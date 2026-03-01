@@ -1,0 +1,26 @@
+args:
+  - input/generics.go
+input/generics.go: |
+  package generics
+
+  func Map[T any, R any](items []T, fn func(T) R) []R {
+    return nil
+  }
+
+  func (s *Slice[T]) Filter(fn func(T) bool) *Slice[T] {
+    return nil
+  }
+
+  type Slice[T any] struct {
+    items []T
+  }
+
+  func NewSlice[T any]() *Slice[T] {
+    return nil
+  }
+stdout: |
+  input/generics.go
+  [L3-L5] func Map[T any, R any](items []T, fn func(T) R) []R
+  [L7-L9] func (s *Slice[T]) Filter(fn func(T) bool) *Slice[T]
+  [L11-L13] type Slice
+  [L15-L17] func NewSlice[T any]() *Slice[T]

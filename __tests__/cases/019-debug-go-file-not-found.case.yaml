@@ -1,0 +1,6 @@
+args:
+  - --debug
+  - input/missing.go
+input/valid.go: |
+  package main
+stderr: File input/missing.go does not exist

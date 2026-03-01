@@ -1,0 +1,16 @@
+args:
+  - input/src
+input/src/has-comment.ts: |
+  /** Has summary. */
+  export const one = 1;
+input/src/nested/no-summary.ts: |
+  export const two = 2;
+input/src/raw.txt: |
+  plain text
+stdout: |
+  glob view: input/src/**/*
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/src/has-comment.ts: Has summary.
+  input/src/nested/no-summary.ts: (no header comment available)
+stderr: FILE input/src/raw.txt HAS UNSUPPORTED FILE TYPE

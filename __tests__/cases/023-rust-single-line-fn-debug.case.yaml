@@ -1,0 +1,6 @@
+args:
+  - --debug
+  - input/rust-single-line-fn.rs
+input/rust-single-line-fn.rs: |
+  fn simple() -> i32 { 42 }
+stdout: "\e[32mfn simple() -> i32\e[0m { 42 }\n"

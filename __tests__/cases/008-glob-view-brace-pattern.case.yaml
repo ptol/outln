@@ -1,0 +1,14 @@
+args:
+  - input/{one,two}.ts
+input/one.ts: |
+  /** First summary. */
+  export const one = 1;
+input/two.ts: |
+  /** Second summary. */
+  export const two = 2;
+stdout: |
+  glob view: input/{one,two}.ts
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/one.ts: First summary.
+  input/two.ts: Second summary.

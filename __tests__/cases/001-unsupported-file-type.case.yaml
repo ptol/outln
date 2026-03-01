@@ -1,0 +1,12 @@
+args:
+  - input/script.py
+  - input/valid.ts
+input/script.py: |
+  def hello():
+      print("Hello")
+input/valid.ts: |
+  function greet() {}
+stdout: |
+  input/valid.ts
+  [L1-L1] function greet()
+stderr: FILE input/script.py HAS UNSUPPORTED FILE TYPE

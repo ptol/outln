@@ -1,0 +1,7 @@
+args:
+  - --debug
+  - input/declare-const-many.ts
+input/declare-const-many.ts: |
+  declare const w: number, x: string, y: boolean, z: object;
+stdout: "\e[32mdeclare const w\e[0m: number, \e[32mx\e[0m: string, \e[32my\e[0m:
+  boolean, \e[32mz\e[0m: object;\n"

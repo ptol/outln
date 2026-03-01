@@ -1,0 +1,15 @@
+args:
+  - --debug
+  - input/guide.md
+input/guide.md: |
+  ---
+  title: Debug Guide
+  description: Testing debug mode for markdown
+  ---
+
+  # Getting Started
+
+  ## Installation
+
+  ## Configuration
+stdout: "---\n\\x1b[32mtitle: Debug Guide\\x1b[0m\n\\x1b[32mdescription: Testing debug mode for markdown\\x1b[0m\n---\n\n\\x1b[32m# Getting Started\\x1b[0m\n\n\\x1b[32m## Installation\\x1b[0m\n\n\\x1b[32m## Configuration\\x1b[0m\n"

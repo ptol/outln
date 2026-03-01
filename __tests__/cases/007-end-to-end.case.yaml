@@ -1,0 +1,46 @@
+args:
+  - input/doc-with-frontmatter.md
+  - input/doc-headings-only.md
+  - input/doc-with-code.md
+  - input/regular.ts
+input/doc-with-frontmatter.md: |
+  ---
+  title: 'API Documentation'
+  version: 2
+  ---
+
+  # Introduction
+
+  ## Getting Started
+input/doc-headings-only.md: |
+  # Overview
+  Some description here.
+  ## Details
+input/doc-with-code.md: |
+  # Configuration
+
+  ```yaml
+  # This is not a heading
+  setting: value
+  ```
+
+  ## Options
+input/regular.ts: |
+  export const config = { enabled: true };
+stdout: |
+  input/doc-with-frontmatter.md
+  title: "API Documentation"
+  version: 2
+  [L6-L6] # Introduction
+  [L8-L8] ## Getting Started
+
+  input/doc-headings-only.md
+  [L1-L1] # Overview
+  [L3-L3] ## Details
+
+  input/doc-with-code.md
+  [L1-L1] # Configuration
+  [L8-L8] ## Options
+
+  input/regular.ts
+  [L1-L1] export const config

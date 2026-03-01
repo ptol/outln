@@ -1,0 +1,5 @@
+args:
+  - input/empty.ts
+input/empty.ts: ''
+stdout: |
+  input/empty.ts

@@ -1,0 +1,44 @@
+args:
+  - --debug
+  - input/combined.ts
+input/combined.ts: |
+  import FS = require('fs');
+
+  namespace Utils {
+    export const helper = () => {};
+  }
+
+  import Path = require('path');
+
+  module Config {
+    export const setting = 'value';
+  }
+
+  export namespace PublicAPI {
+    export const version = '1.0';
+  }
+stdout: "\e[32mimport FS\e[0m = require('fs');
+
+
+  \e[32mnamespace Utils\e[0m {
+
+  \  export const helper = () => {};
+
+  }
+
+
+  \e[32mimport Path\e[0m = require('path');
+
+
+  \e[32mmodule Config\e[0m {
+
+  \  export const setting = 'value';
+
+  }
+
+
+  \e[32mexport namespace PublicAPI\e[0m {
+
+  \  export const version = '1.0';
+
+  }\n"

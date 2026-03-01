@@ -1,0 +1,27 @@
+args:
+  - input/**/*
+input/src/with-comment.go: |
+  // HTTP service handlers.
+  // Used by CLI integration tests.
+
+  package api
+
+  func Run() {}
+input/src/no-comment.go: |
+  package api
+
+  func Ping() {}
+input/misc/raw.txt: |
+  plain text
+stdout: >
+  glob view: input/**/*
+
+  Includes only header comments per file.
+
+  For file-level outlines, use `outln [FILE]...`.
+
+  input/src/no-comment.go: (no header comment available)
+
+  input/src/with-comment.go: HTTP service handlers. Used by CLI integration
+  tests.
+stderr: FILE input/misc/raw.txt HAS UNSUPPORTED FILE TYPE

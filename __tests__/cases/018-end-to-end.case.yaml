@@ -1,0 +1,48 @@
+args:
+  - --debug
+  - input/full-feature.ts
+input/full-feature.ts: |
+  /**
+   * Service module with class members.
+   */
+  export class Service {
+    private data: number;
+    constructor(initial: number) {
+      this.data = initial;
+    }
+    get value(): number {
+      return this.data;
+    }
+    process(input: number): number {
+      return input * 2;
+    }
+  }
+stdout: "\e[32m/**\e[0m
+
+  \e[32m * Service module with class members.\e[0m
+
+  \e[32m */\e[0m
+
+  \e[32mexport class Service\e[0m {
+
+  \  private data: number;
+
+  \  \e[32mconstructor(initial: number)\e[0m {
+
+  \    this.data = initial;
+
+  \  }
+
+  \  \e[32mget value(): number\e[0m {
+
+  \    return this.data;
+
+  \  }
+
+  \  \e[32mprocess(input: number): number\e[0m {
+
+  \    return input * 2;
+
+  \  }
+
+  }\n"

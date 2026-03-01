@@ -1,0 +1,11 @@
+args:
+  - input/decorated.ts
+input/decorated.ts: |
+  @sealed
+  export class Service {
+    run(): void {}
+  }
+stdout: |
+  input/decorated.ts
+  [L1-L4] export class Service
+    [L3-L3] run(): void

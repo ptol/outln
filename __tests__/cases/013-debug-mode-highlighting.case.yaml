@@ -1,0 +1,20 @@
+args:
+  - --debug
+  - input/sample.ts
+input/sample.ts: |
+  // Service bootstrap.
+
+  export const version = 1;
+  export function run(value: number) {
+    return value + 1;
+  }
+stdout: "\e[32m// Service bootstrap.\e[0m
+
+
+  \e[32mexport const version\e[0m = 1;
+
+  \e[32mexport function run(value: number)\e[0m {
+
+  \  return value + 1;
+
+  }\n"

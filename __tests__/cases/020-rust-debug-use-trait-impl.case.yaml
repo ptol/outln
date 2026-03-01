@@ -1,0 +1,5 @@
+args:
+  - --debug
+  - input/contracts.rs
+input/contracts.rs: "use std::fmt::Debug;\n\ntrait Repo {\n  fn load(&self);\n}\n\nimpl Repo for Store {\n  fn load(&self) {}\n}\n"
+stdout: "\e[32muse std::fmt::Debug\e[0m;\n\n\e[32mtrait Repo\e[0m {\n  fn load(&self);\n}\n\n\e[32mimpl Repo for Store\e[0m {\n  fn load(&self) {}\n}\n"

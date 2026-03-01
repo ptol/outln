@@ -1,0 +1,11 @@
+args:
+  - --debug
+  - input/frontmatter.md
+input/frontmatter.md: |
+  ---
+  title: Guide
+  owner: docs
+  ---
+
+  Body text.
+stdout: "---\n\\x1b[32mtitle: Guide\\x1b[0m\n\\x1b[32mowner: docs\\x1b[0m\n---\n\nBody text.\n"

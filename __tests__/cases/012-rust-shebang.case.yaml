@@ -1,0 +1,14 @@
+args:
+  - input/shebang.rs
+input/shebang.rs: |
+  #!/usr/bin/env rust-script
+
+  // Header comment after shebang.
+  // Second line of header.
+
+  fn main() {}
+stdout: |
+  input/shebang.rs
+  // Header comment after shebang.
+  // Second line of header.
+  [L6-L6] fn main ()

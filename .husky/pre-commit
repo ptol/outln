@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+set -eu
+
+pnpm exec concurrently --kill-others-on-fail --success=all "pnpm run typecheck" "pnpm lint-staged"

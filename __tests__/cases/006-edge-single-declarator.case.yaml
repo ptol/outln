@@ -1,0 +1,11 @@
+args:
+  - input/single-declarator.ts
+input/single-declarator.ts: |
+  declare var singleVar: string;
+  declare let singleLet: number;
+  declare const singleConst: boolean;
+stdout: |
+  input/single-declarator.ts
+  [L1-L1] declare var singleVar
+  [L2-L2] declare let singleLet
+  [L3-L3] declare const singleConst

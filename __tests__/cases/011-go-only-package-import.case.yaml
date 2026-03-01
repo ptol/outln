@@ -1,0 +1,13 @@
+args:
+  - input/minimal.go
+input/minimal.go: |
+  package minimal
+
+  import (
+    "fmt"
+    "os"
+  )
+
+  // No declarations here
+stdout: |
+  input/minimal.go

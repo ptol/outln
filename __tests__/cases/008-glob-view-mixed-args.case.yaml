@@ -1,0 +1,7 @@
+args:
+  - input/**/*.ts
+  - input/direct.ts
+input/direct.ts: |
+  /** Direct file. */
+  export const direct = true;
+stderr: Cannot mix glob patterns and file paths in one command.

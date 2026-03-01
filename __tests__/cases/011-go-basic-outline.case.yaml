@@ -1,0 +1,59 @@
+args:
+  - input/sample.go
+input/sample.go: |
+  //go:build linux
+
+  package sample
+
+  import (
+    "errors"
+    "fmt"
+  )
+
+  const DefaultTimeout = 30
+  const (
+    ModeRead = "read"
+    ModeWrite = "write"
+  )
+
+  var serviceName = "api"
+  var (
+    retries = 3
+    verbose = true
+  )
+
+  type Config struct {
+    Name string
+  }
+
+  type Runner interface {
+    Run() error
+  }
+
+  func NewConfig(path string) *Config {
+    return &Config{Name: path}
+  }
+
+  func (c *Config) Validate() error {
+    if c.Name == "" {
+      return errors.New("empty name")
+    }
+    return nil
+  }
+
+  func helper() {
+    fmt.Println("debug")
+  }
+stdout: |
+  input/sample.go
+  [L10-L10] const DefaultTimeout
+  [L12-L12] const ModeRead
+  [L13-L13] const ModeWrite
+  [L16-L16] var serviceName
+  [L18-L18] var retries
+  [L19-L19] var verbose
+  [L22-L24] type Config
+  [L26-L28] type Runner
+  [L30-L32] func NewConfig(path string) *Config
+  [L34-L39] func (c *Config) Validate() error
+  [L41-L43] func helper()

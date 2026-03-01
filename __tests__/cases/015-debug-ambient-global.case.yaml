@@ -1,0 +1,12 @@
+args:
+  - --debug
+  - input/declare-global.ts
+input/declare-global.ts: |
+  declare global {
+    var declaredGlobalValue: string;
+  }
+stdout: "\e[32mdeclare global\e[0m {
+
+  \  var declaredGlobalValue: string;
+
+  }\n"

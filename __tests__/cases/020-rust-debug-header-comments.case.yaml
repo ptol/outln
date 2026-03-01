@@ -1,0 +1,5 @@
+args:
+  - --debug
+  - input/sample.rs
+input/sample.rs: "// Domain model.\n\nstruct User {\n  id: u64,\n}\n\nfn load(id: u64) -> User {\n  User { id }\n}\n"
+stdout: "\e[32m// Domain model.\e[0m\n\n\e[32mstruct User\e[0m {\n  id: u64,\n}\n\n\e[32mfn load(id: u64) -> User\e[0m {\n  User { id }\n}\n"

@@ -1,0 +1,34 @@
+args:
+  - input/basic.js
+  - input/view.jsx
+  - input/module.mjs
+  - input/common.cjs
+input/basic.js: |
+  // js summary
+  function plain(value) {
+    return value;
+  }
+input/view.jsx: |
+  export function View() {
+    return <main>Hello</main>;
+  }
+input/module.mjs: |
+  export const version = '1.0.0';
+input/common.cjs: |
+  /* cjs summary */
+  const cache = {};
+  module.exports = cache;
+stdout: |
+  input/basic.js
+  // js summary
+  [L2-L4] function plain(value)
+
+  input/view.jsx
+  [L1-L3] export function View()
+
+  input/module.mjs
+  [L1-L1] export const version
+
+  input/common.cjs
+  /* cjs summary */
+  [L2-L2] const cache

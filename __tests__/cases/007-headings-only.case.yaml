@@ -1,0 +1,13 @@
+args:
+  - input/headings-only.md
+input/headings-only.md: |
+  # Intro
+  Body text with # inline is not a heading.
+  ## Details
+  Not a heading: ### inline marker.
+  ### Next
+stdout: |
+  input/headings-only.md
+  [L1-L1] # Intro
+  [L3-L3] ## Details
+  [L5-L5] ### Next

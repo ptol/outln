@@ -1,0 +1,25 @@
+args:
+  - --debug
+  - input/declarations.go
+input/declarations.go: |
+  package api
+
+  const DefaultTimeout = 30
+  var retries = 3
+
+  type Config struct {
+    Name string
+  }
+stdout: "package api
+
+
+  \e[32mconst DefaultTimeout\e[0m = 30
+
+  \e[32mvar retries\e[0m = 3
+
+
+  \e[32mtype Config\e[0m struct {
+
+  \  Name string
+
+  }\n"

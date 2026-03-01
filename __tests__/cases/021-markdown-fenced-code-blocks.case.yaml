@@ -1,0 +1,12 @@
+args:
+  - --debug
+  - input/fences.md
+input/fences.md: |
+  # Overview
+
+  ```md
+  ## Not a heading
+  ```
+
+  ## Real heading
+stdout: "\x1b[32m# Overview\x1b[0m\n\n```md\n## Not a heading\n```\n\n\x1b[32m## Real heading\x1b[0m\n"

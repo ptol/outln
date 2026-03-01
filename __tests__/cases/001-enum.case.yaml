@@ -1,0 +1,17 @@
+args:
+  - input/enum.ts
+input/enum.ts: |
+  enum Color {
+    Red,
+    Green,
+    Blue
+  }
+
+  export enum Status {
+    Active = 'active',
+    Inactive = 'inactive'
+  }
+stdout: |
+  input/enum.ts
+  [L1-L5] enum Color
+  [L7-L10] export enum Status

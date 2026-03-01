@@ -1,0 +1,9 @@
+args:
+  - --debug
+  - input/a.ts
+  - input/b.ts
+input/a.ts: |
+  export const a = 1;
+input/b.ts: |
+  export const b = 2;
+stderr: --debug requires exactly one input file path.

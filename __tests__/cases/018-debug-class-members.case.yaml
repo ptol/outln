@@ -1,0 +1,39 @@
+args:
+  - --debug
+  - input/debug-class-members.ts
+input/debug-class-members.ts: |
+  class Counter {
+    private value: number;
+    constructor(initial: number) {
+      this.value = initial;
+    }
+    get count() {
+      return this.value;
+    }
+    increment(step: number): void {
+      this.value += step;
+    }
+  }
+stdout: "\e[32mclass Counter\e[0m {
+
+  \  private value: number;
+
+  \  \e[32mconstructor(initial: number)\e[0m {
+
+  \    this.value = initial;
+
+  \  }
+
+  \  \e[32mget count()\e[0m {
+
+  \    return this.value;
+
+  \  }
+
+  \  \e[32mincrement(step: number): void\e[0m {
+
+  \    this.value += step;
+
+  \  }
+
+  }\n"

@@ -1,0 +1,10 @@
+args:
+  - input/comment-after-code.ts
+input/comment-after-code.ts: |
+  const x = 1;
+  // This comment is after code.
+  const y = 2;
+stdout: |
+  input/comment-after-code.ts
+  [L1-L1] const x
+  [L3-L3] const y

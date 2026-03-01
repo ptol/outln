@@ -1,0 +1,11 @@
+args:
+  - input/bad-frontmatter.md
+input/bad-frontmatter.md: |
+  ---
+  title: Broken
+  # Visible heading
+  ## Also visible
+stdout: |
+  input/bad-frontmatter.md
+  [L3-L3] # Visible heading
+  [L4-L4] ## Also visible

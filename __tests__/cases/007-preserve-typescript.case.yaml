@@ -1,0 +1,12 @@
+args:
+  - input/reference.ts
+input/reference.ts: |
+  interface Person {
+    name: string;
+  }
+
+  const ready = true;
+stdout: |
+  input/reference.ts
+  [L1-L3] interface Person
+  [L5-L5] const ready

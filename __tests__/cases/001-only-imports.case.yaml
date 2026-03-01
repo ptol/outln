@@ -1,0 +1,8 @@
+args:
+  - input/imports.ts
+input/imports.ts: |
+  import { readFile } from 'node:fs/promises';
+  import type { Config } from './types';
+  import * as path from 'node:path';
+stdout: |
+  input/imports.ts

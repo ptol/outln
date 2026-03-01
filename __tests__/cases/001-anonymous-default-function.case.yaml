@@ -1,0 +1,9 @@
+args:
+  - input/anon.ts
+input/anon.ts: |
+  export default function () {
+    return 42;
+  }
+stdout: |
+  input/anon.ts
+  [L1-L3] export default function()

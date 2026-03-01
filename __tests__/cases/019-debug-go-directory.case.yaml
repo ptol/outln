@@ -1,0 +1,7 @@
+args:
+  - --debug
+  - input/
+input/sample.go: |
+  package main
+stdout: |
+  package main

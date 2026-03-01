@@ -1,0 +1,12 @@
+args:
+  - --debug
+  - input/default-anon-class.ts
+input/default-anon-class.ts: |
+  export default class {
+    x = 1;
+  }
+stdout: "\e[32mexport default class\e[0m {
+
+  \  x = 1;
+
+  }\n"

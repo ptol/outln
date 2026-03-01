@@ -1,0 +1,9 @@
+args:
+  - --debug
+  - input/const-multi-line.ts
+input/const-multi-line.ts: |
+  const a = 1,
+    b = 2;
+stdout: "\e[32mconst a\e[0m = 1,
+
+  \  \e[32mb\e[0m = 2;\n"

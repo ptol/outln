@@ -1,0 +1,9 @@
+args:
+  - --debug
+  - input/import-alias-namespace.ts
+input/import-alias-namespace.ts: |
+  import ReadFile = FS.readFileSync;
+  import MyUtil = MyNamespace.Utils.helper;
+stdout: "\e[32mimport ReadFile\e[0m = FS.readFileSync;
+
+  \e[32mimport MyUtil\e[0m = MyNamespace.Utils.helper;\n"

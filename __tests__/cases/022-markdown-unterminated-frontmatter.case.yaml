@@ -1,0 +1,10 @@
+args:
+  - --debug
+  - input/unterminated.md
+input/unterminated.md: |
+  ---
+  title: Guide
+  owner: docs
+
+  Body text.
+stdout: "---\ntitle: Guide\nowner: docs\n\nBody text.\n"

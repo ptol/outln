@@ -1,0 +1,33 @@
+args:
+  - --debug
+  - input/multiple-classes.ts
+input/multiple-classes.ts: |
+  class First {
+    greet(): string {
+      return "hello";
+    }
+  }
+  class Second {
+    farewell(): string {
+      return "goodbye";
+    }
+  }
+stdout: "\e[32mclass First\e[0m {
+
+  \  \e[32mgreet(): string\e[0m {
+
+  \    return \"hello\";
+
+  \  }
+
+  }
+
+  \e[32mclass Second\e[0m {
+
+  \  \e[32mfarewell(): string\e[0m {
+
+  \    return \"goodbye\";
+
+  \  }
+
+  }\n"

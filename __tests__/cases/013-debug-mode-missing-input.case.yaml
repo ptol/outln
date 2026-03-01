@@ -1,0 +1,5 @@
+args:
+  - --debug
+input/fixture.ts: |
+  export const fixture = true;
+stderr: --debug requires exactly one input file path.

@@ -1,0 +1,6 @@
+args:
+  - --debug
+  - input/const-binding-pattern.ts
+input/const-binding-pattern.ts: |
+  const a = 1, { b } = obj;
+stdout: "\e[32mconst a\e[0m = 1, { b } = obj;\n"

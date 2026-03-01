@@ -1,0 +1,53 @@
+args:
+  - --debug
+  - input/service.ts
+input/service.ts: |
+  // Main service module.
+  // Provides core functionality.
+
+  export interface Config {
+    name: string;
+  }
+
+  export class Service {
+    constructor(private config: Config) {}
+
+    start(): void {
+      console.log('starting');
+    }
+  }
+
+  export function createService(config: Config): Service {
+    return new Service(config);
+  }
+stdout: "\e[32m// Main service module.\e[0m
+
+  \e[32m// Provides core functionality.\e[0m
+
+
+  \e[32mexport interface Config\e[0m {
+
+  \  name: string;
+
+  }
+
+
+  \e[32mexport class Service\e[0m {
+
+  \  \e[32mconstructor(private config: Config)\e[0m {}
+
+
+  \  \e[32mstart(): void\e[0m {
+
+  \    console.log('starting');
+
+  \  }
+
+  }
+
+
+  \e[32mexport function createService(config: Config): Service\e[0m {
+
+  \  return new Service(config);
+
+  }\n"

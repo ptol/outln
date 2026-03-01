@@ -1,0 +1,12 @@
+args:
+  - --debug
+  - input/mixed
+input/mixed/c.ts: |
+  export const c = 3;
+input/mixed/a.ts: |
+  export const a = 1;
+input/mixed/raw.txt: |
+  plain text
+stdout: "\e[32mexport const a\e[0m = 1;\n\n\e[32mexport const c\e[0m = 3;\n"
+stderr: |
+  FILE input/mixed/raw.txt HAS UNSUPPORTED FILE TYPE

@@ -1,0 +1,12 @@
+args:
+  - input/fenced.md
+input/fenced.md: |
+  # Top
+  ```md
+  ## Not a heading
+  ```
+  ## Real
+stdout: |
+  input/fenced.md
+  [L1-L1] # Top
+  [L5-L5] ## Real

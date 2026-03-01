@@ -1,0 +1,9 @@
+args:
+  - input/comment-only-blank-break.rs
+input/comment-only-blank-break.rs: |
+  // First line is part of header.
+
+  // This line is not contiguous and must be excluded.
+stdout: |
+  input/comment-only-blank-break.rs
+  // First line is part of header.

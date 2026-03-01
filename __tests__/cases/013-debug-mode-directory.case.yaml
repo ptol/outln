@@ -1,0 +1,6 @@
+args:
+  - --debug
+  - input/src
+input/src/file.ts: |
+  export const a = 1;
+stdout: "\e[32mexport const a\e[0m = 1;\n"

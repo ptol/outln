@@ -1,0 +1,8 @@
+args:
+  - input/no-top-comment.ts
+input/no-top-comment.ts: |
+  import { build } from './lib';
+  export const ready = build();
+stdout: |
+  input/no-top-comment.ts
+  [L2-L2] export const ready

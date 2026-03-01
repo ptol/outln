@@ -1,0 +1,18 @@
+args:
+  - --debug
+  - input/empty-class.ts
+input/empty-class.ts: |
+  class Empty {
+  }
+  class WithMethod {
+    doSomething(): void {}
+  }
+stdout: "\e[32mclass Empty\e[0m {
+
+  }
+
+  \e[32mclass WithMethod\e[0m {
+
+  \  \e[32mdoSomething(): void\e[0m {}
+
+  }\n"

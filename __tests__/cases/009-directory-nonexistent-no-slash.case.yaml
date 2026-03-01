@@ -1,0 +1,6 @@
+args:
+  - input/nonexistent
+input/reference.ts: |
+  /** Reference file. */
+  export const ref = true;
+stderr: File input/nonexistent does not exist

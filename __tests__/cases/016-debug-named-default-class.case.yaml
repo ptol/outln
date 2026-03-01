@@ -1,0 +1,12 @@
+args:
+  - --debug
+  - input/default-named-class.ts
+input/default-named-class.ts: |
+  export default class MyClass {
+    x = 1;
+  }
+stdout: "\e[32mexport default class MyClass\e[0m {
+
+  \  x = 1;
+
+  }\n"

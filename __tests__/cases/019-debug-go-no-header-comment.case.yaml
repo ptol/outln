@@ -1,0 +1,17 @@
+args:
+  - --debug
+  - input/no-comment.go
+input/no-comment.go: |
+  package main
+
+  func Hello() string {
+    return "hello"
+  }
+stdout: "package main
+
+
+  \e[32mfunc Hello() string\e[0m {
+
+  \  return \"hello\"
+
+  }\n"

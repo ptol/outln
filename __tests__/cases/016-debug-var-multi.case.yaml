@@ -1,0 +1,6 @@
+args:
+  - --debug
+  - input/var-multi.ts
+input/var-multi.ts: |
+  var a = 1, b = 2;
+stdout: "\e[32mvar a\e[0m = 1, \e[32mb\e[0m = 2;\n"

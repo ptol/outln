@@ -1,0 +1,13 @@
+args:
+  - --debug
+  - input/rust-highlight-members.rs
+input/rust-highlight-members.rs: |
+  use std::collections::{HashMap, HashSet};
+
+  pub(crate) fn generic_where<T>(value: T) -> T
+  where
+      T: Clone,
+  {
+      value.clone()
+  }
+stdout: "\e[32muse std::collections::{HashMap, HashSet}\e[0m;\n\n\e[32mpub(crate) fn generic_where<T>(value: T) -> T\e[0m\nwhere\n    T: Clone,\n{\n    value.clone()\n}\n"

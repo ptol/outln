@@ -1,0 +1,9 @@
+args:
+  - input/inline-block.ts
+input/inline-block.ts: |
+  /* Inline block comment */
+  const x = 1;
+stdout: |
+  input/inline-block.ts
+  /* Inline block comment */
+  [L2-L2] const x

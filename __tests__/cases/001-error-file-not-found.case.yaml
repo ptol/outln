@@ -1,0 +1,9 @@
+args:
+  - input/missing.ts
+  - input/existing.ts
+input/existing.ts: |
+  // This file exists
+stdout: |
+  input/existing.ts
+  // This file exists
+stderr: File input/missing.ts does not exist

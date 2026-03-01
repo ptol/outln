@@ -1,0 +1,24 @@
+args:
+  - --debug
+  - input/class-with-fields.ts
+input/class-with-fields.ts: |
+  class Example {
+    private secret: string;
+    public count = 0;
+    getSecret(): string {
+      return this.secret;
+    }
+  }
+stdout: "\e[32mclass Example\e[0m {
+
+  \  private secret: string;
+
+  \  public count = 0;
+
+  \  \e[32mgetSecret(): string\e[0m {
+
+  \    return this.secret;
+
+  \  }
+
+  }\n"

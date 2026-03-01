@@ -1,0 +1,11 @@
+args:
+  - input/preamble.ts
+input/preamble.ts: |
+  #!/usr/bin/env node
+
+  // CLI wiring.
+  export function main(): void {}
+stdout: |
+  input/preamble.ts
+  // CLI wiring.
+  [L4-L4] export function main(): void

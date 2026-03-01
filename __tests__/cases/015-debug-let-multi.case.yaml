@@ -1,0 +1,6 @@
+args:
+  - --debug
+  - input/declare-let-multi.ts
+input/declare-let-multi.ts: |
+  declare let mutableA: string, mutableB: number;
+stdout: "\e[32mdeclare let mutableA\e[0m: string, \e[32mmutableB\e[0m: number;\n"

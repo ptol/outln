@@ -1,0 +1,10 @@
+args:
+  - --debug
+  - input/pkg
+  - input/extra.ts
+input/pkg/a.ts: |
+  export const a = 1;
+input/extra.ts: |
+  export const extra = 2;
+stderr: |
+  --debug requires exactly one input file path.

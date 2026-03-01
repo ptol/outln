@@ -1,0 +1,6 @@
+args:
+  - --debug
+  - input/declare-var-multi.ts
+input/declare-var-multi.ts: |
+  declare var varX: any, varY: unknown;
+stdout: "\e[32mdeclare var varX\e[0m: any, \e[32mvarY\e[0m: unknown;\n"

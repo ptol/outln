@@ -1,0 +1,24 @@
+args:
+  - input/type-aliases.go
+input/type-aliases.go: |
+  package aliases
+
+  type UserID = int64
+
+  type (
+    Labels = map[string]string
+    Pair[T any] = struct {
+      A T
+      B T
+    }
+    Name string
+  )
+
+  func keep() {}
+stdout: |
+  input/type-aliases.go
+  [L3-L3] type UserID
+  [L6-L6] type Labels
+  [L7-L10] type Pair
+  [L11-L11] type Name
+  [L14-L14] func keep()

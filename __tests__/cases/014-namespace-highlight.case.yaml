@@ -1,0 +1,29 @@
+args:
+  - --debug
+  - input/namespace.ts
+input/namespace.ts: |
+  namespace PlainNamespace {
+    export const enabled = true;
+  }
+
+  namespace NestedNamespace {
+    export module Inner {
+      export const value = 42;
+    }
+  }
+stdout: "\e[32mnamespace PlainNamespace\e[0m {
+
+  \  export const enabled = true;
+
+  }
+
+
+  \e[32mnamespace NestedNamespace\e[0m {
+
+  \  export module Inner {
+
+  \    export const value = 42;
+
+  \  }
+
+  }\n"

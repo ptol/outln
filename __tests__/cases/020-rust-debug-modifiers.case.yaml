@@ -1,0 +1,5 @@
+args:
+  - --debug
+  - input/modifiers.rs
+input/modifiers.rs: "pub async fn load() -> Result<(), Error> {\n  Ok(())\n}\n\npub(crate) struct Store {\n  id: u64,\n}\n"
+stdout: "\e[32mpub async fn load() -> Result<(), Error>\e[0m {\n  Ok(())\n}\n\n\e[32mpub(crate) struct Store\e[0m {\n  id: u64,\n}\n"

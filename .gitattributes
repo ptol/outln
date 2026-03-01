@@ -1,0 +1,3 @@
+# Husky hooks must use LF; CRLF causes `/bin/sh` errors like `\r: not found`.
+.husky/* text eol=lf
+.husky/_/* text eol=lf

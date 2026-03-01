@@ -1,0 +1,11 @@
+args:
+  - --debug
+  - input/go-type-alias-standalone.go
+input/go-type-alias-standalone.go: |
+  package main
+
+  import "time"
+
+  type ID = string
+  type Timestamp = time.Time
+stdout: "package main\n\nimport \"time\"\n\n\e[32mtype ID\e[0m = string\n\e[32mtype Timestamp\e[0m = time.Time\n"

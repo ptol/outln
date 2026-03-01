@@ -1,0 +1,11 @@
+args:
+  - input/blank-lines.ts
+input/blank-lines.ts: |
+
+
+  // After blank lines.
+  const x = 1;
+stdout: |
+  input/blank-lines.ts
+  // After blank lines.
+  [L4-L4] const x

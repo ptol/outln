@@ -1,0 +1,6 @@
+args:
+  - --debug
+  - input/let-multi.ts
+input/let-multi.ts: |
+  let a = 1, b = 2;
+stdout: "\e[32mlet a\e[0m = 1, \e[32mb\e[0m = 2;\n"

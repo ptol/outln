@@ -1,0 +1,10 @@
+args:
+  - input/not-header-comments.rs
+input/not-header-comments.rs: |
+  //! Module docs are not file header output.
+  /* Block comments are not file header output. */
+  /// Item docs are also excluded.
+  struct Item {}
+stdout: |
+  input/not-header-comments.rs
+  [L4-L4] struct Item

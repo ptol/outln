@@ -1,0 +1,9 @@
+args:
+  - --debug
+  - input/import-alias-require.ts
+input/import-alias-require.ts: |
+  import FS = require('node:fs');
+  import Path = require('path');
+stdout: "\e[32mimport FS\e[0m = require('node:fs');
+
+  \e[32mimport Path\e[0m = require('path');\n"

@@ -1,0 +1,21 @@
+args:
+  - input/a/**/*
+  - input/**/*
+input/a/one.ts: |
+  /** One summary. */
+  export const one = 1;
+input/a/two.md: |
+  ---
+  title: Some title
+  summary: Two summary.
+  ---
+input/z/three.ts: |
+  /** Three summary. */
+  export const three = 3;
+stdout: |
+  glob view: input/a/**/* input/**/*
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/a/one.ts: One summary.
+  input/a/two.md: title: "Some title", summary: "Two summary."
+  input/z/three.ts: Three summary.

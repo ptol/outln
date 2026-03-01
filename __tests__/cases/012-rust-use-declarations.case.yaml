@@ -1,0 +1,18 @@
+args:
+  - input/use.rs
+input/use.rs: |
+  // Use declarations
+
+  use std::io;
+  use std::collections::HashMap;
+  use crate::utils::helpers::{self, format};
+  use super::*;
+  use std::fs::File as FsFile;
+stdout: |
+  input/use.rs
+  // Use declarations
+  [L3-L3] use std::io
+  [L4-L4] use std::collections::HashMap
+  [L5-L5] use crate::utils::helpers::{self, format}
+  [L6-L6] use super::*
+  [L7-L7] use std::fs::File as FsFile

@@ -1,0 +1,6 @@
+args:
+  - --debug
+  - input/single
+input/single/only.ts: |
+  export const only = 1;
+stdout: "\e[32mexport const only\e[0m = 1;\n"

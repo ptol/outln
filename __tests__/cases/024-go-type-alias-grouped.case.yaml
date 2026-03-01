@@ -1,0 +1,12 @@
+args:
+  - --debug
+  - input/go-type-alias-grouped.go
+input/go-type-alias-grouped.go: |
+  package main
+
+  type (
+    ID = string
+    Set[T comparable] = map[T]bool
+    Config struct{}
+  )
+stdout: "package main\n\ntype (\n\e[32m  ID\e[0m = string\n\e[32m  Set\e[0m[T comparable] = map[T]bool\n\e[32m  Config\e[0m struct{}\n)\n"

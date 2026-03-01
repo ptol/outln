@@ -1,0 +1,6 @@
+args:
+  - --debug
+  - input/rust-declaration-semi.e2e.rs
+input/rust-declaration-semi.e2e.rs: |
+  fn declared() -> i32;
+stdout: "\e[32mfn declared() -> i32\e[0m;\n"

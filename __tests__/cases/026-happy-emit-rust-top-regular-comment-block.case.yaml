@@ -1,0 +1,14 @@
+args:
+  - input/with-header.rs
+input/with-header.rs: |
+  #!/usr/bin/env rust-script
+
+  // Service bootstrap for CLI scripts.
+  // Loads config and starts runner.
+
+  fn main() {}
+stdout: |
+  input/with-header.rs
+  // Service bootstrap for CLI scripts.
+  // Loads config and starts runner.
+  [L6-L6] fn main ()

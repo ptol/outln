@@ -1,0 +1,10 @@
+args:
+  - input/dir-special
+input/dir-special/file.ts: |
+  /** Special dir file. */
+  export const special = 1;
+stdout: |
+  glob view: input/dir-special/**/*
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/dir-special/file.ts: Special dir file.

@@ -1,0 +1,45 @@
+args:
+  - --debug
+  - input/multi-line-members.ts
+input/multi-line-members.ts: |
+  class MultiLine {
+    constructor(
+      a: number,
+      b: string
+    ) {
+      console.log(a, b);
+    }
+    calculate(
+      x: number,
+      y: number
+    ): number {
+      return x + y;
+    }
+  }
+stdout: "\e[32mclass MultiLine\e[0m {
+
+  \  \e[32mconstructor(\e[0m
+
+  \    a: number,
+
+  \    b: string
+
+  \  ) {
+
+  \    console.log(a, b);
+
+  \  }
+
+  \  \e[32mcalculate(\e[0m
+
+  \    x: number,
+
+  \    y: number
+
+  \  ): number {
+
+  \    return x + y;
+
+  \  }
+
+  }\n"

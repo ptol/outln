@@ -1,0 +1,27 @@
+args:
+  - --debug
+  - input/class-return-types.ts
+input/class-return-types.ts: |
+  class Calculator {
+    add(a: number, b: number): number {
+      return a + b;
+    }
+    get result(): number {
+      return 42;
+    }
+  }
+stdout: "\e[32mclass Calculator\e[0m {
+
+  \  \e[32madd(a: number, b: number): number\e[0m {
+
+  \    return a + b;
+
+  \  }
+
+  \  \e[32mget result(): number\e[0m {
+
+  \    return 42;
+
+  \  }
+
+  }\n"

@@ -1,0 +1,7 @@
+args:
+  - --debug
+  - input/declare-const-multi.ts
+input/declare-const-multi.ts: |
+  declare const declaredConst: string, declaredConst2: string;
+stdout: "\e[32mdeclare const declaredConst\e[0m: string,
+  \e[32mdeclaredConst2\e[0m: string;\n"

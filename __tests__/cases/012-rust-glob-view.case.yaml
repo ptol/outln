@@ -1,0 +1,18 @@
+args:
+  - input/**/*
+input/src/with-header.rs: |
+  // Rust service worker.
+  // Handles background jobs.
+
+  fn run() {}
+input/src/no-header.rs: |
+  fn ping() {}
+input/misc/raw.txt: |
+  plain text
+stdout: |
+  glob view: input/**/*
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/src/no-header.rs: (no header comment available)
+  input/src/with-header.rs: Rust service worker. Handles background jobs.
+stderr: FILE input/misc/raw.txt HAS UNSUPPORTED FILE TYPE

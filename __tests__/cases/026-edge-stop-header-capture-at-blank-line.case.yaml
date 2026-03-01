@@ -1,0 +1,11 @@
+args:
+  - input/blank-breaks-header-block.rs
+input/blank-breaks-header-block.rs: |
+  // First line is part of header.
+
+  // This line is not contiguous and must be excluded.
+  fn main() {}
+stdout: |
+  input/blank-breaks-header-block.rs
+  // First line is part of header.
+  [L4-L4] fn main ()

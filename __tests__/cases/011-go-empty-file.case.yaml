@@ -1,0 +1,5 @@
+args:
+  - input/empty.go
+input/empty.go: ''
+stdout: |
+  input/empty.go

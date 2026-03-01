@@ -1,0 +1,21 @@
+args:
+  - input/multi-const.go
+input/multi-const.go: |
+  package test
+
+  const A, B = 1, 2
+
+  const (
+    X = 10
+    Y, Z = 20, 30
+  )
+
+  func main() {}
+stdout: |
+  input/multi-const.go
+  [L3-L3] const A
+  [L3-L3] const B
+  [L6-L6] const X
+  [L7-L7] const Y
+  [L7-L7] const Z
+  [L10-L10] func main()

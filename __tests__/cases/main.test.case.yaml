@@ -1,0 +1,9 @@
+args:
+  - alpha.txt
+  - nested/beta.txt
+alpha.txt: |
+  const alpha = 1;
+nested/beta.txt: |
+  const beta = 2;
+stderr: FILE alpha.txt HAS UNSUPPORTED FILE TYPEFILE nested/beta.txt HAS
+  UNSUPPORTED FILE TYPE

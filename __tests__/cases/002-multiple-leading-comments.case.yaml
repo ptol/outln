@@ -1,0 +1,12 @@
+args:
+  - input/multiple-leading-comments.ts
+input/multiple-leading-comments.ts: |
+  // Primary file purpose.
+  // Keep this.
+  /* Secondary note that should not be emitted. */
+  export const ready = true;
+stdout: |
+  input/multiple-leading-comments.ts
+  // Primary file purpose.
+  // Keep this.
+  [L4-L4] export const ready

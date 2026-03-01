@@ -1,0 +1,96 @@
+{
+  "name": "outln",
+  "version": "0.0.0",
+  "description": "CLI for generating structured outlines from TypeScript, JavaScript, Go, Rust, and Markdown files.",
+  "keywords": [
+    "cli",
+    "outline"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ptol/outln.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ptol/outln/issues"
+  },
+  "homepage": "https://github.com/ptol/outln",
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.15.1",
+  "private": false,
+  "type": "module",
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
+  "exports": {
+    ".": "./dist/main.js"
+  },
+  "bin": {
+    "outln": "./dist/main.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "tsx ./src/main.ts",
+    "build": "tsc -p tsconfig.build.json && pnpm run build:bin",
+    "build:bin": "node -e \"const fs=require('fs');const p='dist/main.js';let s=fs.readFileSync(p,'utf8');if(!s.startsWith('#!/usr/bin/env node\\n')) s='#!/usr/bin/env node\\n'+s;fs.writeFileSync(p,s);fs.chmodSync(p,0o755);\"",
+    "prepack": "pnpm run build",
+    "prepare": "husky",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "update-cases": "UPDATE_CASES=1 pnpm test",
+    "lint": "eslint . --max-warnings=0 --fix",
+    "format": "prettier . --write",
+    "typecheck": "tsc --noEmit",
+    "check": "concurrently --group 'pnpm run typecheck' 'pnpm run lint' ",
+    "fullcheck": "concurrently --group 'pnpm run typecheck' 'pnpm run lint' 'pnpm test'"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/node": "^25.2.0",
+    "casefile-runner": "^0.0.3",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "globals": "^17.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0",
+    "vitest": "^4.0.18",
+    "yaml": "^2.8.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "tree-sitter",
+      "tree-sitter-go",
+      "tree-sitter-javascript",
+      "tree-sitter-rust",
+      "tree-sitter-typescript"
+    ]
+  },
+  "dependencies": {
+    "glob": "^13.0.6",
+    "minimatch": "^10.2.2",
+    "tree-sitter": "0.21.1",
+    "tree-sitter-go": "0.23.4",
+    "tree-sitter-javascript": "0.23.1",
+    "tree-sitter-rust": "^0.23.1",
+    "tree-sitter-typescript": "0.23.2"
+  }
+}

@@ -1,0 +1,33 @@
+args:
+  - input/grouped.go
+input/grouped.go: |
+  package grouped
+
+  const (
+    Alpha = 1
+    Beta = 2
+    Gamma = 3
+  )
+
+  var (
+    x, y = 1, 2
+    z string
+  )
+
+  type (
+    ID int
+    Name string
+  )
+
+  func helper() {}
+stdout: |
+  input/grouped.go
+  [L4-L4] const Alpha
+  [L5-L5] const Beta
+  [L6-L6] const Gamma
+  [L10-L10] var x
+  [L10-L10] var y
+  [L11-L11] var z
+  [L15-L15] type ID
+  [L16-L16] type Name
+  [L19-L19] func helper()

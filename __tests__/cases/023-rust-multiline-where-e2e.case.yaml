@@ -1,0 +1,23 @@
+args:
+  - --debug
+  - input/rust-multiline-where-e2e.rs
+input/rust-multiline-where-e2e.rs: |
+  use std::collections::{HashMap, HashSet};
+
+  fn single_line() -> i32 { 42 }
+
+  pub(crate) fn generic_where<T>(value: T) -> T
+  where
+      T: Clone,
+  {
+      value.clone()
+  }
+
+  fn multi_param<T, U>(x: T, y: U) -> U
+  where
+      T: Display,
+      U: Clone,
+  {
+      y
+  }
+stdout: "\e[32muse std::collections::{HashMap, HashSet}\e[0m;\n\n\e[32mfn single_line() -> i32\e[0m { 42 }\n\n\e[32mpub(crate) fn generic_where<T>(value: T) -> T\e[0m\nwhere\n    T: Clone,\n{\n    value.clone()\n}\n\n\e[32mfn multi_param<T, U>(x: T, y: U) -> U\e[0m\nwhere\n    T: Display,\n    U: Clone,\n{\n    y\n}\n"

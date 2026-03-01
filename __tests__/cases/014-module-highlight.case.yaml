@@ -1,0 +1,23 @@
+args:
+  - --debug
+  - input/module.ts
+input/module.ts: |
+  module PlainModule {
+    export const mode = 'plain';
+  }
+
+  module StringLiteralModule {
+    export const key = 'value';
+  }
+stdout: "\e[32mmodule PlainModule\e[0m {
+
+  \  export const mode = 'plain';
+
+  }
+
+
+  \e[32mmodule StringLiteralModule\e[0m {
+
+  \  export const key = 'value';
+
+  }\n"

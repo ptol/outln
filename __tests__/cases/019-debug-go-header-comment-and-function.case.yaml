@@ -1,0 +1,22 @@
+args:
+  - --debug
+  - input/sample.go
+input/sample.go: |
+  // API handlers.
+
+  package api
+
+  func Run() error {
+    return nil
+  }
+stdout: "\e[32m// API handlers.\e[0m
+
+
+  package api
+
+
+  \e[32mfunc Run() error\e[0m {
+
+  \  return nil
+
+  }\n"

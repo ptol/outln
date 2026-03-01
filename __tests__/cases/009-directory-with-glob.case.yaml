@@ -1,0 +1,16 @@
+args:
+  - input/src
+  - input/docs/**/*.md
+input/src/a.ts: |
+  /** A summary. */
+  export const a = 1;
+input/docs/guide.md: |
+  ---
+  summary: Guide summary.
+  ---
+stdout: |
+  glob view: input/src/**/* input/docs/**/*.md
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/docs/guide.md: summary: "Guide summary."
+  input/src/a.ts: A summary.

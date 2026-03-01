@@ -1,0 +1,5 @@
+args:
+  - input/empty.rs
+input/empty.rs: ''
+stdout: |
+  input/empty.rs

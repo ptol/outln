@@ -1,0 +1,19 @@
+args:
+  - input/impls.rs
+input/impls.rs: |
+  // Impl blocks
+
+  struct Container<T> { value: T }
+  trait Printable { fn print(&self); }
+
+  impl<T> Container<T> { fn new(v: T) -> Self { Self { value: v } } }
+  impl<T: Display> Printable for Container<T> { fn print(&self) {} }
+  impl String { fn len(&self) -> usize { 0 } }
+stdout: |
+  input/impls.rs
+  // Impl blocks
+  [L3-L3] struct Container
+  [L4-L4] trait Printable
+  [L6-L6] impl Container
+  [L7-L7] impl Printable for Container
+  [L8-L8] impl String

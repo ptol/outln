@@ -1,0 +1,9 @@
+args:
+  - input/comments.ts
+input/comments.ts: |
+  // This is a comment
+  /* Multi-line
+     comment */
+stdout: |
+  input/comments.ts
+  // This is a comment

@@ -1,0 +1,6 @@
+args:
+  - --debug
+  - input/
+input/sample.md: |
+  # Hello
+stdout: "\e[32m# Hello\e[0m\n"

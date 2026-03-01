@@ -1,0 +1,23 @@
+args:
+  - --debug
+  - input/ambient-mixed.ts
+input/ambient-mixed.ts: |
+  declare const first: string, second: number;
+
+  declare global {
+    interface Window {
+      customProp: boolean;
+    }
+  }
+stdout: "\e[32mdeclare const first\e[0m: string, \e[32msecond\e[0m: number;
+
+
+  \e[32mdeclare global\e[0m {
+
+  \  interface Window {
+
+  \    customProp: boolean;
+
+  \  }
+
+  }\n"

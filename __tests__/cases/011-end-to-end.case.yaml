@@ -1,0 +1,99 @@
+args:
+  - input/models/config.go
+  - input/utils/helpers.go
+  - input/main.go
+input/models/config.go: |
+  // Configuration models for the application.
+  // Contains all domain types and constants.
+
+  package models
+
+  import "time"
+
+  const DefaultTimeout = 30 * time.Second
+
+  const (
+    StatusActive   = "active"
+    StatusInactive = "inactive"
+  )
+
+  type Config struct {
+    Name    string
+    Timeout time.Duration
+  }
+
+  type Service interface {
+    Start() error
+    Stop() error
+  }
+
+  func NewConfig(name string) *Config {
+    return &Config{
+      Name:    name,
+      Timeout: DefaultTimeout,
+    }
+  }
+
+  func (c *Config) IsValid() bool {
+    return c.Name != ""
+  }
+input/utils/helpers.go: |
+  package utils
+
+  var (
+    DebugMode = false
+    LogLevel  = "info"
+  )
+
+  func FormatMessage(msg string) string {
+    return "[" + LogLevel + "] " + msg
+  }
+
+  func (u *Utils) Process() error {
+    return nil
+  }
+
+  type Utils struct{}
+input/main.go: |
+  //go:build !windows
+
+  // Main entry point for the CLI application.
+
+  package main
+
+  import (
+    "fmt"
+    "os"
+  )
+
+  func main() {
+    fmt.Println("Hello")
+    os.Exit(0)
+  }
+
+  func init() {
+    // Setup
+  }
+stdout: |
+  input/models/config.go
+  // Configuration models for the application.
+  // Contains all domain types and constants.
+  [L8-L8] const DefaultTimeout
+  [L11-L11] const StatusActive
+  [L12-L12] const StatusInactive
+  [L15-L18] type Config
+  [L20-L23] type Service
+  [L25-L30] func NewConfig(name string) *Config
+  [L32-L34] func (c *Config) IsValid() bool
+
+  input/utils/helpers.go
+  [L4-L4] var DebugMode
+  [L5-L5] var LogLevel
+  [L8-L10] func FormatMessage(msg string) string
+  [L12-L14] func (u *Utils) Process() error
+  [L16-L16] type Utils
+
+  input/main.go
+  // Main entry point for the CLI application.
+  [L12-L15] func main()
+  [L17-L19] func init()

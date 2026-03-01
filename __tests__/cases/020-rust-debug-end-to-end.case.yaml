@@ -1,0 +1,5 @@
+args:
+  - --debug
+  - input/full-feature.rs
+input/full-feature.rs: "// Main entry point for the application.\n\npub struct App {\n  name: String,\n}\n\nimpl App {\n  pub fn new() -> Self {\n    Self { name: String::new() }\n  }\n\n  pub fn run(&self) {}\n}\n\nasync fn handle_request(req: Request) -> Response {\n  Response::new()\n}\n\nuse std::collections::HashMap;\n\npub trait Service {\n  fn process(&self, input: u64) -> u64;\n}\n"
+stdout: "\e[32m// Main entry point for the application.\e[0m\n\n\e[32mpub struct App\e[0m {\n  name: String,\n}\n\n\e[32mimpl App\e[0m {\n  pub fn new() -> Self {\n    Self { name: String::new() }\n  }\n\n  pub fn run(&self) {}\n}\n\n\e[32masync fn handle_request(req: Request) -> Response\e[0m {\n  Response::new()\n}\n\n\e[32muse std::collections::HashMap\e[0m;\n\n\e[32mpub trait Service\e[0m {\n  fn process(&self, input: u64) -> u64;\n}\n"

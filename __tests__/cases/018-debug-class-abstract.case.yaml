@@ -1,0 +1,21 @@
+args:
+  - --debug
+  - input/abstract-class.ts
+input/abstract-class.ts: |
+  abstract class Base {
+    abstract init(): void;
+    run(): void {
+      this.init();
+    }
+  }
+stdout: "\e[32mabstract class Base\e[0m {
+
+  \  abstract \e[32minit(): void\e[0m;
+
+  \  \e[32mrun(): void\e[0m {
+
+  \    this.init();
+
+  \  }
+
+  }\n"

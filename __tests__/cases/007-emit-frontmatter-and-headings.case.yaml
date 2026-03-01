@@ -1,0 +1,20 @@
+args:
+  - input/sample.md
+input/sample.md: |
+  ---
+  title: 'Sample doc'
+  owner: 'docs-team'
+  ---
+
+  # Overview
+
+  ## Scope
+
+  ### Notes
+stdout: |
+  input/sample.md
+  title: "Sample doc"
+  owner: "docs-team"
+  [L6-L6] # Overview
+  [L8-L8] ## Scope
+  [L10-L10] ### Notes

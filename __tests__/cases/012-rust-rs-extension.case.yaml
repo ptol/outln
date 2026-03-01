@@ -1,0 +1,10 @@
+args:
+  - input/main.rs
+input/main.rs: |
+  // Entry point.
+
+  fn main() {}
+stdout: |
+  input/main.rs
+  // Entry point.
+  [L3-L3] fn main ()

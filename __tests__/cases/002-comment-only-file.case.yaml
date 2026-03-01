@@ -1,0 +1,7 @@
+args:
+  - input/comment-only.ts
+input/comment-only.ts: |
+  // Just a comment, no declarations.
+stdout: |
+  input/comment-only.ts
+  // Just a comment, no declarations.

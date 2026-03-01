@@ -1,0 +1,9 @@
+args:
+  - input/doc-comment-before-regular-comment.rs
+input/doc-comment-before-regular-comment.rs: |
+  //! Module docs stay excluded.
+  // Regular comment should not be treated as file header in this case.
+  fn main() {}
+stdout: |
+  input/doc-comment-before-regular-comment.rs
+  [L3-L3] fn main ()

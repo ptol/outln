@@ -1,0 +1,23 @@
+args:
+  - input/**/*
+input/docs/guide.md: |
+  ---
+  summary: Guide overview.
+  ---
+
+  # Guide
+input/src/with-comment.ts: |
+  /** Utility helpers for HTTP requests. */
+  export const fetcher = () => 1;
+input/src/no-summary.ts: |
+  export const value = 1;
+input/misc/raw.txt: |
+  plain text
+stdout: |
+  glob view: input/**/*
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/docs/guide.md: summary: "Guide overview."
+  input/src/no-summary.ts: (no header comment available)
+  input/src/with-comment.ts: Utility helpers for HTTP requests.
+stderr: FILE input/misc/raw.txt HAS UNSUPPORTED FILE TYPE

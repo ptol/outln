@@ -1,0 +1,10 @@
+args:
+  - input/doc-comments.rs
+input/doc-comments.rs: |
+  //! This is a module doc comment
+
+  /// This is a struct doc comment
+  struct Item {}
+stdout: |
+  input/doc-comments.rs
+  [L4-L4] struct Item

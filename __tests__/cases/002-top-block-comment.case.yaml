@@ -1,0 +1,15 @@
+args:
+  - input/with-top-comment.ts
+input/with-top-comment.ts: |
+  /**
+   * Domain model for account sessions.
+   */
+  export interface Session {
+    id: string;
+  }
+stdout: |
+  input/with-top-comment.ts
+  /**
+   * Domain model for account sessions.
+   */
+  [L4-L6] export interface Session

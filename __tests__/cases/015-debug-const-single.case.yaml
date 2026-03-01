@@ -1,0 +1,6 @@
+args:
+  - --debug
+  - input/declare-const-single.ts
+input/declare-const-single.ts: |
+  declare const singleValue: number;
+stdout: "\e[32mdeclare const singleValue\e[0m: number;\n"

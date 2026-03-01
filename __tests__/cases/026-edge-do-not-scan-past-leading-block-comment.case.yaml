@@ -1,0 +1,9 @@
+args:
+  - input/block-comment-before-regular-comment.rs
+input/block-comment-before-regular-comment.rs: |
+  /* Block comments are not eligible file headers. */
+  // Regular comment after block comment must stay excluded.
+  struct Item {}
+stdout: |
+  input/block-comment-before-regular-comment.rs
+  [L3-L3] struct Item
