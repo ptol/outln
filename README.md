@@ -2,6 +2,8 @@
 
 CLI to print concise file outlines for source files.
 
+You can read about this cli here: [https://blog.fooqux.com/blog/outline-oriented-codebase/](https://blog.fooqux.com/blog/outline-oriented-codebase/)
+
 ## Install
 
 ```bash
