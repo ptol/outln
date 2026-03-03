@@ -1,7 +1,7 @@
 {
   "name": "outln",
   "version": "0.0.0",
-  "description": "CLI for generating structured outlines from TypeScript, JavaScript, Go, Rust, Java, Kotlin, and Markdown files.",
+  "description": "CLI for generating structured outlines from TypeScript, JavaScript, Go, Rust, Java, Kotlin, C#, and Markdown files.",
   "keywords": [
     "cli",
     "outline"
