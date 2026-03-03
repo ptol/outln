@@ -1,0 +1,145 @@
+args:
+  - input/extension-methods.cs
+input/extension-methods.cs: >
+  namespace MyApp.Extensions;
+
+
+  public static class StringExtensions
+
+  {
+      public static bool IsNullOrEmpty(this string value)
+      {
+          return string.IsNullOrEmpty(value);
+      }
+
+      public static string Reverse(this string value)
+      {
+          var chars = value.ToCharArray();
+          Array.Reverse(chars);
+          return new string(chars);
+      }
+
+      public static string ToTitleCase(this string value)
+      {
+          if (string.IsNullOrEmpty(value))
+              return value;
+
+          var words = value.Split(' ');
+          for (int i = 0; i < words.Length; i++)
+          {
+              if (words[i].Length > 0)
+              {
+                  words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();
+              }
+          }
+          return string.Join(' ', words);
+      }
+
+      public static string Truncate(this string value, int maxLength)
+      {
+          if (string.IsNullOrEmpty(value))
+              return value;
+
+          return value.Length <= maxLength ? value : value.Substring(0, maxLength) + "...";
+      }
+  }
+
+
+  public static class EnumerableExtensions
+
+  {
+      public static T Random<T>(this IEnumerable<T> source)
+      {
+          var random = new Random();
+          var list = source.ToList();
+          return list[random.Next(list.Count)];
+      }
+
+      public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source)
+      {
+          var random = new Random();
+          return source.OrderBy(x => random.Next());
+      }
+
+      public static IEnumerable<T> DistinctBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> keySelector)
+      {
+          var seen = new HashSet<TKey>();
+          foreach (var item in source)
+          {
+              if (seen.Add(keySelector(item)))
+              {
+                  yield return item;
+              }
+          }
+      }
+  }
+
+
+  public static class DateTimeExtensions
+
+  {
+      public static DateTime ToEndOfDay(this DateTime date)
+      {
+          return date.Date.AddDays(1).AddTicks(-1);
+      }
+
+      public static DateTime ToStartOfDay(this DateTime date)
+      {
+          return date.Date;
+      }
+
+      public static int Age(this DateTime birthDate)
+      {
+          var today = DateTime.Today;
+          var age = today.Year - birthDate.Year;
+          if (birthDate > today.AddYears(-age))
+              age--;
+          return age;
+      }
+
+      public static bool IsWeekend(this DateTime date)
+      {
+          return date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
+      }
+  }
+
+
+  public static class ObjectExtensions
+
+  {
+      public static T As<T>(this object obj) where T : class
+      {
+          return obj as T;
+      }
+
+      public static bool Is<T>(this object obj) where T : class
+      {
+          return obj is T;
+      }
+
+      public static TResult MapTo<T, TResult>(this T source, Func<T, TResult> mapper)
+      {
+          return mapper(source);
+      }
+  }
+stdout: >
+  input/extension-methods.cs
+
+  [L3-L40] public static class StringExtensions
+    [L5-L8] public static bool IsNullOrEmpty(this string value)
+    [L10-L15] public static string Reverse(this string value)
+    [L17-L31] public static string ToTitleCase(this string value)
+    [L33-L39] public static string Truncate(this string value, int maxLength)
+  [L42-L68] public static class EnumerableExtensions
+    [L44-L49] public static <T> Random(this IEnumerable<T> source)
+    [L51-L55] public static <T> IEnumerable<T> Shuffle(this IEnumerable<T> source)
+    [L57-L67] public static <T, TKey> IEnumerable<T> DistinctBy(this IEnumerable<T> source, Func<T, TKey> keySelector)
+  [L70-L95] public static class DateTimeExtensions
+    [L72-L75] public static ToEndOfDay(this DateTime date)
+    [L77-L80] public static ToStartOfDay(this DateTime date)
+    [L82-L89] public static int Age(this DateTime birthDate)
+    [L91-L94] public static bool IsWeekend(this DateTime date)
+  [L97-L113] public static class ObjectExtensions
+    [L99-L102] public static <T> As(this object obj)
+    [L104-L107] public static <T> bool Is(this object obj)
+    [L109-L112] public static <T, TResult> MapTo(this T source, Func<T, TResult> mapper)

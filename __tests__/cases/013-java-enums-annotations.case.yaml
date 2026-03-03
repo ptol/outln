@@ -1,0 +1,51 @@
+args:
+  - input/enums.java
+input/enums.java: |
+  package com.example;
+
+  enum Color {
+    RED,
+    GREEN,
+    BLUE
+  }
+
+  enum Status {
+    PENDING("Pending"),
+    ACTIVE("Active"),
+    COMPLETED("Completed");
+
+    private final String label;
+
+    Status(String label) {
+      this.label = label;
+    }
+
+    public String getLabel() {
+      return label;
+    }
+  }
+
+  @interface Deprecated {
+    String value() default "";
+  }
+
+  @interface Entity {
+    String tableName();
+  }
+stdout: |
+  input/enums.java
+  [L3-L7] enum Color
+    [L4-L4] enum-constant RED
+    [L5-L5] enum-constant GREEN
+    [L6-L6] enum-constant BLUE
+  [L9-L23] enum Status
+    [L10-L10] enum-constant PENDING
+    [L11-L11] enum-constant ACTIVE
+    [L12-L12] enum-constant COMPLETED
+    [L14-L14] private final String label
+    [L16-L18] Status(String label)
+    [L20-L22] public String getLabel()
+  [L25-L27] annotation-type Deprecated
+    [L26-L26] String value() default ""
+  [L29-L31] annotation-type Entity
+    [L30-L30] String tableName()

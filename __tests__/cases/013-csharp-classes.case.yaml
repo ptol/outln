@@ -1,0 +1,152 @@
+args:
+  - input/classes.cs
+input/classes.cs: >
+  namespace MyApp.Models;
+
+
+  public partial class Person
+
+  {
+      public string FirstName { get; set; }
+      public string LastName { get; set; }
+
+      public Person(string firstName, string lastName)
+      {
+          FirstName = firstName;
+          LastName = lastName;
+      }
+  }
+
+
+  public partial class Person
+
+  {
+      public string FullName => $"{FirstName} {LastName}";
+
+      public override string ToString()
+      {
+          return FullName;
+      }
+  }
+
+
+  public static class StringExtensions
+
+  {
+      public static bool IsNullOrEmpty(this string value)
+      {
+          return string.IsNullOrEmpty(value);
+      }
+
+      public static string Reverse(this string value)
+      {
+          var chars = value.ToCharArray();
+          Array.Reverse(chars);
+          return new string(chars);
+      }
+
+      public static string Capitalize(this string value)
+      {
+          if (string.IsNullOrEmpty(value))
+              return value;
+          return char.ToUpper(value[0]) + value.Substring(1);
+      }
+  }
+
+
+  public static class MathHelpers
+
+  {
+      public static int Square(int x) => x * x;
+      public static int Cube(int x) => x * x * x;
+
+      public static double Average(params int[] numbers)
+      {
+          if (numbers.Length == 0)
+              return 0;
+          return numbers.Average();
+      }
+
+      public static int Max(params int[] numbers)
+      {
+          return numbers.Max();
+      }
+  }
+
+
+  public partial class Order
+
+  {
+      public int Id { get; set; }
+      public DateTime OrderDate { get; set; }
+
+      public Order(int id)
+      {
+          Id = id;
+          OrderDate = DateTime.Now;
+      }
+  }
+
+
+  public partial class Order
+
+  {
+      public List<OrderItem> Items { get; } = new List<OrderItem>();
+
+      public decimal TotalAmount => Items.Sum(item => item.Price * item.Quantity);
+
+      public void AddItem(OrderItem item)
+      {
+          Items.Add(item);
+      }
+  }
+
+
+  public static class ConfigurationManager
+
+  {
+      public static string GetConnectionString()
+      {
+          return "Server=localhost;Database=Test;";
+      }
+
+      public static string GetApiKey()
+      {
+          return "secret-key-123";
+      }
+
+      public static bool IsDebugMode()
+      {
+          return true;
+      }
+  }
+stdout: |
+  input/classes.cs
+  [L3-L13] public partial class Person
+    [L5-L5] public string FirstName { get; set; }
+    [L6-L6] public string LastName { get; set; }
+    [L8-L12] public Person(string firstName, string lastName)
+  [L15-L23] public partial class Person
+    [L17-L17] public string FullName
+    [L19-L22] public override string ToString()
+  [L25-L45] public static class StringExtensions
+    [L27-L30] public static bool IsNullOrEmpty(this string value)
+    [L32-L37] public static string Reverse(this string value)
+    [L39-L44] public static string Capitalize(this string value)
+  [L47-L63] public static class MathHelpers
+    [L49-L49] public static int Square(int x)
+    [L50-L50] public static int Cube(int x)
+    [L52-L57] public static double Average(params int[] numbers)
+    [L59-L62] public static int Max(params int[] numbers)
+  [L65-L75] public partial class Order
+    [L67-L67] public int Id { get; set; }
+    [L68-L68] public DateTime OrderDate { get; set; }
+    [L70-L74] public Order(int id)
+  [L77-L87] public partial class Order
+    [L79-L79] public List<OrderItem> Items { get; }
+    [L81-L81] public decimal TotalAmount
+    [L83-L86] public void AddItem(OrderItem item)
+  [L89-L105] public static class ConfigurationManager
+    [L91-L94] public static string GetConnectionString()
+    [L96-L99] public static string GetApiKey()
+    [L101-L104] public static bool IsDebugMode()

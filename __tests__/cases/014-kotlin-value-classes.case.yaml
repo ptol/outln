@@ -1,0 +1,17 @@
+args:
+  - input/value.kt
+input/value.kt: |
+  package com.example
+
+  @JvmInline
+  value class Person(val name: String)
+
+  @JvmInline
+  value class EmailAddress(val value: String) {
+      fun isValid(): Boolean = value.contains("@")
+  }
+stdout: |
+  input/value.kt
+  [L3-L4] @JvmInline value class Person(val name: String)
+  [L6-L9] @JvmInline value class EmailAddress(val value: String)
+    [L8-L8] fun isValid(): Boolean

@@ -1,0 +1,73 @@
+args:
+  - input/interface-static-methods.java
+input/interface-static-methods.java: |
+  package com.example;
+
+  public interface StringUtils {
+      static boolean isEmpty(String str) {
+          return str == null || str.isEmpty();
+      }
+
+      static String toUpperCase(String str) {
+          return str != null ? str.toUpperCase() : null;
+      }
+
+      static String reverse(String str) {
+          if (str == null) return null;
+          return new StringBuilder(str).reverse().toString();
+      }
+  }
+
+  public interface MathOperations {
+      static int add(int a, int b) {
+          return a + b;
+      }
+
+      static int multiply(int a, int b) {
+          return a * b;
+      }
+
+      static <T extends Comparable<T>> T max(T a, T b) {
+          return a.compareTo(b) > 0 ? a : b;
+      }
+  }
+
+  public interface Factory<T> {
+      T create();
+  }
+
+  public interface PersonFactory extends Factory<String> {
+      static PersonFactory getInstance() {
+          return new PersonFactory() {
+              public String create() {
+                  return "John Doe";
+              }
+          };
+      }
+
+      String create();
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          System.out.println(StringUtils.isEmpty(""));
+          System.out.println(StringUtils.toUpperCase("hello"));
+      }
+  }
+stdout: |
+  input/interface-static-methods.java
+  [L3-L16] public interface StringUtils
+    [L4-L6] static boolean isEmpty(String str)
+    [L8-L10] static String toUpperCase(String str)
+    [L12-L15] static String reverse(String str)
+  [L18-L30] public interface MathOperations
+    [L19-L21] static int add(int a, int b)
+    [L23-L25] static int multiply(int a, int b)
+    [L27-L29] static <T extends Comparable<T>> T max(T a, T b)
+  [L32-L34] public interface Factory<T>
+    [L33-L33] T create()
+  [L36-L46] public interface PersonFactory
+    [L37-L43] static PersonFactory getInstance()
+    [L45-L45] String create()
+  [L48-L53] public class Main
+    [L49-L52] public static void main(String[] args)

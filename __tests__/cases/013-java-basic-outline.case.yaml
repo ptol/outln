@@ -1,0 +1,40 @@
+args:
+  - input/sample.java
+input/sample.java: |
+  package com.example;
+
+  public class Sample {
+    private String name;
+    private int age;
+
+    public Sample(String name, int age) {
+      this.name = name;
+      this.age = age;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public int getAge() {
+      return age;
+    }
+
+    public static void main(String[] args) {
+      System.out.println("Hello");
+    }
+  }
+stdout: |
+  input/sample.java
+  [L3-L27] public class Sample
+    [L4-L4] private String name
+    [L5-L5] private int age
+    [L7-L10] public Sample(String name, int age)
+    [L12-L14] public String getName()
+    [L16-L18] public void setName(String name)
+    [L20-L22] public int getAge()
+    [L24-L26] public static void main(String[] args)

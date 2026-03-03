@@ -1,0 +1,47 @@
+args:
+  - input/inheritance.kt
+input/inheritance.kt: |
+  package com.example
+
+  open class Animal {
+    open fun speak() {}
+  }
+
+  class Dog(val breed: String) : Animal() {
+    override fun speak() {
+      println("Woof")
+    }
+  }
+
+  interface Pet {
+    fun play()
+  }
+
+  interface Named {
+    fun getName(): String
+  }
+
+  class Cat(private val name: String) : Animal(), Pet, Named {
+    override fun play() {}
+
+    override fun getName(): String = name
+  }
+
+  object Singleton {
+    val instance: Singleton = this
+  }
+stdout: |
+  input/inheritance.kt
+  [L3-L5] open class Animal
+    [L4-L4] open fun speak()
+  [L7-L11] class Dog(val breed: String) : Animal()
+    [L8-L10] override fun speak()
+  [L13-L15] interface Pet
+    [L14-L14] fun play()
+  [L17-L19] interface Named
+    [L18-L18] fun getName(): String
+  [L21-L25] class Cat(private val name: String) : Animal(), Pet, Named
+    [L22-L22] override fun play()
+    [L24-L24] override fun getName(): String
+  [L27-L29] object Singleton
+    [L28-L28] val instance: Singleton

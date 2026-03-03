@@ -1,0 +1,46 @@
+args:
+  - input/AnonymousClasses.java
+input/AnonymousClasses.java: |
+  package com.example;
+
+  public class AnonymousClasses {
+      // Anonymous class as field initializer
+      private Runnable runnable = new Runnable() {
+          @Override
+          public void run() {
+              System.out.println("Running");
+          }
+      };
+
+      // Anonymous class in method
+      public void process() {
+          ActionListener listener = new ActionListener() {
+              @Override
+              public void onAction(String event) {
+                  System.out.println("Event: " + event);
+              }
+          };
+      }
+
+      // Anonymous class implementing interface
+      public Comparator<String> getComparator() {
+          return new Comparator<String>() {
+              @Override
+              public int compare(String a, String b) {
+                  return a.compareTo(b);
+              }
+          };
+      }
+  }
+
+  interface ActionListener {
+      void onAction(String event);
+  }
+stdout: |
+  input/AnonymousClasses.java
+  [L3-L31] public class AnonymousClasses
+    [L5-L10] private Runnable runnable
+    [L13-L20] public void process()
+    [L23-L30] public Comparator<String> getComparator()
+  [L33-L35] interface ActionListener
+    [L34-L34] void onAction(String event)

@@ -1,0 +1,172 @@
+args:
+  - input/explicit-implementations.cs
+input/explicit-implementations.cs: |
+  namespace MyApp.Interfaces;
+
+  public interface IWriter
+  {
+      void Write(string message);
+      void WriteLine(string message);
+  }
+
+  public interface ILogger
+  {
+      void Log(string message);
+      void LogError(string error);
+  }
+
+  public class ConsoleWriter : IWriter
+  {
+      void IWriter.Write(string message)
+      {
+          Console.Write(message);
+      }
+
+      void IWriter.WriteLine(string message)
+      {
+          Console.WriteLine(message);
+      }
+
+      public void Write(string message)
+      {
+          Console.Write($"[Console] {message}");
+      }
+
+      public void WriteLine(string message)
+      {
+          Console.WriteLine($"[Console] {message}");
+      }
+  }
+
+  public class FileLogger : ILogger
+  {
+      private string _filePath;
+
+      public FileLogger(string filePath)
+      {
+          _filePath = filePath;
+      }
+
+      void ILogger.Log(string message)
+      {
+          File.AppendAllText(_filePath, message);
+      }
+
+      void ILogger.LogError(string error)
+      {
+          File.AppendAllText(_filePath, $"ERROR: {error}");
+      }
+
+      public void Log(string message)
+      {
+          File.AppendAllText(_filePath, $"[LOG] {message}");
+      }
+  }
+
+  public interface IDataProvider
+  {
+      string this[int index] { get; }
+      void Reset();
+  }
+
+  public class ArrayProvider : IDataProvider
+  {
+      private string[] _data;
+
+      public ArrayProvider(string[] data)
+      {
+          _data = data;
+      }
+
+      string IDataProvider.this[int index]
+      {
+          get { return _data[index]; }
+      }
+
+      void IDataProvider.Reset()
+      {
+          _data = new string[0];
+      }
+
+      public string this[int index]
+      {
+          get { return _data[index] ?? string.Empty; }
+      }
+
+      public void Reset()
+      {
+          Array.Clear(_data, 0, _data.Length);
+      }
+  }
+
+  public interface ICalculator
+  {
+      int Add(int a, int b);
+      int Subtract(int a, int b);
+      int Multiply(int a, int b);
+      int Divide(int a, int b);
+  }
+
+  public class Calculator : ICalculator
+  {
+      int ICalculator.Add(int a, int b) => a + b;
+      int ICalculator.Subtract(int a, int b) => a - b;
+      int ICalculator.Multiply(int a, int b) => a * b;
+      int ICalculator.Divide(int a, int b) => a / b;
+
+      public int Add(int a, int b) => a + b;
+      public int Subtract(int a, int b) => a - b;
+
+      public int Multiply(int a, int b)
+      {
+          return a * b;
+      }
+
+      public int Divide(int a, int b)
+      {
+          if (b == 0)
+              throw new DivideByZeroException();
+          return a / b;
+      }
+  }
+stdout: |
+  input/explicit-implementations.cs
+  [L3-L7] public interface IWriter
+    [L5-L5] void Write(string message)
+    [L6-L6] void WriteLine(string message)
+  [L9-L13] public interface ILogger
+    [L11-L11] void Log(string message)
+    [L12-L12] void LogError(string error)
+  [L15-L36] public class ConsoleWriter
+    [L17-L20] void Write(string message)
+    [L22-L25] void WriteLine(string message)
+    [L27-L30] public void Write(string message)
+    [L32-L35] public void WriteLine(string message)
+  [L38-L61] public class FileLogger
+    [L42-L45] public FileLogger(string filePath)
+    [L47-L50] void Log(string message)
+    [L52-L55] void LogError(string error)
+    [L57-L60] public void Log(string message)
+  [L63-L67] public interface IDataProvider
+    [L65-L65] string this[[int index]]
+    [L66-L66] void Reset()
+  [L69-L97] public class ArrayProvider
+    [L73-L76] public ArrayProvider(string[] data)
+    [L78-L81] string this[[int index]]
+    [L83-L86] void Reset()
+    [L88-L91] public string this[[int index]]
+    [L93-L96] public void Reset()
+  [L99-L105] public interface ICalculator
+    [L101-L101] int Add(int a, int b)
+    [L102-L102] int Subtract(int a, int b)
+    [L103-L103] int Multiply(int a, int b)
+    [L104-L104] int Divide(int a, int b)
+  [L107-L128] public class Calculator
+    [L109-L109] int Add(int a, int b)
+    [L110-L110] int Subtract(int a, int b)
+    [L111-L111] int Multiply(int a, int b)
+    [L112-L112] int Divide(int a, int b)
+    [L114-L114] public int Add(int a, int b)
+    [L115-L115] public int Subtract(int a, int b)
+    [L117-L120] public int Multiply(int a, int b)
+    [L122-L127] public int Divide(int a, int b)

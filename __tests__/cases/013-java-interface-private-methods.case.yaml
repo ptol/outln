@@ -1,0 +1,91 @@
+args:
+  - input/interface-private-methods.java
+input/interface-private-methods.java: |
+  package com.example;
+
+  public interface Logger {
+      default void log(String message) {
+          validateMessage(message);
+          System.out.println("LOG: " + message);
+      }
+
+      default void error(String message) {
+          validateMessage(message);
+          System.out.println("ERROR: " + message);
+      }
+
+      private void validateMessage(String message) {
+          if (message == null || message.isEmpty()) {
+              throw new IllegalArgumentException("Message cannot be empty");
+          }
+      }
+
+      private static String getTimestamp() {
+          return java.time.Instant.now().toString();
+      }
+  }
+
+  public interface Calculator {
+      default int add(int a, int b) {
+          return a + b;
+      }
+
+      default int multiply(int a, int b) {
+          return a * b;
+      }
+
+      default int calculate(int a, int b, String operation) {
+          return performCalculation(a, b, operation);
+      }
+
+      private int performCalculation(int a, int b, String operation) {
+          switch (operation) {
+              case "+": return a + b;
+              case "*": return a * b;
+              case "-": return a - b;
+              case "/": return b != 0 ? a / b : 0;
+              default: throw new IllegalArgumentException("Invalid operation");
+          }
+      }
+  }
+
+  public interface DataProcessor {
+      default void process(String data) {
+          String cleanData = cleanData(data);
+          processCleanData(cleanData);
+      }
+
+      private String cleanData(String data) {
+          return data.trim().replaceAll("\\s+", " ");
+      }
+
+      private void processCleanData(String data) {
+          System.out.println("Processing: " + data);
+      }
+  }
+
+  public class Main implements Logger {
+      public static void main(String[] args) {
+          Main logger = new Main();
+          logger.log("Hello, World!");
+          logger.error("An error occurred");
+      }
+  }
+stdout: |
+  input/interface-private-methods.java
+  [L3-L23] public interface Logger
+    [L4-L7] default void log(String message)
+    [L9-L12] default void error(String message)
+    [L14-L18] private void validateMessage(String message)
+    [L20-L22] private static String getTimestamp()
+  [L25-L47] public interface Calculator
+    [L26-L28] default int add(int a, int b)
+    [L30-L32] default int multiply(int a, int b)
+    [L34-L36] default int calculate(int a, int b, String operation)
+    [L38-L46] private int performCalculation(int a, int b, String operation)
+  [L49-L62] public interface DataProcessor
+    [L50-L53] default void process(String data)
+    [L55-L57] private String cleanData(String data)
+    [L59-L61] private void processCleanData(String data)
+  [L64-L70] public class Main implements Logger
+    [L65-L69] public static void main(String[] args)

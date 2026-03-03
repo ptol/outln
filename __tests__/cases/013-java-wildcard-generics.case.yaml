@@ -1,0 +1,128 @@
+args:
+  - input/wildcard-generics.java
+input/wildcard-generics.java: >
+  package com.example;
+
+
+  import java.util.List;
+
+  import java.util.ArrayList;
+
+
+  public class WildcardExample {
+      public void printList(List<?> list) {
+          for (Object item : list) {
+              System.out.println(item);
+          }
+      }
+
+      public void addNumbers(List<? extends Number> list) {
+          double sum = 0;
+          for (Number num : list) {
+              sum += num.doubleValue();
+          }
+          System.out.println("Sum: " + sum);
+      }
+
+      public void addStrings(List<? super String> list) {
+          list.add("Hello");
+      }
+
+      public List<?> copyList(List<?> source) {
+          return new ArrayList<>(source);
+      }
+
+      public <T> void processList(List<? extends T> list, T item) {
+          for (T element : list) {
+              System.out.println(element);
+          }
+          list.add(item);
+      }
+
+      public boolean containsAll(List<?> list1, List<?> list2) {
+          for (Object item : list1) {
+              if (!list2.contains(item)) {
+                  return false;
+              }
+          }
+          return true;
+      }
+
+      public void printUpperBounds(List<? extends Number> nums, List<? extends Comparable<?>> items) {
+          System.out.println("Numbers: " + nums.size());
+          System.out.println("Items: " + items.size());
+      }
+
+      public void printLowerBounds(List<? super Number> nums, List<? super String> strs) {
+          nums.add(42);
+          strs.add("Hello");
+      }
+  }
+
+
+  class Pair<T, U> {
+      private T first;
+      private U second;
+
+      public Pair(T first, U second) {
+          this.first = first;
+          this.second = second;
+      }
+
+      public void setFirst(T first) {
+          this.first = first;
+      }
+
+      public void setSecond(U second) {
+          this.second = second;
+      }
+  }
+
+
+  class PairUtil {
+      public void swapFirst(Pair<? extends Number, ?> pair, Number newValue) {
+          pair.setFirst(newValue);
+      }
+
+      public <T> void copyFirst(Pair<? extends T, ?> source, Pair<T, ?> target) {
+          T value = extractFirst(source);
+          target.setFirst(value);
+      }
+
+      private <T> T extractFirst(Pair<T, ?> pair) {
+          return pair.first;
+      }
+  }
+
+
+  interface Repository<T> {
+      void save(T entity);
+      T findById(int id);
+      List<? extends T> findAll();
+  }
+stdout: >
+  input/wildcard-generics.java
+
+  [L6-L54] public class WildcardExample
+    [L7-L11] public void printList(List<?> list)
+    [L13-L19] public void addNumbers(List<? extends Number> list)
+    [L21-L23] public void addStrings(List<? super String> list)
+    [L25-L27] public List<?> copyList(List<?> source)
+    [L29-L34] public <T> void processList(List<? extends T> list, T item)
+    [L36-L43] public boolean containsAll(List<?> list1, List<?> list2)
+    [L45-L48] public void printUpperBounds(List<? extends Number> nums, List<? extends Comparable<?>> items)
+    [L50-L53] public void printLowerBounds(List<? super Number> nums, List<? super String> strs)
+  [L56-L72] class Pair<T, U>
+    [L57-L57] private T first
+    [L58-L58] private U second
+    [L60-L63] public Pair(T first, U second)
+    [L65-L67] public void setFirst(T first)
+    [L69-L71] public void setSecond(U second)
+  [L74-L87] class PairUtil
+    [L75-L77] public void swapFirst(Pair<? extends Number, ?> pair, Number newValue)
+    [L79-L82] public <T> void copyFirst(Pair<? extends T, ?> source, Pair<T, ?> target)
+    [L84-L86] private <T> T extractFirst(Pair<T, ?> pair)
+  [L89-L93] interface Repository<T>
+    [L90-L90] void save(T entity)
+    [L91-L91] T findById(int id)
+    [L92-L92] List<? extends T> findAll()

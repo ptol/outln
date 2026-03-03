@@ -1,0 +1,30 @@
+args:
+  - input/sealed.kt
+input/sealed.kt: |
+  package com.example
+
+  sealed class Shape {
+      abstract fun area(): Double
+  }
+
+  class Circle(val radius: Double) : Shape() {
+      override fun area(): Double = Math.PI * radius * radius
+  }
+
+  sealed interface Drawable {
+      fun draw(): String
+  }
+
+  class Canvas : Drawable {
+      override fun draw(): String = "canvas"
+  }
+stdout: |
+  input/sealed.kt
+  [L3-L5] sealed class Shape
+    [L4-L4] abstract fun area(): Double
+  [L7-L9] class Circle(val radius: Double) : Shape()
+    [L8-L8] override fun area(): Double
+  [L11-L13] sealed interface Drawable
+    [L12-L12] fun draw(): String
+  [L15-L17] class Canvas : Drawable
+    [L16-L16] override fun draw(): String

@@ -1,0 +1,94 @@
+args:
+  - input/indexers.cs
+input/indexers.cs: |
+  namespace MyApp.Collections;
+
+  public class StringCollection
+  {
+      private string[] _items;
+
+      public StringCollection(string[] items)
+      {
+          _items = items;
+      }
+
+      public string this[int index]
+      {
+          get { return _items[index]; }
+          set { _items[index] = value; }
+      }
+  }
+
+  public class Matrix
+  {
+      private int[,] _data;
+
+      public Matrix(int rows, int cols)
+      {
+          _data = new int[rows, cols];
+      }
+
+      public int this[int row, int col]
+      {
+          get => _data[row, col];
+          set => _data[row, col] = value;
+      }
+  }
+
+  public class SparseArray
+  {
+      public int this[int index] => index * 2;
+
+      public int this[string key]
+      {
+          get => key.Length;
+      }
+  }
+
+  public class ReadOnlyCollection
+  {
+      private int[] _items;
+
+      public ReadOnlyCollection(int[] items)
+      {
+          _items = items;
+      }
+
+      public int this[int index] => _items[index];
+  }
+
+  public interface IIndexer
+  {
+      string this[int index] { get; }
+      string this[string key] { get; set; }
+  }
+
+  public class GenericIndexer<T>
+  {
+      private T[] _items;
+
+      public T this[int index]
+      {
+          get => _items[index];
+          set => _items[index] = value;
+      }
+  }
+stdout: |
+  input/indexers.cs
+  [L3-L17] public class StringCollection
+    [L7-L10] public StringCollection(string[] items)
+    [L12-L16] public string this[[int index]]
+  [L19-L33] public class Matrix
+    [L23-L26] public Matrix(int rows, int cols)
+    [L28-L32] public int this[[int row, int col]]
+  [L35-L43] public class SparseArray
+    [L37-L37] public int this[[int index]]
+    [L39-L42] public int this[[string key]]
+  [L45-L55] public class ReadOnlyCollection
+    [L49-L52] public ReadOnlyCollection(int[] items)
+    [L54-L54] public int this[[int index]]
+  [L57-L61] public interface IIndexer
+    [L59-L59] string this[[int index]]
+    [L60-L60] string this[[string key]]
+  [L63-L72] public class GenericIndexer
+    [L67-L71] public T this[[int index]]

@@ -1,0 +1,33 @@
+args:
+  - input/nested.java
+input/nested.java: |
+  package com.example;
+
+  public class Outer {
+      public class Level1 {
+          public class Level2 {
+              public class Level3 {
+                  public class Level4 {
+                      public void deep() {}
+                  }
+              }
+          }
+      }
+      
+      public static class StaticNested {
+          public class AnotherDeep {
+              public void method() {}
+          }
+      }
+  }
+stdout: |
+  input/nested.java
+  [L3-L19] public class Outer
+    [L4-L12] public class Level1
+      [L5-L11] public class Level2
+        [L6-L10] public class Level3
+          [L7-L9] public class Level4
+            [L8-L8] public void deep()
+    [L14-L18] public static class StaticNested
+      [L15-L17] public class AnotherDeep
+        [L16-L16] public void method()

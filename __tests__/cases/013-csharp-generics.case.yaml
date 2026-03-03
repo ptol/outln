@@ -1,0 +1,68 @@
+args:
+  - input/generics.cs
+input/generics.cs: |
+  namespace MyApp.Collections;
+
+  public class Box<T> {
+      private T value;
+
+      public Box(T value) {
+          this.value = value;
+      }
+
+      public T GetValue() {
+          return value;
+      }
+  }
+
+  public class Pair<A, B> {
+      private A first;
+      private B second;
+
+      public Pair(A first, B second) {
+          this.first = first;
+          this.second = second;
+      }
+
+      public A GetFirst() { return first; }
+      public B GetSecond() { return second; }
+  }
+
+  public class Triple<T, U, V> {
+      private T first;
+      private U second;
+      private V third;
+
+      public Triple(T first, U second, V third) {
+          this.first = first;
+          this.second = second;
+          this.third = third;
+      }
+  }
+
+  public class Bounded<T> where T : IComparable<T> {
+      private T value;
+
+      public Bounded(T value) {
+          this.value = value;
+      }
+  }
+
+  public interface IFunction<T, R> {
+      R Apply(T t);
+  }
+stdout: |
+  input/generics.cs
+  [L3-L13] public class Box
+    [L6-L8] public Box(T value)
+    [L10-L12] public GetValue()
+  [L15-L26] public class Pair
+    [L19-L22] public Pair(A first, B second)
+    [L24-L24] public GetFirst()
+    [L25-L25] public GetSecond()
+  [L28-L38] public class Triple
+    [L33-L37] public Triple(T first, U second, V third)
+  [L40-L46] public class Bounded
+    [L43-L45] public Bounded(T value)
+  [L48-L50] public interface IFunction<T, R>
+    [L49-L49] Apply(T t)
