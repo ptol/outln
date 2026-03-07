@@ -1,0 +1,152 @@
+args:
+  - input/modifiers.cs
+input/modifiers.cs: |
+  namespace MyApp.Shapes;
+
+  public abstract class Shape
+  {
+      public abstract double Area();
+
+      public virtual double Perimeter()
+      {
+          return 0;
+      }
+
+      public sealed void Display()
+      {
+          Console.WriteLine("Shape");
+      }
+  }
+
+  public class Circle : Shape
+  {
+      public double Radius;
+
+      public Circle(double radius)
+      {
+          Radius = radius;
+      }
+
+      public override double Area()
+      {
+          return Math.PI * Radius * Radius;
+      }
+
+      public override double Perimeter()
+      {
+          return 2 * Math.PI * Radius;
+      }
+  }
+
+  public class Rectangle : Shape
+  {
+      public double Width;
+      public double Height;
+
+      public Rectangle(double width, double height)
+      {
+          Width = width;
+          Height = height;
+      }
+
+      public override double Area()
+      {
+          return Width * Height;
+      }
+
+      public override double Perimeter()
+      {
+          return 2 * (Width + Height);
+      }
+  }
+
+  public abstract class Polygon : Shape
+  {
+      public int SideCount;
+      public abstract double CalculateArea();
+  }
+
+  public sealed class Triangle : Polygon
+  {
+      public double Base;
+      public double Height;
+
+      public Triangle(double @base, double height)
+      {
+          Base = @base;
+          Height = height;
+          SideCount = 3;
+      }
+
+      public override double Area()
+      {
+          return 0.5 * Base * Height;
+      }
+
+      public override double CalculateArea()
+      {
+          return 0.5 * Base * Height;
+      }
+  }
+
+  public class AsyncExample
+  {
+      public async Task<int> ComputeAsync()
+      {
+          await Task.Delay(100);
+          return 42;
+      }
+
+      public async Task<string> ProcessAsync(string input)
+      {
+          await Task.Delay(50);
+          return input.ToUpper();
+      }
+
+      public async Task ExecuteAsync()
+      {
+          var result = await ComputeAsync();
+          var processed = await ProcessAsync("hello");
+      }
+  }
+
+  public interface IMessageProcessor
+  {
+      Task ProcessAsync(Message message);
+  }
+
+  public class MessageProcessor : IMessageProcessor
+  {
+      public async Task ProcessAsync(Message message)
+      {
+          await Task.CompletedTask;
+      }
+  }
+stdout: |
+  input/modifiers.cs
+  [L3-L16] public abstract class Shape
+    [L5-L5] public abstract double Area()
+    [L7-L10] public virtual double Perimeter()
+    [L12-L15] public sealed void Display()
+  [L18-L36] public class Circle
+    [L22-L25] public Circle(double radius)
+    [L27-L30] public override double Area()
+    [L32-L35] public override double Perimeter()
+  [L38-L58] public class Rectangle
+    [L43-L47] public Rectangle(double width, double height)
+    [L49-L52] public override double Area()
+    [L54-L57] public override double Perimeter()
+  [L60-L64] public abstract class Polygon
+    [L63-L63] public abstract double CalculateArea()
+  [L66-L87] public sealed class Triangle
+    [L71-L76] public Triangle(double @base, double height)
+    [L78-L81] public override double Area()
+    [L83-L86] public override double CalculateArea()
+  [L89-L108] public class AsyncExample
+    [L91-L95] public async Task<int> ComputeAsync()
+    [L97-L101] public async Task<string> ProcessAsync(string input)
+    [L103-L107] public async ExecuteAsync()
+  [L110-L113] public interface IMessageProcessor
+    [L112-L112] ProcessAsync(Message message)
+  [L115-L121] public class MessageProcessor
+    [L117-L120] public async ProcessAsync(Message message)

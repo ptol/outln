@@ -1,0 +1,85 @@
+args:
+  - input/fields.cs
+input/fields.cs: |
+  namespace MyApp.Data;
+
+  public class Configuration
+  {
+      public const int MaxConnections = 100;
+      public const int DefaultTimeout = 30;
+      public const string DefaultEndpoint = "https://api.example.com";
+      public const double Pi = 3.14159;
+
+      private readonly string _connectionString;
+      private readonly DateTime _createdAt;
+      private readonly int _id;
+
+      public readonly string Server;
+      public readonly int Port;
+
+      public Configuration(string connectionString)
+      {
+          _connectionString = connectionString;
+          _createdAt = DateTime.Now;
+          _id = Guid.NewGuid().GetHashCode();
+          Server = "localhost";
+          Port = 8080;
+      }
+
+      public string ConnectionString => _connectionString;
+      public DateTime CreatedAt => _createdAt;
+      public int Id => _id;
+
+      private int _count;
+      public int Count;
+
+      public readonly struct Point
+      {
+          public readonly int X;
+          public readonly int Y;
+
+          public Point(int x, int y)
+          {
+              X = x;
+              Y = y;
+          }
+      }
+  }
+
+  public static class Constants
+  {
+      public const string ApiKey = "abc123";
+      public const int MaxRetries = 3;
+      public const bool ProductionMode = true;
+
+      private const string _internalKey = "internal";
+  }
+
+  public class ImmutableData
+  {
+      public readonly int Value;
+      public readonly string Name;
+      public readonly DateTime Timestamp;
+
+      public ImmutableData(int value, string name)
+      {
+          Value = value;
+          Name = name;
+          Timestamp = DateTime.Now;
+      }
+
+      public const int MaxValue = int.MaxValue;
+      public const string Version = "1.0.0";
+  }
+stdout: |
+  input/fields.cs
+  [L3-L44] public class Configuration
+    [L17-L24] public Configuration(string connectionString)
+    [L26-L26] public string ConnectionString
+    [L27-L27] public DateTime CreatedAt
+    [L28-L28] public int Id
+    [L33-L43] public readonly struct Point
+      [L38-L42] public Point(int x, int y)
+  [L46-L53] public static class Constants
+  [L55-L70] public class ImmutableData
+    [L61-L66] public ImmutableData(int value, string name)

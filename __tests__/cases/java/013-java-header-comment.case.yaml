@@ -1,0 +1,20 @@
+args:
+  - input/HeaderComment.java
+input/HeaderComment.java: |
+  /**
+   * This is a header comment for the file.
+   * It provides an overview of what this class does.
+   */
+  package com.example;
+
+  public class HeaderComment {
+    public void method() {}
+  }
+stdout: |
+  input/HeaderComment.java
+  /**
+  * This is a header comment for the file.
+  * It provides an overview of what this class does.
+  */
+  [L7-L9] public class HeaderComment
+    [L8-L8] public void method()

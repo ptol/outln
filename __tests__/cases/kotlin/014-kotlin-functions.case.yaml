@@ -1,0 +1,34 @@
+args:
+  - input/functions.kt
+input/functions.kt: |
+  package com.example
+
+  fun hello(): Unit = println("Hello")
+
+  fun add(a: Int, b: Int): Int = a + b
+
+  fun greet(name: String): String {
+    return "Hello, $name"
+  }
+
+  fun String.exclaim(): String = this + "!"
+
+  fun List<Int>.sum(): Int {
+    var total = 0
+    for (item in this) {
+      total += item
+    }
+    return total
+  }
+
+  infix fun Int.timesRepeated(action: () -> Unit) {
+    repeat(this) { action() }
+  }
+stdout: |
+  input/functions.kt
+  [L3-L3] fun hello(): Unit
+  [L5-L5] fun add(a: Int, b: Int): Int
+  [L7-L9] fun greet(name: String): String
+  [L11-L11] fun String.exclaim(): String
+  [L13-L19] fun List<Int>.sum(): Int
+  [L21-L23] infix fun Int.timesRepeated(action: () -> Unit)

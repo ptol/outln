@@ -1,0 +1,63 @@
+args:
+  - input/ inheritance.java
+input/ inheritance.java: |
+  package com.example;
+
+  class Animal {
+    public void speak() {}
+  }
+
+  public class Dog extends Animal {
+    private String breed;
+
+    public Dog(String breed) {
+      super();
+      this.breed = breed;
+    }
+
+    @Override
+    public void speak() {
+      System.out.println("Woof");
+    }
+  }
+
+  interface Pet {
+    void play();
+  }
+
+  interface Named {
+    String getName();
+  }
+
+  public class Cat extends Animal implements Pet, Named {
+    private String name;
+
+    public Cat(String name) {
+      this.name = name;
+    }
+
+    @Override
+    public void play() {}
+
+    @Override
+    public String getName() {
+      return name;
+    }
+  }
+stdout: |
+  input/ inheritance.java
+  [L3-L5] class Animal
+    [L4-L4] public void speak()
+  [L7-L19] public class Dog extends Animal
+    [L8-L8] private String breed
+    [L10-L13] public Dog(String breed)
+    [L15-L18] @Override public void speak()
+  [L21-L23] interface Pet
+    [L22-L22] void play()
+  [L25-L27] interface Named
+    [L26-L26] String getName()
+  [L29-L43] public class Cat extends Animal implements Pet, Named
+    [L30-L30] private String name
+    [L32-L34] public Cat(String name)
+    [L36-L37] @Override public void play()
+    [L39-L42] @Override public String getName()

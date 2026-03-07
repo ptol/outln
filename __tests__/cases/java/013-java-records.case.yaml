@@ -1,0 +1,29 @@
+args:
+  - input/records.java
+input/records.java: |
+  package com.example;
+
+  public record Person(String name, int age) {
+      public Person {
+          if (age < 0) {
+              throw new IllegalArgumentException("Age cannot be negative");
+          }
+      }
+      
+      public String greeting() {
+          return "Hello, " + name;
+      }
+  }
+
+  public record Point(int x, int y) {
+      public static Point origin() {
+          return new Point(0, 0);
+      }
+  }
+stdout: |
+  input/records.java
+  [L3-L13] public record Person (String name, int age)
+    [L4-L8] public Person()
+    [L10-L12] public String greeting()
+  [L15-L19] public record Point (int x, int y)
+    [L16-L18] public static Point origin()

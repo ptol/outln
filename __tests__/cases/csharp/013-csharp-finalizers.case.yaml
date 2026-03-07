@@ -1,0 +1,106 @@
+args:
+  - input/finalizers.cs
+input/finalizers.cs: |
+  namespace MyApp.Resources;
+
+  public class FileHandle
+  {
+      private IntPtr _handle;
+
+      public FileHandle(IntPtr handle)
+      {
+          _handle = handle;
+      }
+
+      ~FileHandle()
+      {
+          Close();
+      }
+
+      private void Close()
+      {
+          if (_handle != IntPtr.Zero)
+          {
+              NativeMethods.CloseHandle(_handle);
+              _handle = IntPtr.Zero;
+          }
+      }
+  }
+
+  public class DatabaseConnection
+  {
+      private string _connectionString;
+
+      public DatabaseConnection(string connectionString)
+      {
+          _connectionString = connectionString;
+      }
+
+      ~DatabaseConnection()
+      {
+          Dispose();
+      }
+
+      private void Dispose()
+      {
+          if (_connectionString != null)
+          {
+              NativeMethods.CloseConnection(_connectionString);
+              _connectionString = null;
+          }
+      }
+  }
+
+  public class UnmanagedResource
+  {
+      private IntPtr _resource;
+
+      public UnmanagedResource(IntPtr resource)
+      {
+          _resource = resource;
+      }
+
+      ~UnmanagedResource()
+      {
+          Release();
+      }
+
+      private void Release()
+      {
+          if (_resource != IntPtr.Zero)
+          {
+              NativeMethods.ReleaseResource(_resource);
+              _resource = IntPtr.Zero;
+          }
+      }
+  }
+
+  public static class NativeMethods
+  {
+      public static void CloseHandle(IntPtr handle)
+      {
+      }
+
+      public static void CloseConnection(string connectionString)
+      {
+      }
+
+      public static void ReleaseResource(IntPtr resource)
+      {
+      }
+  }
+stdout: |
+  input/finalizers.cs
+  [L3-L25] public class FileHandle
+    [L7-L10] public FileHandle(IntPtr handle)
+    [L17-L24] private void Close()
+  [L27-L49] public class DatabaseConnection
+    [L31-L34] public DatabaseConnection(string connectionString)
+    [L41-L48] private void Dispose()
+  [L51-L73] public class UnmanagedResource
+    [L55-L58] public UnmanagedResource(IntPtr resource)
+    [L65-L72] private void Release()
+  [L75-L88] public static class NativeMethods
+    [L77-L79] public static void CloseHandle(IntPtr handle)
+    [L81-L83] public static void CloseConnection(string connectionString)
+    [L85-L87] public static void ReleaseResource(IntPtr resource)

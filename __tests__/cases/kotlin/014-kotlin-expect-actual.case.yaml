@@ -1,0 +1,58 @@
+args:
+  - input/expect-actual.kt
+input/expect-actual.kt: |
+  package com.example
+
+  // Expect declarations (in common module)
+  expect class Platform() {
+      fun getPlatformName(): String
+  }
+
+  expect object Database {
+      fun connect(): Connection
+      fun disconnect()
+  }
+
+  expect fun getPlatformType(): String
+
+  expect val platformVersion: String
+
+  // Actual declarations (in platform-specific module)
+  actual class Platform {
+      actual fun getPlatformName(): String = "JVM"
+  }
+
+  actual object Database {
+      actual fun connect(): Connection = RealConnection()
+      actual fun disconnect() = println("Disconnected")
+  }
+
+  actual fun getPlatformType(): String = "JVM"
+
+  actual val platformVersion: String = "1.0.0"
+
+  class Connection {
+      fun close() = println("Closed")
+  }
+
+  class RealConnection : Connection()
+stdout: |
+  input/expect-actual.kt
+  // Expect declarations (in common module)
+  [L4-L6] expect class Platform()
+    [L5-L5] fun getPlatformName(): String
+  [L8-L11] expect object Database
+    [L9-L9] fun connect(): Connection
+    [L10-L10] fun disconnect()
+  [L13-L13] expect fun getPlatformType(): String
+  [L15-L15] expect val platformVersion: String
+  [L18-L20] actual class Platform
+    [L19-L19] actual fun getPlatformName(): String
+  [L22-L25] actual object Database
+    [L23-L23] actual fun connect(): Connection
+    [L24-L24] actual fun disconnect()
+  [L27-L27] actual fun getPlatformType(): String
+  [L29-L29] actual val platformVersion: String
+  [L31-L33] class Connection
+    [L32-L32] fun close()
+  [L35-L35] class RealConnection : Connection()

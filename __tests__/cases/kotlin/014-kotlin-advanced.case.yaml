@@ -1,0 +1,153 @@
+args:
+  - input/advanced.kt
+input/advanced.kt: |
+  package com.example
+
+  // Lateinit properties
+  class LateinitExample {
+      lateinit var name: String
+      lateinit var data: List<String>
+
+      fun init() {
+          name = "Test"
+          data = listOf("a", "b")
+      }
+  }
+
+  // Inline properties
+  class InlinePropertyExample {
+      inline val inlineProp: String
+          get() = "inline"
+
+      var normal: String = "normal"
+  }
+
+  // Inner classes
+  class Outer {
+      private val outerValue = "outer"
+
+      inner class Inner {
+          fun accessOuter() = outerValue
+      }
+
+      class Nested {
+          // Cannot access outerValue directly
+      }
+  }
+
+  // Nested objects
+  class Container {
+      object NestedObject {
+          fun doSomething() = "nested object"
+      }
+
+      companion object {
+          fun create() = Container()
+      }
+  }
+
+  // Delegated properties
+  import kotlin.properties.Delegates
+
+  class DelegatedExample {
+      var observable: String by Delegates.observable("initial") { property, oldValue, newValue ->
+          println("$oldValue -> $newValue")
+      }
+
+      val lazyValue: String by lazy {
+          println("computed!")
+          "lazy"
+      }
+
+      var vetoable: Int by Delegates.vetoable(0) { property, oldValue, newValue ->
+          newValue > 0
+      }
+  }
+
+  // Init blocks
+  class InitExample(val name: String) {
+      init {
+          println("Init 1: $name")
+      }
+
+      val upper = name.uppercase()
+
+      init {
+          println("Init 2: $upper")
+      }
+  }
+
+  // Local classes
+  fun processLocal() {
+      class LocalProcessor(val prefix: String) {
+          fun process(input: String): String = prefix + input
+      }
+
+      val processor = LocalProcessor("Processed: ")
+      println(processor.process("test"))
+  }
+
+  // Anonymous objects
+  fun createListener() = object {
+      fun onClick() = println("clicked")
+      fun onHover() = println("hovered")
+  }
+
+  interface ClickListener {
+      fun onClick()
+  }
+
+  fun createClickListener(): ClickListener = object : ClickListener {
+      override fun onClick() = println("clicked!")
+  }
+
+  // Value classes with inline modifier (Kotlin 1.5+)
+  inline value class InlineUserId(val value: String)
+
+  inline value class InlineEmail(val value: String) {
+      fun isValid(): Boolean = value.contains("@")
+  }
+
+  @JvmInline
+  value class LegacyEmail(val value: String)
+stdout: |
+  input/advanced.kt
+  // Lateinit properties
+  [L4-L12] class LateinitExample
+    [L5-L5] lateinit var name: String
+    [L6-L6] lateinit var data: List<String>
+    [L8-L11] fun init()
+  [L15-L20] class InlinePropertyExample
+    [L16-L17] inline val inlineProp: String
+    [L19-L19] var normal: String
+  [L23-L33] class Outer
+    [L24-L24] private val outerValue
+    [L26-L28] inner class Inner
+      [L27-L27] fun accessOuter()
+    [L30-L32] class Nested
+  [L36-L44] class Container
+    [L37-L39] object NestedObject
+      [L38-L38] fun doSomething()
+    [L41-L43] companion object Companion
+      [L42-L42] fun create()
+  [L49-L62] class DelegatedExample
+    [L50-L52] var observable: String by Delegates.observable("initial") { property, oldValue, newValue -> println("$oldValue -> $newValue") }
+    [L54-L57] val lazyValue: String by lazy { println("computed!") "lazy" }
+    [L59-L61] var vetoable: Int by Delegates.vetoable(0) { property, oldValue, newValue -> newValue > 0 }
+  [L65-L75] class InitExample(val name: String)
+    [L66-L68] init
+    [L70-L70] val upper
+    [L72-L74] init
+  [L78-L85] fun processLocal()
+    [L79-L81] class LocalProcessor(val prefix: String)
+      [L80-L80] fun process(input: String): String
+  [L88-L91] fun createListener()
+    [L88-L91] object
+  [L93-L95] interface ClickListener
+    [L94-L94] fun onClick()
+  [L97-L99] fun createClickListener(): ClickListener
+    [L97-L99] object : ClickListener
+  [L102-L102] inline value class InlineUserId(val value: String)
+  [L104-L106] inline value class InlineEmail(val value: String)
+    [L105-L105] fun isValid(): Boolean
+  [L108-L109] @JvmInline value class LegacyEmail(val value: String)

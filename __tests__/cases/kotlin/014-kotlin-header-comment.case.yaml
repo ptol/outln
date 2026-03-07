@@ -1,0 +1,20 @@
+args:
+  - input/HeaderComment.kt
+input/HeaderComment.kt: |
+  /**
+   * This is a header comment for the Kotlin file.
+   * It provides an overview of the functionality.
+   */
+  package com.example
+
+  class HeaderComment {
+    fun method() {}
+  }
+stdout: |
+  input/HeaderComment.kt
+  /**
+  * This is a header comment for the Kotlin file.
+  * It provides an overview of the functionality.
+  */
+  [L7-L9] class HeaderComment
+    [L8-L8] fun method()

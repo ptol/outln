@@ -1,0 +1,93 @@
+args:
+  - input/varargs.java
+input/varargs.java: |
+  package com.example;
+
+  public class VarargsExample {
+      public void printNames(String... names) {
+          for (String name : names) {
+              System.out.println(name);
+          }
+      }
+
+      public int sum(int... numbers) {
+          int total = 0;
+          for (int num : numbers) {
+              total += num;
+          }
+          return total;
+      }
+
+      public String concatenate(String delimiter, String... parts) {
+          return String.join(delimiter, parts);
+      }
+
+      public void printAll(Object... objects) {
+          for (Object obj : objects) {
+              System.out.println(obj);
+          }
+      }
+
+      public String format(String template, Object... args) {
+          return String.format(template, args);
+      }
+
+      public static void main(String... args) {
+          VarargsExample example = new VarargsExample();
+          example.printNames("Alice", "Bob", "Charlie");
+          System.out.println("Sum: " + example.sum(1, 2, 3, 4, 5));
+      }
+  }
+
+  class Calculator {
+      public int calculate(String operation, int... numbers) {
+          if (numbers.length == 0) return 0;
+
+          int result = numbers[0];
+          for (int i = 1; i < numbers.length; i++) {
+              switch (operation) {
+                  case "+":
+                      result += numbers[i];
+                      break;
+                  case "*":
+                      result *= numbers[i];
+                      break;
+                  case "-":
+                      result -= numbers[i];
+                      break;
+              }
+          }
+          return result;
+      }
+  }
+
+  class StringUtils {
+      public String join(String separator, String... strings) {
+          return String.join(separator, strings);
+      }
+
+      public String repeat(String str, int... times) {
+          if (times.length == 0) return str;
+          StringBuilder sb = new StringBuilder();
+          for (int t : times) {
+              for (int i = 0; i < t; i++) {
+                  sb.append(str);
+              }
+          }
+          return sb.toString();
+      }
+  }
+stdout: |
+  input/varargs.java
+  [L3-L37] public class VarargsExample
+    [L4-L8] public void printNames(String... names)
+    [L10-L16] public int sum(int... numbers)
+    [L18-L20] public String concatenate(String delimiter, String... parts)
+    [L22-L26] public void printAll(Object... objects)
+    [L28-L30] public String format(String template, Object... args)
+    [L32-L36] public static void main(String... args)
+  [L39-L59] class Calculator
+    [L40-L58] public int calculate(String operation, int... numbers)
+  [L61-L76] class StringUtils
+    [L62-L64] public String join(String separator, String... strings)
+    [L66-L75] public String repeat(String str, int... times)

@@ -1,0 +1,37 @@
+args:
+  - input/static-imports.java
+input/static-imports.java: |
+  package com.example;
+
+  import static java.lang.Math.PI;
+  import static java.lang.Math.sqrt;
+  import static java.util.Collections.emptyList;
+  import static java.util.Collections.*;
+
+  public class Circle {
+      private double radius;
+
+      public Circle(double radius) {
+          this.radius = radius;
+      }
+
+      public double area() {
+          return PI * radius * radius;
+      }
+
+      public double diagonal() {
+          return sqrt(2) * radius;
+      }
+
+      public java.util.List<String> getEmptyList() {
+          return emptyList();
+      }
+  }
+stdout: |
+  input/static-imports.java
+  [L8-L26] public class Circle
+    [L9-L9] private double radius
+    [L11-L13] public Circle(double radius)
+    [L15-L17] public double area()
+    [L19-L21] public double diagonal()
+    [L23-L25] public java.util.List<String> getEmptyList()

@@ -1,0 +1,169 @@
+args:
+  - input/operators.cs
+input/operators.cs: |
+  namespace MyApp.Math;
+
+  public struct Complex
+  {
+      public double Real;
+      public double Imaginary;
+
+      public Complex(double real, double imaginary)
+      {
+          Real = real;
+          Imaginary = imaginary;
+      }
+
+      public static Complex operator +(Complex a, Complex b)
+      {
+          return new Complex(a.Real + b.Real, a.Imaginary + b.Imaginary);
+      }
+
+      public static Complex operator -(Complex a, Complex b)
+      {
+          return new Complex(a.Real - b.Real, a.Imaginary - b.Imaginary);
+      }
+
+      public static Complex operator *(Complex a, Complex b)
+      {
+          return new Complex(
+              a.Real * b.Real - a.Imaginary * b.Imaginary,
+              a.Real * b.Imaginary + a.Imaginary * b.Real
+          );
+      }
+
+      public static Complex operator -(Complex a)
+      {
+          return new Complex(-a.Real, -a.Imaginary);
+      }
+
+      public static explicit operator double(Complex c)
+      {
+          return c.Real;
+      }
+
+      public static implicit operator Complex(double d)
+      {
+          return new Complex(d, 0);
+      }
+  }
+
+  public struct Vector2
+  {
+      public double X;
+      public double Y;
+
+      public Vector2(double x, double y)
+      {
+          X = x;
+          Y = y;
+      }
+
+      public static Vector2 operator +(Vector2 a, Vector2 b)
+      {
+          return new Vector2(a.X + b.X, a.Y + b.Y);
+      }
+
+      public static bool operator ==(Vector2 a, Vector2 b)
+      {
+          return a.X == b.X && a.Y == b.Y;
+      }
+
+      public static bool operator !=(Vector2 a, Vector2 b)
+      {
+          return !(a == b);
+      }
+  }
+
+  public class Fraction
+  {
+      public int Numerator;
+      public int Denominator;
+
+      public Fraction(int numerator, int denominator)
+      {
+          Numerator = numerator;
+          Denominator = denominator;
+      }
+
+      public static Fraction operator +(Fraction a, Fraction b)
+      {
+          return new Fraction(
+              a.Numerator * b.Denominator + b.Numerator * a.Denominator,
+              a.Denominator * b.Denominator
+          );
+      }
+
+      public static Fraction operator ++(Fraction f)
+      {
+          return new Fraction(f.Numerator + f.Denominator, f.Denominator);
+      }
+
+      public static Fraction operator --(Fraction f)
+      {
+          return new Fraction(f.Numerator - f.Denominator, f.Denominator);
+      }
+  }
+
+  public class Money
+  {
+      public decimal Amount;
+
+      public Money(decimal amount)
+      {
+          Amount = amount;
+      }
+
+      public static Money operator +(Money a, Money b)
+      {
+          return new Money(a.Amount + b.Amount);
+      }
+
+      public static Money operator -(Money a, Money b)
+      {
+          return new Money(a.Amount - b.Amount);
+      }
+
+      public static Money operator *(Money m, decimal multiplier)
+      {
+          return new Money(m.Amount * multiplier);
+      }
+
+      public static bool operator >(Money a, Money b)
+      {
+          return a.Amount > b.Amount;
+      }
+
+      public static bool operator <(Money a, Money b)
+      {
+          return a.Amount < b.Amount;
+      }
+  }
+stdout: >
+  input/operators.cs
+
+  [L3-L46] public struct Complex
+    [L8-L12] public Complex(double real, double imaginary)
+    [L14-L17] public static Complex operatoroperator(Complex a, Complex b)
+    [L19-L22] public static Complex operatoroperator(Complex a, Complex b)
+    [L24-L30] public static Complex operatoroperator(Complex a, Complex b)
+    [L32-L35] public static Complex operatoroperator(Complex a)
+    [L37-L40] public static operatoroperator(Complex c)
+    [L42-L45] public static Complex operatoroperator(double d)
+  [L48-L73] public struct Vector2
+    [L53-L57] public Vector2(double x, double y)
+    [L59-L62] public static Vector2 operatoroperator(Vector2 a, Vector2 b)
+    [L64-L67] public static operatorbool(Vector2 a, Vector2 b)
+    [L69-L72] public static operatorbool(Vector2 a, Vector2 b)
+  [L75-L103] public class Fraction
+    [L80-L84] public Fraction(int numerator, int denominator)
+    [L86-L92] public static Fraction operatoroperator(Fraction a, Fraction b)
+    [L94-L97] public static Fraction operatoroperator(Fraction f)
+    [L99-L102] public static Fraction operatoroperator(Fraction f)
+  [L105-L138] public class Money
+    [L109-L112] public Money(decimal amount)
+    [L114-L117] public static Money operatoroperator(Money a, Money b)
+    [L119-L122] public static Money operatoroperator(Money a, Money b)
+    [L124-L127] public static Money operatoroperator(Money m, decimal multiplier)
+    [L129-L132] public static operatorbool(Money a, Money b)
+    [L134-L137] public static operatorbool(Money a, Money b)

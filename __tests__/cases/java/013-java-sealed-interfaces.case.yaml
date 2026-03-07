@@ -1,0 +1,236 @@
+args:
+  - input/sealed-interfaces.java
+input/sealed-interfaces.java: |
+  package com.example;
+
+  public sealed interface Shape permits Circle, Rectangle, Triangle {
+      double area();
+      double perimeter();
+  }
+
+  public sealed interface Colorable permits Red, Blue, Green {
+      String getColor();
+      void setColor(String color);
+  }
+
+  public interface Movable permits Vehicle {
+      void move();
+      int getSpeed();
+  }
+
+  public sealed interface Flyable permits Bird, Airplane {
+      void fly();
+      void land();
+  }
+
+  public final class Circle implements Shape {
+      private final double radius;
+
+      public Circle(double radius) {
+          this.radius = radius;
+      }
+
+      @Override
+      public double area() {
+          return Math.PI * radius * radius;
+      }
+
+      @Override
+      public double perimeter() {
+          return 2 * Math.PI * radius;
+      }
+  }
+
+  public final class Rectangle implements Shape {
+      private final double width;
+      private final double height;
+
+      public Rectangle(double width, double height) {
+          this.width = width;
+          this.height = height;
+      }
+
+      @Override
+      public double area() {
+          return width * height;
+      }
+
+      @Override
+      public double perimeter() {
+          return 2 * (width + height);
+      }
+  }
+
+  public final class Triangle implements Shape {
+      private final double base;
+      private final double height;
+
+      public Triangle(double base, double height) {
+          this.base = base;
+          this.height = height;
+      }
+
+      @Override
+      public double area() {
+          return 0.5 * base * height;
+      }
+
+      @Override
+      public double perimeter() {
+          return base + height + Math.sqrt(base * base + height * height);
+      }
+  }
+
+  public final class Red implements Colorable {
+      private String color = "Red";
+
+      @Override
+      public String getColor() {
+          return color;
+      }
+
+      @Override
+      public void setColor(String color) {
+          this.color = color;
+      }
+  }
+
+  public final class Blue implements Colorable {
+      private String color = "Blue";
+
+      @Override
+      public String getColor() {
+          return color;
+      }
+
+      @Override
+      public void setColor(String color) {
+          this.color = color;
+      }
+  }
+
+  public final class Green implements Colorable {
+      private String color = "Green";
+
+      @Override
+      public String getColor() {
+          return color;
+      }
+
+      @Override
+      public void setColor(String color) {
+          this.color = color;
+      }
+  }
+
+  public abstract class Vehicle implements Movable {
+      protected String name;
+      protected int speed = 0;
+
+      public Vehicle(String name) {
+          this.name = name;
+      }
+
+      @Override
+      public void move() {
+          speed = 60;
+      }
+
+      @Override
+      public int getSpeed() {
+          return speed;
+      }
+  }
+
+  public final class Car extends Vehicle {
+      public Car(String name) {
+          super(name);
+      }
+  }
+
+  public final class Bird implements Flyable {
+      private boolean isFlying = false;
+
+      @Override
+      public void fly() {
+          isFlying = true;
+      }
+
+      @Override
+      public void land() {
+          isFlying = false;
+      }
+  }
+
+  public final class Airplane implements Flyable {
+      private boolean isFlying = false;
+
+      @Override
+      public void fly() {
+          isFlying = true;
+      }
+
+      @Override
+      public void land() {
+          isFlying = false;
+      }
+  }
+stdout: |
+  input/sealed-interfaces.java
+  [L3-L6] public sealed interface Shape permits Circle, Rectangle, Triangle
+    [L4-L4] double area()
+    [L5-L5] double perimeter()
+  [L8-L11] public sealed interface Colorable permits Red, Blue, Green
+    [L9-L9] String getColor()
+    [L10-L10] void setColor(String color)
+  [L13-L16] public interface Movable permits Vehicle
+    [L14-L14] void move()
+    [L15-L15] int getSpeed()
+  [L18-L21] public sealed interface Flyable permits Bird, Airplane
+    [L19-L19] void fly()
+    [L20-L20] void land()
+  [L23-L39] public final class Circle implements Shape
+    [L24-L24] private final double radius
+    [L26-L28] public Circle(double radius)
+    [L30-L33] @Override public double area()
+    [L35-L38] @Override public double perimeter()
+  [L41-L59] public final class Rectangle implements Shape
+    [L42-L42] private final double width
+    [L43-L43] private final double height
+    [L45-L48] public Rectangle(double width, double height)
+    [L50-L53] @Override public double area()
+    [L55-L58] @Override public double perimeter()
+  [L61-L79] public final class Triangle implements Shape
+    [L62-L62] private final double base
+    [L63-L63] private final double height
+    [L65-L68] public Triangle(double base, double height)
+    [L70-L73] @Override public double area()
+    [L75-L78] @Override public double perimeter()
+  [L81-L93] public final class Red implements Colorable
+    [L82-L82] private String color
+    [L84-L87] @Override public String getColor()
+    [L89-L92] @Override public void setColor(String color)
+  [L95-L107] public final class Blue implements Colorable
+    [L96-L96] private String color
+    [L98-L101] @Override public String getColor()
+    [L103-L106] @Override public void setColor(String color)
+  [L109-L121] public final class Green implements Colorable
+    [L110-L110] private String color
+    [L112-L115] @Override public String getColor()
+    [L117-L120] @Override public void setColor(String color)
+  [L123-L140] public abstract class Vehicle implements Movable
+    [L124-L124] protected String name
+    [L125-L125] protected int speed
+    [L127-L129] public Vehicle(String name)
+    [L131-L134] @Override public void move()
+    [L136-L139] @Override public int getSpeed()
+  [L142-L146] public final class Car extends Vehicle
+    [L143-L145] public Car(String name)
+  [L148-L160] public final class Bird implements Flyable
+    [L149-L149] private boolean isFlying
+    [L151-L154] @Override public void fly()
+    [L156-L159] @Override public void land()
+  [L162-L174] public final class Airplane implements Flyable
+    [L163-L163] private boolean isFlying
+    [L165-L168] @Override public void fly()
+    [L170-L173] @Override public void land()

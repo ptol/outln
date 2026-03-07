@@ -1,0 +1,19 @@
+args:
+  - input/delegates.cs
+input/delegates.cs: |
+  namespace MyApp;
+
+  public delegate void Action();
+  public delegate void Action<T>(T arg);
+  public delegate TResult Func<TResult>();
+  public delegate TResult Func<T, TResult>(T arg);
+  public delegate int Compare<T>(T a, T b);
+  public delegate string StringProcessor(string input);
+stdout: |
+  input/delegates.cs
+  [L3-L3] public Action()
+  [L4-L4] public <T> Action(T arg)
+  [L5-L5] public <TResult> Func()
+  [L6-L6] public <T, TResult> Func(T arg)
+  [L7-L7] public <T> Compare(T a, T b)
+  [L8-L8] public StringProcessor(string input)

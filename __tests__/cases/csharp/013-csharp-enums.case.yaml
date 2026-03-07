@@ -1,0 +1,32 @@
+args:
+  - input/enums.cs
+input/enums.cs: |
+  namespace MyApp;
+
+  public enum DayOfWeek {
+      Monday,
+      Tuesday,
+      Wednesday,
+      Thursday,
+      Friday,
+      Saturday,
+      Sunday
+  }
+
+  public enum Status {
+      Pending = 0,
+      InProgress = 1,
+      Completed = 2,
+      Failed = -1
+  }
+
+  public enum Color {
+      Red,
+      Green,
+      Blue
+  }
+stdout: |
+  input/enums.cs
+  [L3-L11] public enum DayOfWeek
+  [L13-L18] public enum Status
+  [L20-L24] public enum Color

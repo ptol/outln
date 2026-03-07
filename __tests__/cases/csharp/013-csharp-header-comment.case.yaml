@@ -1,0 +1,20 @@
+args:
+  - input/HeaderComment.cs
+input/HeaderComment.cs: |
+  /// <summary>
+  /// This is a header comment for the file.
+  /// It provides an overview of what this class does.
+  /// </summary>
+  namespace MyApp;
+
+  public class HeaderComment {
+      public void Method() {}
+  }
+stdout: |
+  input/HeaderComment.cs
+  /// <summary>
+  /// This is a header comment for the file.
+  /// It provides an overview of what this class does.
+  /// </summary>
+  [L7-L9] public class HeaderComment
+    [L8-L8] public void Method()

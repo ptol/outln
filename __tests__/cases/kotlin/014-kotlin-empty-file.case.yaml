@@ -1,0 +1,7 @@
+args:
+  - input/Empty.kt
+input/Empty.kt: |
+  // Comment only
+stdout: |
+  input/Empty.kt
+  // Comment only

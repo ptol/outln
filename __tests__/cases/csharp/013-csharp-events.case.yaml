@@ -1,0 +1,70 @@
+args:
+  - input/events.cs
+input/events.cs: |
+  namespace MyApp.Events;
+
+  public class EventPublisher
+  {
+      public event EventHandler Click;
+
+      public event EventHandler<string> MessageReceived;
+
+      public event Action<EventArgs> SomethingHappened;
+
+      private event EventHandler _internalEvent;
+
+      public event EventHandler CustomEvent
+      {
+          add { Click += value; }
+          remove { Click -= value; }
+      }
+
+      public event EventHandler AnotherCustomEvent
+      {
+          add
+          {
+              Console.WriteLine("Added");
+              Click += value;
+          }
+          remove
+          {
+              Console.WriteLine("Removed");
+              Click -= value;
+          }
+      }
+
+      public void Publish()
+      {
+          Click?.Invoke(this, EventArgs.Empty);
+      }
+  }
+
+  public class EventSubscriber
+  {
+      public event EventHandler<NotificationData> Notification;
+
+      public void SendNotification(NotificationData data)
+      {
+          Notification?.Invoke(this, data);
+      }
+  }
+
+  public class NotificationData
+  {
+      public string Message;
+      public DateTime Timestamp;
+  }
+stdout: |
+  input/events.cs
+  [L3-L37] public class EventPublisher
+    [L5-L5] public event EventHandler Click
+    [L7-L7] public event EventHandler<string> MessageReceived
+    [L9-L9] public event Action<EventArgs> SomethingHappened
+    [L11-L11] private event EventHandler _internalEvent
+    [L13-L17] public event EventHandler CustomEvent
+    [L19-L31] public event EventHandler AnotherCustomEvent
+    [L33-L36] public void Publish()
+  [L39-L47] public class EventSubscriber
+    [L41-L41] public event EventHandler<NotificationData> Notification
+    [L43-L46] public void SendNotification(NotificationData data)
+  [L49-L53] public class NotificationData

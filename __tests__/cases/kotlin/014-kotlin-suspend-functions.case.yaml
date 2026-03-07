@@ -1,0 +1,53 @@
+args:
+  - input/suspend-functions.kt
+input/suspend-functions.kt: |
+  package com.example
+
+  import kotlinx.coroutines.delay
+
+  suspend fun fetchData(url: String): String {
+      delay(1000)
+      return "Data from $url"
+  }
+
+  suspend fun <T> withRetry(retries: Int, block: suspend () -> T): T {
+      repeat(retries) {
+          try {
+              return block()
+          } catch (e: Exception) {
+              delay(100)
+          }
+      }
+      throw RuntimeException("Failed after $retries retries")
+  }
+
+  class ApiService {
+      suspend fun getUser(id: String): User {
+          delay(500)
+          return User(id, "User $id")
+      }
+
+      suspend fun getPosts(userId: String): List<Post> {
+          delay(300)
+          return listOf(Post(1, "Post 1"), Post(2, "Post 2"))
+      }
+
+      suspend fun fetchAll(userId: String): Pair<User, List<Post>> {
+          val user = getUser(userId)
+          val posts = getPosts(userId)
+          return Pair(user, posts)
+      }
+  }
+
+  data class User(val id: String, val name: String)
+  data class Post(val id: Int, val title: String)
+stdout: |
+  input/suspend-functions.kt
+  [L5-L8] suspend fun fetchData(url: String): String
+  [L10-L19] suspend fun withRetry(retries: Int, block: suspend () -> T): T
+  [L21-L37] class ApiService
+    [L22-L25] suspend fun getUser(id: String): User
+    [L27-L30] suspend fun getPosts(userId: String): List<Post>
+    [L32-L36] suspend fun fetchAll(userId: String): Pair<User, List<Post>>
+  [L39-L39] data class User(val id: String, val name: String)
+  [L40-L40] data class Post(val id: Int, val title: String)

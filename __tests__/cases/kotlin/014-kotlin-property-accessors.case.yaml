@@ -1,0 +1,40 @@
+args:
+  - input/property-accessors.kt
+input/property-accessors.kt: |
+  package com.example
+
+  class PropertyAccessors {
+      // Property with custom getter
+      val isEmpty: Boolean
+          get() = size == 0
+
+      // Property with custom setter
+      var counter: Int = 0
+          set(value) {
+              if (value >= 0) field = value
+          }
+
+      // Property with both getter and setter
+      var name: String = ""
+          get() = field.uppercase()
+          set(value) { field = value.trim() }
+
+      // Computed property
+      val size: Int
+          get() = items.size
+
+      // Backing field usage
+      private var _items = mutableListOf<String>()
+      var items: List<String>
+          get() = _items
+          set(value) { _items = value.toMutableList() }
+  }
+stdout: |
+  input/property-accessors.kt
+  [L3-L28] class PropertyAccessors
+    [L5-L6] val isEmpty: Boolean
+    [L9-L12] var counter: Int
+    [L15-L17] var name: String
+    [L20-L21] val size: Int
+    [L24-L24] private var _items
+    [L25-L27] var items: List<String>

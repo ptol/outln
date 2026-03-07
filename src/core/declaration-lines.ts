@@ -40,30 +40,27 @@ export function buildDeclarationOutlineLines(
       };
     });
 
-  for (const declaration of declarations) {
-    const declarationSpan = resolveSpan(declaration);
-    const declarationLineNumber = declaration.declaratorLine ?? declaration.startLine;
+  function addDeclarationWithMembers(decl: ParsedDeclaration, indent: string): void {
+    const declarationSpan = resolveSpan(decl);
+    const declarationLineNumber = decl.declaratorLine ?? decl.startLine;
     lines.push({
       kind: 'declaration',
-      text: formatSingleDeclaration(declaration),
+      text: `${indent}${formatSingleDeclaration(decl)}`,
       ...(declarationSpan !== undefined && { span: declarationSpan }),
       lineNumber: declarationLineNumber
     });
 
-    if (declaration.members === undefined || declaration.members.length === 0) {
-      continue;
+    if (decl.members === undefined || decl.members.length === 0) {
+      return;
     }
 
-    for (const member of declaration.members) {
-      const memberSpan = resolveSpan(member);
-      const memberLineNumber = member.declaratorLine ?? member.startLine;
-      lines.push({
-        kind: 'declaration',
-        text: `${memberIndent}${formatSingleDeclaration(member)}`,
-        ...(memberSpan !== undefined && { span: memberSpan }),
-        lineNumber: memberLineNumber
-      });
+    for (const member of decl.members) {
+      addDeclarationWithMembers(member, indent + memberIndent);
     }
+  }
+
+  for (const declaration of declarations) {
+    addDeclarationWithMembers(declaration, '');
   }
 
   return lines;
