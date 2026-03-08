@@ -1,0 +1,59 @@
+args:
+  - input/inline-functions.kt
+input/inline-functions.kt: |
+  package com.example
+
+  inline fun measureTime(action: () -> Unit): Long {
+      val start = System.currentTimeMillis()
+      action()
+      return System.currentTimeMillis() - start
+  }
+
+  inline fun <T> measureTimeReturning(action: () -> T): Pair<Long, T> {
+      val start = System.currentTimeMillis()
+      val result = action()
+      val elapsed = System.currentTimeMillis() - start
+      return Pair(elapsed, result)
+  }
+
+  inline fun <T> lock(lock: Any, action: () -> T): T {
+      synchronized(lock) {
+          return action()
+      }
+  }
+
+  inline fun <T, R> T.applyIf(condition: Boolean, block: T.() -> Unit): T {
+      if (condition) {
+          this.block()
+      }
+      return this
+  }
+
+  class Logger {
+      inline fun debug(message: () -> String) {
+          if (isDebugEnabled) {
+              println(message())
+          }
+      }
+
+      inline fun debugLazy(message: String) {
+          if (isDebugEnabled) {
+              println(message)
+          }
+      }
+
+      companion object {
+          var isDebugEnabled = true
+      }
+  }
+stdout: |
+  input/inline-functions.kt
+  [L3-L7] inline fun measureTime(action: () -> Unit): Long
+  [L9-L14] inline fun measureTimeReturning(action: () -> T): Pair<Long, T>
+  [L16-L20] inline fun lock(lock: Any, action: () -> T): T
+  [L22-L27] inline fun T.applyIf(condition: Boolean, block: T.() -> Unit): T
+  [L29-L45] class Logger
+    [L30-L34] inline fun debug(message: () -> String)
+    [L36-L40] inline fun debugLazy(message: String)
+    [L42-L44] companion object Companion
+      [L43-L43] var isDebugEnabled

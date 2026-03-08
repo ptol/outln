@@ -1,0 +1,25 @@
+args:
+  - input/records.cs
+input/records.cs: |
+  namespace MyApp.Models;
+
+  public record Person(string Name, int Age);
+
+  public record Point(int X, int Y) {
+      public int Sum => X + Y;
+  }
+
+  public record Book(string Title, string Author)
+  {
+      public int Year { get; init; }
+  }
+
+  public record Coordinates<T>(T X, T Y);
+stdout: |
+  input/records.cs
+  [L3-L3] public record Person (string Name, int Age)
+  [L5-L7] public record Point (int X, int Y)
+    [L6-L6] public int Sum
+  [L9-L12] public record Book (string Title, string Author)
+    [L11-L11] public int Year { get; }
+  [L14-L14] public record Coordinates (T X, T Y)

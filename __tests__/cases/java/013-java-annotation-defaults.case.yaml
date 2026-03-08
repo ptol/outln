@@ -1,0 +1,55 @@
+args:
+  - input/annotation-defaults.java
+input/annotation-defaults.java: |
+  package com.example;
+
+  @interface Entity {
+      String tableName();
+      String schema() default "public";
+      boolean cached() default true;
+      int timeout() default 30;
+  }
+
+  @interface Service {
+      String name();
+      Class<?> type() default Object.class;
+      String[] tags() default {};
+  }
+
+  @interface Endpoint {
+      String path();
+      String method() default "GET";
+      boolean authRequired() default true;
+      String[] produces() default {"application/json"};
+  }
+
+  @Entity(tableName = "users", schema = "app")
+  public class User {
+      private String name;
+      private int age;
+
+      public User(String name, int age) {
+          this.name = name;
+          this.age = age;
+      }
+  }
+stdout: |
+  input/annotation-defaults.java
+  [L3-L8] annotation-type Entity
+    [L4-L4] String tableName()
+    [L5-L5] String schema() default "public"
+    [L6-L6] boolean cached() default true
+    [L7-L7] int timeout() default 30
+  [L10-L14] annotation-type Service
+    [L11-L11] String name()
+    [L12-L12] Class<?> type() default Object.class
+    [L13-L13] String[] tags() default {}
+  [L16-L21] annotation-type Endpoint
+    [L17-L17] String path()
+    [L18-L18] String method() default "GET"
+    [L19-L19] boolean authRequired() default true
+    [L20-L20] String[] produces() default {"application/json"}
+  [L23-L32] @Entity(tableName = "users", schema = "app") public class User
+    [L25-L25] private String name
+    [L26-L26] private int age
+    [L28-L31] public User(String name, int age)

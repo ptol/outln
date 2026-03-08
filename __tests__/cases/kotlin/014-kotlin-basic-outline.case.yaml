@@ -1,0 +1,37 @@
+args:
+  - input/sample.kt
+input/sample.kt: |
+  package com.example
+
+  class Sample(val name: String, var age: Int) {
+    private val secret = "secret"
+
+    constructor(name: String) : this(name, 0)
+
+    fun getName(): String = name
+
+    fun setName(name: String) {
+      this.name = name
+    }
+
+    fun getAge(): Int = age
+
+    companion object {
+      fun create(name: String): Sample = Sample(name)
+    }
+  }
+
+  fun main(args: Array<String>) {
+    println("Hello")
+  }
+stdout: |
+  input/sample.kt
+  [L3-L19] class Sample(val name: String, var age: Int)
+    [L4-L4] private val secret
+    [L6-L6] constructor(name: String) : this(name, 0)
+    [L8-L8] fun getName(): String
+    [L10-L12] fun setName(name: String)
+    [L14-L14] fun getAge(): Int
+    [L16-L18] companion object Companion
+      [L17-L17] fun create(name: String): Sample
+  [L21-L23] fun main(args: Array<String>)

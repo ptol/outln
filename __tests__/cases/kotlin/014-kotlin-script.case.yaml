@@ -1,0 +1,20 @@
+args:
+  - input/script.kts
+input/script.kts: |
+  // Kotlin script example
+
+  println("Hello from script")
+
+  fun sayHello(name: String): String = "Hello, $name"
+
+  val result = sayHello("World")
+
+  data class User(val name: String, val age: Int)
+  val user = User("John", 30)
+stdout: |
+  input/script.kts
+  // Kotlin script example
+  [L5-L5] fun sayHello(name: String): String
+  [L7-L7] val result
+  [L9-L9] data class User(val name: String, val age: Int)
+  [L10-L10] val user

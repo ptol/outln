@@ -1,0 +1,76 @@
+args:
+  - input/enum-members.kt
+input/enum-members.kt: |
+  package com.example
+
+  enum class Color(val rgb: Int) {
+      RED(0xFF0000) {
+          override fun isPrimary(): Boolean = true
+          override fun getHex(): String = "#FF0000"
+      },
+      GREEN(0x00FF00) {
+          override fun isPrimary(): Boolean = true
+          override fun getHex(): String = "#00FF00"
+      },
+      BLUE(0x0000FF) {
+          override fun isPrimary(): Boolean = true
+          override fun getHex(): String = "#0000FF"
+      },
+      YELLOW(0xFFFF00) {
+          override fun isPrimary(): Boolean = false
+          override fun getHex(): String = "#FFFF00"
+      };
+
+      abstract fun isPrimary(): Boolean
+      abstract fun getHex(): String
+  }
+
+  enum class State {
+      IDLE {
+          fun start(): Processing = Processing
+      },
+      PROCESSING {
+          fun complete(): Success = Success
+          fun fail(): Error = Error
+      },
+      SUCCESS {
+          fun reset(): Idle = Idle
+      },
+      ERROR {
+          fun retry(): Processing = Processing
+      }
+  }
+
+  enum class Priority(val value: Int) {
+      LOW(1),
+      MEDIUM(5),
+      HIGH(10) {
+          fun isUrgent(): Boolean = true
+      },
+      CRITICAL(20) {
+          fun isUrgent(): Boolean = true
+          fun canInterrupt(): Boolean = true
+      };
+
+      fun getLevel(): String = name.lowercase()
+  }
+stdout: |
+  input/enum-members.kt
+  [L3-L23] enum class Color(val rgb: Int)
+    [L4-L7] enum-entry RED
+    [L8-L11] enum-entry GREEN
+    [L12-L15] enum-entry BLUE
+    [L16-L19] enum-entry YELLOW
+    [L21-L21] abstract fun isPrimary(): Boolean
+    [L22-L22] abstract fun getHex(): String
+  [L25-L39] enum class State
+    [L26-L28] enum-entry IDLE
+    [L29-L32] enum-entry PROCESSING
+    [L33-L35] enum-entry SUCCESS
+    [L36-L38] enum-entry ERROR
+  [L41-L53] enum class Priority(val value: Int)
+    [L42-L42] enum-entry LOW
+    [L43-L43] enum-entry MEDIUM
+    [L44-L46] enum-entry HIGH
+    [L47-L50] enum-entry CRITICAL
+    [L52-L52] fun getLevel(): String

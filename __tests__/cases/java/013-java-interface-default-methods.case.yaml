@@ -1,0 +1,54 @@
+args:
+  - input/interface-default-methods.java
+input/interface-default-methods.java: |
+  package com.example;
+
+  public interface Vehicle {
+      default String getType() {
+          return "Vehicle";
+      }
+
+      default int getSpeed() {
+          return 0;
+      }
+  }
+
+  public interface Movable extends Vehicle {
+      @Override
+      default String getType() {
+          return "Movable " + super.getType();
+      }
+
+      default void move() {
+          System.out.println("Moving");
+      }
+  }
+
+  public interface Flyable {
+      default void fly() {
+          System.out.println("Flying");
+      }
+  }
+
+  public class Car implements Movable, Flyable {
+      public void move() {
+          System.out.println("Driving");
+      }
+
+      public void fly() {
+          System.out.println("Cannot fly");
+      }
+  }
+stdout: |
+  input/interface-default-methods.java
+  [L3-L11] public interface Vehicle
+    [L4-L6] default String getType()
+    [L8-L10] default int getSpeed()
+  [L13-L22] public interface Movable
+    [L14-L17] @Override default String getType()
+    [L19-L21] default void move()
+  [L24-L28] public interface Flyable
+    [L25-L27] default void fly()
+  [L30-L38] public class Car implements Movable, Flyable
+    [L31-L33] public void move()
+    [L35-L37] public void fly()

@@ -1,0 +1,45 @@
+args:
+  - input/properties.kt
+input/properties.kt: |
+  package com.example
+
+  val constant = 42
+
+  var mutable = "hello"
+
+  const val COMPILE_TIME = "constant"
+
+  lateinit var lateInit: String
+
+  class Properties {
+    val readOnly = "read"
+    var readWrite = "write"
+
+    val computed: String
+      get() = readOnly + readWrite
+
+    var counter = 0
+      private set
+
+    companion object {
+      const val CONST = 1
+    }
+  }
+
+  typealias StringList = List<String>
+  typealias Action = () -> Unit
+stdout: |
+  input/properties.kt
+  [L3-L3] val constant
+  [L5-L5] var mutable
+  [L7-L7] const val COMPILE_TIME
+  [L9-L9] lateinit var lateInit: String
+  [L11-L24] class Properties
+    [L12-L12] val readOnly
+    [L13-L13] var readWrite
+    [L15-L16] val computed: String
+    [L18-L19] var counter
+    [L21-L23] companion object Companion
+      [L22-L22] const val CONST
+  [L26-L26] typealias StringList = List<String>
+  [L27-L27] typealias Action = () -> Unit

@@ -1,0 +1,63 @@
+args:
+  - input/data-classes.kt
+input/data-classes.kt: |
+  package com.example
+
+  data class Person(val name: String, val age: Int)
+
+  data class Point(val x: Double, val y: Double) {
+      fun distance(other: Point): Double {
+          val dx = x - other.x
+          val dy = y - other.y
+          return Math.sqrt(dx * dx + dy * dy)
+      }
+  }
+
+  data class Book(
+      val title: String,
+      val author: String,
+      val isbn: String,
+      val pages: Int = 0
+  ) {
+      companion object {
+          val EMPTY = Book("", "", "", 0)
+      }
+  }
+
+  data class Response<T>(
+      val success: Boolean,
+      val data: T?,
+      val error: String? = null
+  )
+
+  @JvmInline
+  value class UserId(val value: String)
+
+  sealed class Result
+
+  data class Success(val data: String) : Result()
+  data class Failure(val error: String) : Result()
+  object Loading : Result()
+stdout: >
+  input/data-classes.kt
+
+  [L3-L3] data class Person(val name: String, val age: Int)
+
+  [L5-L11] data class Point(val x: Double, val y: Double)
+    [L6-L10] fun distance(other: Point): Double
+  [L13-L22] data class Book( val title: String, val author: String, val isbn:
+  String, val pages: Int = 0 )
+    [L19-L21] companion object Companion
+      [L20-L20] val EMPTY
+  [L24-L28] data class <T> Response( val success: Boolean, val data: T?, val
+  error: String? = null )
+
+  [L30-L31] @JvmInline value class UserId(val value: String)
+
+  [L33-L33] sealed class Result
+
+  [L35-L35] data class Success(val data: String) : Result()
+
+  [L36-L36] data class Failure(val error: String) : Result()
+
+  [L37-L37] object Loading : Result()

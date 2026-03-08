@@ -1,0 +1,24 @@
+args:
+  - input/reified.kt
+input/reified.kt: |
+  package com.example
+
+  inline fun <reified T> printType() {
+      println(T::class)
+  }
+
+  inline fun <reified T : Any> ofType(value: Any): T? {
+      return value as? T
+  }
+
+  class MyClass {
+      inline fun <reified T> memberPrint() {
+          println(T::class)
+      }
+  }
+stdout: |
+  input/reified.kt
+  [L3-L5] inline reified fun printType()
+  [L7-L9] inline reified fun ofType(value: Any)
+  [L11-L15] class MyClass
+    [L12-L14] inline reified fun memberPrint()

@@ -9,13 +9,19 @@ import { typeScriptLanguageEngine } from '../languages/typescript/typescript-eng
 import { javaScriptLanguageEngine } from '../languages/typescript/javascript-engine.js';
 import { goLanguageEngine } from '../languages/go/engine.js';
 import { rustLanguageEngine } from '../languages/rust/engine.js';
+import { javaLanguageEngine } from '../languages/java/engine.js';
+import { kotlinLanguageEngine } from '../languages/kotlin/engine.js';
+import { csharpLanguageEngine } from '../languages/csharp/engine.js';
 
 const REGISTERED_ENGINES: readonly OutlineLanguageEngine[] = [
   markdownLanguageEngine,
   typeScriptLanguageEngine,
   javaScriptLanguageEngine,
   goLanguageEngine,
-  rustLanguageEngine
+  rustLanguageEngine,
+  javaLanguageEngine,
+  kotlinLanguageEngine,
+  csharpLanguageEngine
 ];
 
 /**

@@ -1,0 +1,42 @@
+args:
+  - input/sealed.java
+input/sealed.java: |
+  package com.example;
+
+  public sealed class Shape
+      permits Circle, Rectangle, Square {
+      
+      public abstract double area();
+  }
+
+  final class Circle extends Shape {
+      private final double radius;
+      public Circle(double radius) { this.radius = radius; }
+      public double area() { return Math.PI * radius * radius; }
+  }
+
+  final class Rectangle extends Shape {
+      private final double width;
+      private final double height;
+      public Rectangle(double w, double h) { this.width = w; this.height = h; }
+      public double area() { return width * height; }
+  }
+
+  final class Square extends Rectangle {
+      public Square(double side) { super(side, side); }
+  }
+stdout: |
+  input/sealed.java
+  [L3-L7] public sealed class Shape permits Circle, Rectangle, Square
+    [L6-L6] public abstract double area()
+  [L9-L13] final class Circle extends Shape
+    [L10-L10] private final double radius
+    [L11-L11] public Circle(double radius)
+    [L12-L12] public double area()
+  [L15-L20] final class Rectangle extends Shape
+    [L16-L16] private final double width
+    [L17-L17] private final double height
+    [L18-L18] public Rectangle(double w, double h)
+    [L19-L19] public double area()
+  [L22-L24] final class Square extends Rectangle
+    [L23-L23] public Square(double side)

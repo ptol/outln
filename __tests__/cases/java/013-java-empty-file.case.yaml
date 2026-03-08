@@ -1,0 +1,7 @@
+args:
+  - input/Empty.java
+input/Empty.java: |
+  // This is a comment but no declarations
+stdout: |
+  input/Empty.java
+  // This is a comment but no declarations
