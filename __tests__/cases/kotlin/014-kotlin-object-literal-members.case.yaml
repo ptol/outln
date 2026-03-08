@@ -1,0 +1,24 @@
+args:
+  - input/object-literal-members.kt
+input/object-literal-members.kt: |
+  package com.example
+
+  fun createProvider() = object {
+      fun name(): String = "provider"
+      val enabled: Boolean = true
+  }
+
+  enum class Mode {
+      ACTIVE {
+          fun label(): String = "active"
+      }
+  }
+stdout: |
+  input/object-literal-members.kt
+  [L3-L6] fun createProvider()
+    [L3-L6] object
+      [L4-L4] fun name(): String
+      [L5-L5] val enabled: Boolean
+  [L8-L12] enum class Mode
+    [L9-L11] enum-entry ACTIVE
+      [L10-L10] fun label(): String

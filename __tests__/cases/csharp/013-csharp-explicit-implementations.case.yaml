@@ -143,6 +143,7 @@ stdout: |
     [L27-L30] public void Write(string message)
     [L32-L35] public void WriteLine(string message)
   [L38-L61] public class FileLogger
+    [L40-L40] private string _filePath
     [L42-L45] public FileLogger(string filePath)
     [L47-L50] void Log(string message)
     [L52-L55] void LogError(string error)
@@ -151,6 +152,7 @@ stdout: |
     [L65-L65] string this[[int index]]
     [L66-L66] void Reset()
   [L69-L97] public class ArrayProvider
+    [L71-L71] private string[] _data
     [L73-L76] public ArrayProvider(string[] data)
     [L78-L81] string this[[int index]]
     [L83-L86] void Reset()

@@ -92,12 +92,15 @@ input/finalizers.cs: |
 stdout: |
   input/finalizers.cs
   [L3-L25] public class FileHandle
+    [L5-L5] private IntPtr _handle
     [L7-L10] public FileHandle(IntPtr handle)
     [L17-L24] private void Close()
   [L27-L49] public class DatabaseConnection
+    [L29-L29] private string _connectionString
     [L31-L34] public DatabaseConnection(string connectionString)
     [L41-L48] private void Dispose()
   [L51-L73] public class UnmanagedResource
+    [L53-L53] private IntPtr _resource
     [L55-L58] public UnmanagedResource(IntPtr resource)
     [L65-L72] private void Release()
   [L75-L88] public static class NativeMethods

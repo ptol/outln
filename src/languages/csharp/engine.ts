@@ -303,16 +303,19 @@ function parseFieldDeclaration(
   const attributes = getAttributesText(node);
   const { startColumn, endColumn } = getColumnSpan(node);
 
-  const type = node.childForFieldName('type');
-
-  const declarators = node.children.filter((c) => c.type === 'variable_declarator');
+  const variableDeclaration = node.children.find((c) => c.type === 'variable_declaration');
+  const type = variableDeclaration?.childForFieldName('type');
+  const declarators =
+    variableDeclaration?.children.filter((c) => c.type === 'variable_declarator') ?? [];
 
   if (declarators.length === 0) {
     return null;
   }
 
   const firstDeclarator = declarators[0];
-  const nameNode = firstDeclarator?.children.find((c) => c.type === 'identifier');
+  const nameNode =
+    firstDeclarator?.childForFieldName('name') ??
+    firstDeclarator?.children.find((c) => c.type === 'identifier');
   if (nameNode === undefined) {
     return null;
   }
@@ -845,6 +848,39 @@ const CSHARP_BODY_PARSERS: Readonly<Record<string, CSharpDeclarationParser>> = {
   ...CSHARP_DECLARATION_PARSERS
 };
 
+function isCSharpContainerDeclaration(type: string): boolean {
+  return (
+    type === 'class_declaration' ||
+    type === 'interface_declaration' ||
+    type === 'struct_declaration' ||
+    type === 'enum_declaration' ||
+    type === 'record_declaration'
+  );
+}
+
+function parseNamespaceMember(node: ReturnType<Parser['parse']>['rootNode']): ParsedDeclaration[] {
+  if (node.type === 'namespace_declaration') {
+    const body = node.childForFieldName('body');
+    return body ? parseNamespaceBody(body) : [];
+  }
+
+  const parserFn = CSHARP_DECLARATION_PARSERS[node.type];
+  if (parserFn === undefined) {
+    return [];
+  }
+
+  const decl = parserFn(node);
+  if (decl === null) {
+    return [];
+  }
+
+  if (isCSharpContainerDeclaration(node.type)) {
+    return [{ ...decl, members: parseClassBody(node) }];
+  }
+
+  return [decl];
+}
+
 function parseClassBody(node: ReturnType<Parser['parse']>['rootNode']): ParsedDeclaration[] {
   const declarations: ParsedDeclaration[] = [];
   let body = node.childForFieldName('body');
@@ -860,13 +896,7 @@ function parseClassBody(node: ReturnType<Parser['parse']>['rootNode']): ParsedDe
     }
     const decl = parserFn(child);
     if (decl !== null) {
-      if (
-        child.type === 'class_declaration' ||
-        child.type === 'interface_declaration' ||
-        child.type === 'struct_declaration' ||
-        child.type === 'enum_declaration' ||
-        child.type === 'record_declaration'
-      ) {
+      if (isCSharpContainerDeclaration(child.type)) {
         const nestedMembers = parseClassBody(child);
         declarations.push({ ...decl, members: nestedMembers });
       } else {
@@ -882,34 +912,7 @@ function parseNamespaceBody(node: ReturnType<Parser['parse']>['rootNode']): Pars
   const declarations: ParsedDeclaration[] = [];
 
   for (const child of node.children) {
-    if (
-      child.type === 'class_declaration' ||
-      child.type === 'interface_declaration' ||
-      child.type === 'struct_declaration' ||
-      child.type === 'enum_declaration' ||
-      child.type === 'record_declaration' ||
-      child.type === 'delegate_declaration'
-    ) {
-      const parserFn = CSHARP_DECLARATION_PARSERS[child.type];
-      if (parserFn === undefined) {
-        continue;
-      }
-      const decl = parserFn(child);
-      if (decl !== null) {
-        if (
-          child.type === 'class_declaration' ||
-          child.type === 'interface_declaration' ||
-          child.type === 'struct_declaration' ||
-          child.type === 'enum_declaration' ||
-          child.type === 'record_declaration'
-        ) {
-          const nestedMembers = parseClassBody(child);
-          declarations.push({ ...decl, members: nestedMembers });
-        } else {
-          declarations.push(decl);
-        }
-      }
-    }
+    declarations.push(...parseNamespaceMember(child));
   }
 
   return declarations;

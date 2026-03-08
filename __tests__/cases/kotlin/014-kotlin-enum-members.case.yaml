@@ -58,19 +58,35 @@ stdout: |
   input/enum-members.kt
   [L3-L23] enum class Color(val rgb: Int)
     [L4-L7] enum-entry RED
+      [L5-L5] override fun isPrimary(): Boolean
+      [L6-L6] override fun getHex(): String
     [L8-L11] enum-entry GREEN
+      [L9-L9] override fun isPrimary(): Boolean
+      [L10-L10] override fun getHex(): String
     [L12-L15] enum-entry BLUE
+      [L13-L13] override fun isPrimary(): Boolean
+      [L14-L14] override fun getHex(): String
     [L16-L19] enum-entry YELLOW
+      [L17-L17] override fun isPrimary(): Boolean
+      [L18-L18] override fun getHex(): String
     [L21-L21] abstract fun isPrimary(): Boolean
     [L22-L22] abstract fun getHex(): String
   [L25-L39] enum class State
     [L26-L28] enum-entry IDLE
+      [L27-L27] fun start(): Processing
     [L29-L32] enum-entry PROCESSING
+      [L30-L30] fun complete(): Success
+      [L31-L31] fun fail(): Error
     [L33-L35] enum-entry SUCCESS
+      [L34-L34] fun reset(): Idle
     [L36-L38] enum-entry ERROR
+      [L37-L37] fun retry(): Processing
   [L41-L53] enum class Priority(val value: Int)
     [L42-L42] enum-entry LOW
     [L43-L43] enum-entry MEDIUM
     [L44-L46] enum-entry HIGH
+      [L45-L45] fun isUrgent(): Boolean
     [L47-L50] enum-entry CRITICAL
+      [L48-L48] fun isUrgent(): Boolean
+      [L49-L49] fun canInterrupt(): Boolean
     [L52-L52] fun getLevel(): String

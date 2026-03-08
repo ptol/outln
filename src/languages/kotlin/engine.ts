@@ -596,8 +596,10 @@ const KOTLIN_BODY_PARSERS: Readonly<Record<string, KotlinDeclarationParser>> = {
 function parseClassBody(node: SyntaxNodeType): ParsedDeclaration[] {
   const declarations: ParsedDeclaration[] = [];
   const body =
-    node.childForFieldName('body') ??
-    node.children.find((c) => c.type === 'class_body' || c.type === 'enum_class_body');
+    node.type === 'class_body' || node.type === 'enum_class_body'
+      ? node
+      : (node.childForFieldName('body') ??
+        node.children.find((c) => c.type === 'class_body' || c.type === 'enum_class_body'));
   if (!body) {
     return declarations;
   }

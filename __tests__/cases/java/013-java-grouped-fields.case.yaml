@@ -1,0 +1,16 @@
+args:
+  - input/grouped-fields.java
+input/grouped-fields.java: |
+  package com.example;
+
+  public class GroupedFields {
+    private int a, b;
+    static final String first = "a", second = "b";
+  }
+stdout: |
+  input/grouped-fields.java
+  [L3-L6] public class GroupedFields
+    [L4-L4] private int a
+    [L4-L4] private int b
+    [L5-L5] static final String first
+    [L5-L5] static final String second

@@ -45,6 +45,8 @@ stdout: |
   [L9-L11] public interface IComparable
     [L10-L10] int CompareTo(object obj)
   [L13-L25] public struct Point
+    [L14-L14] public int X
+    [L15-L15] public int Y
     [L17-L20] public Point(int x, int y)
     [L22-L24] public double Distance()
   [L27-L35] public readonly struct ImmutablePoint

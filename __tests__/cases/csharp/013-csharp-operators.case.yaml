@@ -143,6 +143,8 @@ stdout: >
   input/operators.cs
 
   [L3-L46] public struct Complex
+    [L5-L5] public double Real
+    [L6-L6] public double Imaginary
     [L8-L12] public Complex(double real, double imaginary)
     [L14-L17] public static Complex operatoroperator(Complex a, Complex b)
     [L19-L22] public static Complex operatoroperator(Complex a, Complex b)
@@ -151,16 +153,21 @@ stdout: >
     [L37-L40] public static operatoroperator(Complex c)
     [L42-L45] public static Complex operatoroperator(double d)
   [L48-L73] public struct Vector2
+    [L50-L50] public double X
+    [L51-L51] public double Y
     [L53-L57] public Vector2(double x, double y)
     [L59-L62] public static Vector2 operatoroperator(Vector2 a, Vector2 b)
     [L64-L67] public static operatorbool(Vector2 a, Vector2 b)
     [L69-L72] public static operatorbool(Vector2 a, Vector2 b)
   [L75-L103] public class Fraction
+    [L77-L77] public int Numerator
+    [L78-L78] public int Denominator
     [L80-L84] public Fraction(int numerator, int denominator)
     [L86-L92] public static Fraction operatoroperator(Fraction a, Fraction b)
     [L94-L97] public static Fraction operatoroperator(Fraction f)
     [L99-L102] public static Fraction operatoroperator(Fraction f)
   [L105-L138] public class Money
+    [L107-L107] public decimal Amount
     [L109-L112] public Money(decimal amount)
     [L114-L117] public static Money operatoroperator(Money a, Money b)
     [L119-L122] public static Money operatoroperator(Money a, Money b)

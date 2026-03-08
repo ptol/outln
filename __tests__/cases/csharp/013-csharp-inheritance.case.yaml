@@ -45,6 +45,7 @@ stdout: |
   [L3-L5] class Animal
     [L4-L4] public void Speak()
   [L7-L17] public class Dog
+    [L8-L8] private string breed
     [L10-L12] public Dog(string breed)
     [L14-L16] public override void Speak()
   [L19-L21] interface IPet
@@ -52,6 +53,7 @@ stdout: |
   [L23-L25] interface INamed
     [L24-L24] string GetName()
   [L27-L39] public class Cat
+    [L28-L28] private string name
     [L30-L32] public Cat(string name)
     [L34-L34] public void Play()
     [L36-L38] public string GetName()

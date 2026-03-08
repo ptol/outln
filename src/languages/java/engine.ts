@@ -215,7 +215,7 @@ function parseConstructorDeclaration(node: SyntaxNodeType): ParsedDeclaration | 
   };
 }
 
-function parseFieldDeclaration(node: SyntaxNodeType): ParsedDeclaration | null {
+function parseFieldDeclaration(node: SyntaxNodeType): ParsedDeclaration[] {
   const { startLine, endLine } = getNodeLineRange(node);
   const modifiers = getModifiers(node);
   const annotations = getAnnotationsText(node);
@@ -224,33 +224,37 @@ function parseFieldDeclaration(node: SyntaxNodeType): ParsedDeclaration | null {
   const declarators = node.children.filter((c) => c.type === 'variable_declarator');
 
   if (declarators.length === 0) {
-    return null;
+    return [];
   }
 
   const typeNode = node.childForFieldName('type');
   const type = typeNode?.text ?? '';
-
-  const firstDeclarator = declarators[0];
-  const nameNode = firstDeclarator?.children.find((c) => c.type === 'identifier');
-  if (nameNode === undefined) {
-    return null;
-  }
-
-  const name = nameNode.text;
-  const signature = type ? `${type} ${name}` : name;
-
   const fullModifiers = annotations ? `${annotations} ${modifiers}`.trim() : modifiers;
 
-  return {
-    kind: 'field',
-    name,
-    modifiers: fullModifiers,
-    signature,
-    startLine,
-    endLine,
-    startColumn,
-    endColumn
-  };
+  const declarations: ParsedDeclaration[] = [];
+
+  for (const declarator of declarators) {
+    const nameNode = declarator.children.find((c) => c.type === 'identifier');
+    if (nameNode === undefined) {
+      continue;
+    }
+
+    const name = nameNode.text;
+    const signature = type ? `${type} ${name}` : name;
+
+    declarations.push({
+      kind: 'field',
+      name,
+      modifiers: fullModifiers,
+      signature,
+      startLine,
+      endLine,
+      startColumn,
+      endColumn
+    });
+  }
+
+  return declarations;
 }
 
 function parseClassDeclaration(node: SyntaxNodeType): ParsedDeclaration | null {
@@ -528,7 +532,9 @@ function parseCompactConstructorDeclaration(node: SyntaxNodeType): ParsedDeclara
   };
 }
 
-type JavaDeclarationParser = (node: SyntaxNodeType) => ParsedDeclaration | null;
+type JavaDeclarationParserResult = ParsedDeclaration | ParsedDeclaration[] | null;
+
+type JavaDeclarationParser = (node: SyntaxNodeType) => JavaDeclarationParserResult;
 
 const JAVA_DECLARATION_PARSERS: Readonly<Record<string, JavaDeclarationParser>> = {
   class_declaration: parseClassDeclaration,
@@ -548,6 +554,14 @@ const JAVA_BODY_PARSERS: Readonly<Record<string, JavaDeclarationParser>> = {
   annotation_type_element_declaration: parseAnnotationMethodDeclaration
 };
 
+function toJavaDeclarationList(result: JavaDeclarationParserResult): ParsedDeclaration[] {
+  if (result === null) {
+    return [];
+  }
+
+  return Array.isArray(result) ? result : [result];
+}
+
 function parseClassBody(node: SyntaxNodeType): ParsedDeclaration[] {
   const declarations: ParsedDeclaration[] = [];
   const body = node.childForFieldName('body');
@@ -560,8 +574,7 @@ function parseClassBody(node: SyntaxNodeType): ParsedDeclaration[] {
     if (parserFn === undefined) {
       continue;
     }
-    const decl = parserFn(child);
-    if (decl !== null) {
+    for (const decl of toJavaDeclarationList(parserFn(child))) {
       if (
         child.type === 'class_declaration' ||
         child.type === 'interface_declaration' ||
@@ -601,8 +614,7 @@ function parseEnumBody(node: SyntaxNodeType): ParsedDeclaration[] {
         if (parserFn === undefined) {
           continue;
         }
-        const decl = parserFn(grandchild);
-        if (decl !== null) {
+        for (const decl of toJavaDeclarationList(parserFn(grandchild))) {
           declarations.push(decl);
         }
       }
@@ -613,8 +625,7 @@ function parseEnumBody(node: SyntaxNodeType): ParsedDeclaration[] {
     if (parserFn === undefined) {
       continue;
     }
-    const decl = parserFn(child);
-    if (decl !== null) {
+    for (const decl of toJavaDeclarationList(parserFn(child))) {
       declarations.push(decl);
     }
   }
@@ -665,7 +676,8 @@ function parseJavaDeclarations(content: string): ParsedDeclaration[] {
       nodeType === 'interface_declaration' ||
       nodeType === 'record_declaration'
     ) {
-      const decl = JAVA_DECLARATION_PARSERS[nodeType]?.(node);
+      const parserFn = JAVA_DECLARATION_PARSERS[nodeType];
+      const decl = parserFn ? toJavaDeclarationList(parserFn(node))[0] : null;
       if (decl) {
         const members = parseClassBody(node);
         if (members.length > 0) {
@@ -708,8 +720,7 @@ function parseJavaDeclarations(content: string): ParsedDeclaration[] {
       continue;
     }
 
-    const decl = parserFn(node);
-    if (decl !== null) {
+    for (const decl of toJavaDeclarationList(parserFn(node))) {
       declarations.push(decl);
     }
   }

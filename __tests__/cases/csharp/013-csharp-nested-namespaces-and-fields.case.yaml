@@ -1,0 +1,19 @@
+args:
+  - input/nested-namespaces.cs
+input/nested-namespaces.cs: |
+  namespace Outer
+  {
+      namespace Inner
+      {
+          public class Example
+          {
+              private int count;
+              public const string Name = "x";
+          }
+      }
+  }
+stdout: |
+  input/nested-namespaces.cs
+  [L5-L9] public class Example
+    [L7-L7] private int count
+    [L8-L8] public const string Name

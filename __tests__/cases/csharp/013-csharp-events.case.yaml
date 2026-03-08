@@ -68,3 +68,5 @@ stdout: |
     [L41-L41] public event EventHandler<NotificationData> Notification
     [L43-L46] public void SendNotification(NotificationData data)
   [L49-L53] public class NotificationData
+    [L51-L51] public string Message
+    [L52-L52] public DateTime Timestamp

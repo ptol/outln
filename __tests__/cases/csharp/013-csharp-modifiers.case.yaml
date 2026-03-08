@@ -129,16 +129,22 @@ stdout: |
     [L7-L10] public virtual double Perimeter()
     [L12-L15] public sealed void Display()
   [L18-L36] public class Circle
+    [L20-L20] public double Radius
     [L22-L25] public Circle(double radius)
     [L27-L30] public override double Area()
     [L32-L35] public override double Perimeter()
   [L38-L58] public class Rectangle
+    [L40-L40] public double Width
+    [L41-L41] public double Height
     [L43-L47] public Rectangle(double width, double height)
     [L49-L52] public override double Area()
     [L54-L57] public override double Perimeter()
   [L60-L64] public abstract class Polygon
+    [L62-L62] public int SideCount
     [L63-L63] public abstract double CalculateArea()
   [L66-L87] public sealed class Triangle
+    [L68-L68] public double Base
+    [L69-L69] public double Height
     [L71-L76] public Triangle(double @base, double height)
     [L78-L81] public override double Area()
     [L83-L86] public override double CalculateArea()

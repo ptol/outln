@@ -143,10 +143,13 @@ stdout: |
       [L80-L80] fun process(input: String): String
   [L88-L91] fun createListener()
     [L88-L91] object
+      [L89-L89] fun onClick()
+      [L90-L90] fun onHover()
   [L93-L95] interface ClickListener
     [L94-L94] fun onClick()
   [L97-L99] fun createClickListener(): ClickListener
     [L97-L99] object : ClickListener
+      [L98-L98] override fun onClick()
   [L102-L102] inline value class InlineUserId(val value: String)
   [L104-L106] inline value class InlineEmail(val value: String)
     [L105-L105] fun isValid(): Boolean

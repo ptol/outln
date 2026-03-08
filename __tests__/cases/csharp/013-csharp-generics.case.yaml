@@ -54,15 +54,22 @@ input/generics.cs: |
 stdout: |
   input/generics.cs
   [L3-L13] public class Box
+    [L4-L4] private T value
     [L6-L8] public Box(T value)
     [L10-L12] public GetValue()
   [L15-L26] public class Pair
+    [L16-L16] private A first
+    [L17-L17] private B second
     [L19-L22] public Pair(A first, B second)
     [L24-L24] public GetFirst()
     [L25-L25] public GetSecond()
   [L28-L38] public class Triple
+    [L29-L29] private T first
+    [L30-L30] private U second
+    [L31-L31] private V third
     [L33-L37] public Triple(T first, U second, V third)
   [L40-L46] public class Bounded
+    [L41-L41] private T value
     [L43-L45] public Bounded(T value)
   [L48-L50] public interface IFunction<T, R>
     [L49-L49] Apply(T t)
