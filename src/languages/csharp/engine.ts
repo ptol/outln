@@ -11,7 +11,7 @@ import type {
 import { createOutlineResult } from '../../core/outline-renderer.js';
 import { buildDeclarationOutlineLines } from '../../core/declaration-lines.js';
 import { buildHeaderCommentOutlineLines } from '../../core/header-comment-lines.js';
-import { createConfiguredParser } from '../shared/parser-factory.js';
+import { createConfiguredParser, parseSource } from '../shared/parser-factory.js';
 
 const CSHARP_EXTENSION = '.cs';
 
@@ -920,7 +920,7 @@ function parseNamespaceBody(node: ReturnType<Parser['parse']>['rootNode']): Pars
 
 function parseCSharpDeclarations(content: string): ParsedDeclaration[] {
   const parser = createCSharpParser();
-  const tree = parser.parse(content);
+  const tree = parseSource(parser, content);
   const declarations: ParsedDeclaration[] = [];
 
   const rootNode = tree.rootNode;

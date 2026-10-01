@@ -19,7 +19,7 @@ import { normalizeWhitespace } from '../../core/formatter.js';
 import { createOutlineResult } from '../../core/outline-renderer.js';
 import { buildDeclarationOutlineLines } from '../../core/declaration-lines.js';
 import { buildHeaderCommentOutlineLines } from '../../core/header-comment-lines.js';
-import { createConfiguredParser } from '../shared/parser-factory.js';
+import { createConfiguredParser, parseSource } from '../shared/parser-factory.js';
 
 const GO_EXTENSION = '.go';
 
@@ -313,7 +313,7 @@ const GO_DECLARATION_PARSERS: Readonly<Record<string, GoDeclarationParser>> = {
  */
 function parseGoDeclarations(content: string): ParsedDeclaration[] {
   const parser = createGoParser();
-  const tree = parser.parse(content);
+  const tree = parseSource(parser, content);
   const declarations: ParsedDeclaration[] = [];
 
   const rootNode = tree.rootNode;

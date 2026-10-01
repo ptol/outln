@@ -13,7 +13,7 @@ import { normalizeWhitespace } from '../../core/formatter.js';
 import { createOutlineResult } from '../../core/outline-renderer.js';
 import { buildDeclarationOutlineLines } from '../../core/declaration-lines.js';
 import { buildHeaderCommentOutlineLines } from '../../core/header-comment-lines.js';
-import { createConfiguredParser } from '../shared/parser-factory.js';
+import { createConfiguredParser, parseSource } from '../shared/parser-factory.js';
 
 const KOTLIN_EXTENSIONS = ['.kt', '.kts'];
 
@@ -733,7 +733,7 @@ function parseNestedDeclarations(node: SyntaxNodeType): ParsedDeclaration[] {
 
 function parseKotlinDeclarations(content: string): ParsedDeclaration[] {
   const parser = createKotlinParser();
-  const tree = parser.parse(content);
+  const tree = parseSource(parser, content);
   const declarations: ParsedDeclaration[] = [];
 
   const rootNode = tree.rootNode;

@@ -19,7 +19,7 @@ import { normalizeWhitespace } from '../../core/formatter.js';
 import { createOutlineResult } from '../../core/outline-renderer.js';
 import { buildDeclarationOutlineLines } from '../../core/declaration-lines.js';
 import { buildHeaderCommentOutlineLines } from '../../core/header-comment-lines.js';
-import { createConfiguredParser } from '../shared/parser-factory.js';
+import { createConfiguredParser, parseSource } from '../shared/parser-factory.js';
 import { extractRustHeaderComment } from './header-comment.js';
 
 const RUST_EXTENSION = '.rs';
@@ -474,7 +474,7 @@ const RUST_DECLARATION_PARSERS: Readonly<Record<string, RustDeclarationParser>> 
  */
 function parseRustDeclarations(content: string): ParsedDeclaration[] {
   const parser = createRustParser();
-  const tree = parser.parse(content);
+  const tree = parseSource(parser, content);
   const declarations: ParsedDeclaration[] = [];
 
   const rootNode = tree.rootNode;

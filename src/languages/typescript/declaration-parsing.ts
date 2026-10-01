@@ -37,6 +37,7 @@ import {
 } from './outline-helpers.js';
 import type { ParsedDeclaration } from '../../core/types.js';
 import type { ParseDependencies } from './parse-types.js';
+import { parseSource } from '../shared/parser-factory.js';
 
 /**
  * Type for a function that handles a specific AST node type and extracts declarations.
@@ -373,7 +374,7 @@ export function parseDeclarationsWithTree(
   dependencies: ParseDependencies
 ): ParseResult {
   const parser = dependencies.createParser();
-  const tree = parser.parse(content);
+  const tree = parseSource(parser, content);
   const declarations: ParsedDeclaration[] = [];
 
   const rootNode = tree.rootNode;
