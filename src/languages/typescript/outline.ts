@@ -4,7 +4,7 @@
  */
 
 import Parser from 'tree-sitter';
-import TypeScript from 'tree-sitter-typescript';
+import TypeScript from 'tree-sitter-typescript/bindings/node/index.js';
 
 import { extractTopComment } from './comments.js';
 import { parseDeclarationsWithTree } from './declaration-parsing.js';

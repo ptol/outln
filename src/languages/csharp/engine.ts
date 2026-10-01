@@ -1,5 +1,5 @@
 import type Parser from 'tree-sitter';
-import CSharp from 'tree-sitter-c-sharp';
+import CSharp from 'tree-sitter-c-sharp/bindings/node/index.js';
 
 import type { OutlineLanguageEngine, SummaryResult } from '../../core/language-engine.js';
 import type {

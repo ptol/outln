@@ -1,6 +1,6 @@
 import type Parser from 'tree-sitter';
 import { type SyntaxNode as SyntaxNodeType } from 'tree-sitter';
-import Kotlin from '@tree-sitter-grammars/tree-sitter-kotlin';
+import Kotlin from '@tree-sitter-grammars/tree-sitter-kotlin/bindings/node/index.js';
 
 import type { OutlineLanguageEngine, SummaryResult } from '../../core/language-engine.js';
 import type {

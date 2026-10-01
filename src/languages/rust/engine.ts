@@ -5,7 +5,7 @@
 
 import type Parser from 'tree-sitter';
 import { type SyntaxNode as SyntaxNodeType } from 'tree-sitter';
-import Rust from 'tree-sitter-rust';
+import Rust from 'tree-sitter-rust/bindings/node/index.js';
 
 import type { OutlineLanguageEngine, SummaryResult } from '../../core/language-engine.js';
 import type {

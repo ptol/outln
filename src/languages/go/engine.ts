@@ -5,7 +5,7 @@
 
 import type Parser from 'tree-sitter';
 import { type SyntaxNode as SyntaxNodeType } from 'tree-sitter';
-import Go from 'tree-sitter-go';
+import Go from 'tree-sitter-go/bindings/node/index.js';
 
 import type { OutlineLanguageEngine } from '../../core/language-engine.js';
 import type {

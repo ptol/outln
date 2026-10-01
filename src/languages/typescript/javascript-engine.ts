@@ -2,7 +2,7 @@
  * JavaScript language engine configuration for outline generation.
  */
 
-import JavaScript from 'tree-sitter-javascript';
+import JavaScript from 'tree-sitter-javascript/bindings/node/index.js';
 
 import type { ParseDependencies } from './outline.js';
 import { createFilePathMatcher, createScriptLanguageEngine } from './script-engine.js';

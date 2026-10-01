@@ -2,7 +2,7 @@
  * TypeScript language engine configuration for outline generation.
  */
 
-import TypeScript from 'tree-sitter-typescript';
+import TypeScript from 'tree-sitter-typescript/bindings/node/index.js';
 
 import type { ParseDependencies } from './outline.js';
 import { createFilePathMatcher, createScriptLanguageEngine } from './script-engine.js';
