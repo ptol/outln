@@ -7,5 +7,5 @@ input/blank-lines.ts: |
   const x = 1;
 stdout: |
   input/blank-lines.ts
-  // After blank lines.
+  After blank lines.
   [L4-L4] const x

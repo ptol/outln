@@ -7,6 +7,6 @@ input/app/[id]/page.tsx: |
   }
 stdout: |
   input/app/[id]/page.tsx
-  /** Product detail page. */
+  Product detail page.
   [L2-L4] export default function Page(): JSX.Element
 stderr: ''

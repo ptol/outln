@@ -7,5 +7,5 @@ input/blank-breaks-header-block.rs: |
   fn main() {}
 stdout: |
   input/blank-breaks-header-block.rs
-  // First line is part of header.
+  First line is part of header.
   [L4-L4] fn main ()

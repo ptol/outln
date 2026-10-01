@@ -54,11 +54,11 @@ export function createFilePathMatcher(
  * Returns the cleaned top comment text, or null if no comment is found.
  */
 function extractScriptSummary(content: string): { summary: string | null } {
-  const rawComment = extractTopComment(content);
-  if (rawComment === null) {
+  const topComment = extractTopComment(content);
+  if (topComment === null) {
     return { summary: null };
   }
-  return { summary: cleanCommentText(rawComment) };
+  return { summary: cleanCommentText(topComment.text) };
 }
 
 /**

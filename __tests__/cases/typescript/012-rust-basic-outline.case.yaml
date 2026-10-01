@@ -23,8 +23,8 @@ input/sample.rs: |
   async fn load_user(id: UserId) -> Result<Account, ()> { Ok(Account { id }) }
 stdout: |
   input/sample.rs
-  // Core account domain types.
-  // Shared by CLI and API.
+  Core account domain types.
+  Shared by CLI and API.
   [L4-L4] mod storage
   [L5-L5] mod net
   [L6-L6] extern crate alloc

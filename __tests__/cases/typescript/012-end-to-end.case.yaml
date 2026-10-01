@@ -59,8 +59,8 @@ input/main.rs: |
   }
 stdout: |
   input/models/types.rs
-  // Core domain types for the application.
-  // Defines entities and value objects.
+  Core domain types for the application.
+  Defines entities and value objects.
   [L4-L4] use std::collections::HashMap
   [L6-L6] pub type UserId
   [L8-L11] pub struct User
@@ -69,15 +69,15 @@ stdout: |
   [L23-L25] impl Authenticable for User
 
   input/utils/helpers.rs
-  // Utility functions for common operations.
+  Utility functions for common operations.
   [L3-L3] pub const MAX_SIZE
   [L4-L4] pub static VERSION
   [L6-L8] pub fn format_name (name: &str) -> String
   [L10-L12] macro_rules! log_debug
 
   input/main.rs
-  // Main entry point for the Rust application.
-  // Handles CLI arguments and orchestrates execution.
+  Main entry point for the Rust application.
+  Handles CLI arguments and orchestrates execution.
   [L4-L4] mod storage
   [L5-L5] extern crate log
   [L7-L10] async fn run () -> Result<(), Box<dyn Error>>

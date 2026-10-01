@@ -5,5 +5,5 @@ input/existing.ts: |
   // This file exists
 stdout: |
   input/existing.ts
-  // This file exists
+  This file exists
 stderr: File input/missing.ts does not exist

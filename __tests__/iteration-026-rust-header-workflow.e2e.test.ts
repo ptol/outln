@@ -25,8 +25,8 @@ describe('iteration 026 rust header workflow (e2e)', () => {
       expect(result.stdout).toBe(
         [
           'input/with-header.rs',
-          '// Service bootstrap for CLI scripts.',
-          '// Loads config and starts runner.',
+          'Service bootstrap for CLI scripts.',
+          'Loads config and starts runner.',
           '[L6-L6] fn main ()'
         ].join('\n') + '\n'
       );

@@ -112,7 +112,7 @@ input/advanced.kt: |
   value class LegacyEmail(val value: String)
 stdout: |
   input/advanced.kt
-  // Lateinit properties
+  Lateinit properties
   [L4-L12] class LateinitExample
     [L5-L5] lateinit var name: String
     [L6-L6] lateinit var data: List<String>

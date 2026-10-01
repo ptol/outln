@@ -4,4 +4,4 @@ input/comment-only.ts: |
   // Just a comment, no declarations.
 stdout: |
   input/comment-only.ts
-  // Just a comment, no declarations.
+  Just a comment, no declarations.

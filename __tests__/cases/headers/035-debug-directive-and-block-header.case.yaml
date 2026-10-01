@@ -1,0 +1,11 @@
+args:
+  - --debug
+  - input/page.tsx
+input/page.tsx: |
+  'use client';
+  /**
+   * Client page.
+   */
+  export const page = 1;
+stdout: "'use client';\n\e[32m/**\e[0m\n\e[32m * Client page.\e[0m\n\e[32m */\e[0m\n\e[32mexport const page\e[0m = 1;\n"
+stderr: ''

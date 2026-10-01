@@ -33,9 +33,7 @@ input/crlf.ts: "/**\r
   }\r\n"
 stdout: |
   input/crlf.ts
-  /**
-   * CRLF header.
-   */
+  CRLF header.
   [L4-L9] export function add(
     a: number,
     b: number

@@ -26,7 +26,7 @@ input/tailrec.kt: |
   }
 stdout: |
   input/tailrec.kt
-  // Tailrec functions
+  Tailrec functions
   [L4-L6] tailrec fun factorial(n: Long, acc: Long = 1): Long
   [L8-L14] tailrec fun findMax(list: List<Int>, max: Int? = null)
   [L16-L18] tailrec fun repeatString(s: String, n: Int, acc: String = ""): String

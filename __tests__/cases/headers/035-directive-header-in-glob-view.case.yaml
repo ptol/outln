@@ -1,0 +1,16 @@
+args:
+  - input
+input/page.tsx: |
+  'use client';
+  /** Client-side product page. */
+  export default function Page() {}
+input/server.ts: |
+  'use server';
+  export async function save() {}
+stdout: |
+  glob view: input
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/page.tsx: Client-side product page.
+  input/server.ts: (no header comment available)
+stderr: ''

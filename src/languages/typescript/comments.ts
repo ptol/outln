@@ -20,138 +20,86 @@ function stripBom(content: string): string {
 }
 
 /**
- * Finds the index of the first non-blank, non-shebang line.
+ * Matches a directive prologue line such as `'use client';` or `"use strict"`.
+ */
+const DIRECTIVE_LINE_PATTERN = /^\s*(['"])[^'"]*\1\s*;?\s*$/;
+
+/**
+ * Top-of-file comment with its raw text and position.
+ */
+export interface TopComment {
+  /** Raw comment text including delimiters, one source line per `\n`-separated line. */
+  text: string;
+  /** 1-based source line number of the first comment line. */
+  startLine: number;
+}
+
+/**
+ * Finds the index of the first line that is not a shebang, blank line or directive.
  * @param lines - Array of source lines
  * @returns Index of the first content line, or lines.length if none found
  */
 function findFirstContentLineIndex(lines: readonly string[]): number {
-  let index = 0;
-
-  // Skip shebang line if present
-  if (lines[index]?.startsWith('#!') === true) {
-    index++;
-  }
-
-  // Skip blank lines
-  while (index < lines.length && lines[index]?.trim() === '') {
-    index++;
-  }
-
-  return index;
+  const startIndex = lines[0]?.startsWith('#!') === true ? 1 : 0;
+  const firstContentOffset = lines
+    .slice(startIndex)
+    .findIndex((line) => line.trim() !== '' && !DIRECTIVE_LINE_PATTERN.test(line));
+  return firstContentOffset === -1 ? lines.length : startIndex + firstContentOffset;
 }
 
 /**
- * Calculates the character position in text where a given line starts.
- * @param lines - Array of source lines
- * @param lineIndex - Index of the target line
- * @returns Character position (0-based) where the line starts
+ * Collects a block comment starting at `startIndex`, ending at the line containing its `*\/`.
+ * Text after the closing delimiter on that line is dropped.
+ * @returns The raw block comment lines, or null when the comment is not terminated.
  */
-function getLineStartPosition(lines: readonly string[], lineIndex: number): number {
-  let position = 0;
-  for (let i = 0; i < lineIndex; i++) {
-    const line = lines[i];
-    if (line !== undefined) {
-      position += line.length + 1; // +1 for the newline that was removed by split
+function extractBlockCommentLines(lines: readonly string[], startIndex: number): string[] | null {
+  const firstLine = lines[startIndex] ?? '';
+  const openingIndex = firstLine.indexOf('/*');
+  for (let index = startIndex; index < lines.length; index++) {
+    const line = lines[index] ?? '';
+    const searchFrom = index === startIndex ? openingIndex + 2 : 0;
+    const closingIndex = line.indexOf('*/', searchFrom);
+    if (closingIndex !== -1) {
+      const blockLines = lines.slice(startIndex, index);
+      return [...blockLines, line.slice(0, closingIndex + 2)];
     }
   }
-  return position;
+  return null;
 }
 
 /**
  * Extracts consecutive single-line comments starting from a given line index.
  * @param lines - Array of source lines
  * @param startIndex - Index to start extracting from
- * @returns Joined comment lines
+ * @returns Raw comment lines
  */
-function extractSingleLineComments(lines: readonly string[], startIndex: number): string {
-  const commentLines: string[] = [];
-  let index = startIndex;
-
-  while (index < lines.length) {
-    const line = lines[index];
-    if (line === undefined) break;
-    if (line.trimStart().startsWith('//')) {
-      commentLines.push(line);
-      index++;
-    } else {
-      break;
-    }
-  }
-
-  return commentLines.join('\n');
+function extractSingleLineComments(lines: readonly string[], startIndex: number): string[] {
+  const endOffset = lines.slice(startIndex).findIndex((line) => !line.trimStart().startsWith('//'));
+  return lines.slice(startIndex, endOffset === -1 ? lines.length : startIndex + endOffset);
 }
 
 /**
  * Extracts the first top-of-file comment from source text.
- * Skips BOM, shebang, and blank lines before looking for a comment.
+ * Skips BOM, shebang, blank lines and directive prologues (`'use client'`, `'use strict'`)
+ * before looking for a comment that starts a line.
  * @param content - Source code text
- * @returns The extracted comment text, or null if none found
+ * @returns The comment text and start line, or null if none found
  */
-export function extractTopComment(content: string): string | null {
-  const text = stripBom(content);
-  const lines = text.split(/\r?\n/);
-
+export function extractTopComment(content: string): TopComment | null {
+  const lines = stripBom(content).split(/\r?\n/);
   const index = findFirstContentLineIndex(lines);
-
-  if (index >= lines.length) {
-    return null;
-  }
-
-  const firstLine = lines[index];
+  const firstLine = lines[index]?.trimStart();
   if (firstLine === undefined) {
     return null;
   }
 
-  const currentPos = getLineStartPosition(lines, index);
+  const commentLines = firstLine.startsWith('/*')
+    ? extractBlockCommentLines(lines, index)
+    : firstLine.startsWith('//')
+      ? extractSingleLineComments(lines, index)
+      : null;
 
-  // Check for block comment
-  const blockCommentStartInLine = firstLine.indexOf('/*');
-  if (blockCommentStartInLine !== -1) {
-    const commentStartPos = currentPos + blockCommentStartInLine;
-    const blockCommentEnd = text.indexOf('*/', commentStartPos);
-    if (blockCommentEnd !== -1) {
-      // Slice from start of line to preserve indentation, not from the /* position
-      return text.slice(currentPos, blockCommentEnd + 2);
-    }
-  }
-
-  // Check for single-line comments
-  const firstLineTrimmed = firstLine.trimStart();
-  if (firstLineTrimmed.startsWith('//')) {
-    return extractSingleLineComments(lines, index);
-  }
-
-  return null;
-}
-
-/**
- * Extracts the starting line number of the top-of-file comment (1-based).
- * Returns null if no header comment is found.
- * @param content - The file content to analyze
- * @returns The 1-based line number where the header comment starts, or null
- */
-export function extractTopCommentLineNumber(content: string): number | null {
-  const text = stripBom(content);
-  const lines = text.split(/\r?\n/);
-
-  const index = findFirstContentLineIndex(lines);
-
-  if (index >= lines.length) {
-    return null;
-  }
-
-  const firstLine = lines[index];
-  if (firstLine === undefined) {
-    return null;
-  }
-
-  const firstLineTrimmed = firstLine.trimStart();
-  // Check for block comment or single-line comment
-  if (firstLineTrimmed.startsWith('/*') || firstLineTrimmed.startsWith('//')) {
-    return index + 1; // Convert to 1-based line number
-  }
-
-  return null;
+  return commentLines === null ? null : { text: commentLines.join('\n'), startLine: index + 1 };
 }
 
 /**

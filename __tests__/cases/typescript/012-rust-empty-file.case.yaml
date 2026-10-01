@@ -6,4 +6,4 @@ input/empty.rs: |
   // Another comment
 stdout: |
   input/empty.rs
-  // Just a comment
+  Just a comment

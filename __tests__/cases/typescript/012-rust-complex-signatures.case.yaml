@@ -12,7 +12,7 @@ input/complex.rs: |
   fn generic<T: Display>(value: T) where T: Clone {}
 stdout: |
   input/complex.rs
-  // Complex functions
+  Complex functions
   [L3-L3] const fn compute (x: u32) -> u64
   [L4-L4] unsafe fn dangerous ()
   [L5-L5] async fn fetch () -> Result<(), Error>

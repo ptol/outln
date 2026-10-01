@@ -6,5 +6,5 @@ input/shebang-with-comment.ts: |
   export function main(): void {}
 stdout: |
   input/shebang-with-comment.ts
-  // CLI entrypoint wiring.
+  CLI entrypoint wiring.
   [L3-L3] export function main(): void

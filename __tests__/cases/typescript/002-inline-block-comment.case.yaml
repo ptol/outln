@@ -5,5 +5,5 @@ input/inline-block.ts: |
   const x = 1;
 stdout: |
   input/inline-block.ts
-  /* Inline block comment */
+  Inline block comment
   [L2-L2] const x

@@ -38,7 +38,7 @@ input/expect-actual.kt: |
   class RealConnection : Connection()
 stdout: |
   input/expect-actual.kt
-  // Expect declarations (in common module)
+  Expect declarations (in common module)
   [L4-L6] expect class Platform()
     [L5-L5] fun getPlatformName(): String
   [L8-L11] expect object Database

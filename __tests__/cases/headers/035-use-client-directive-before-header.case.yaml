@@ -1,0 +1,16 @@
+args:
+  - input/page.tsx
+input/page.tsx: |
+  'use client';
+
+  /**
+   * Client-side product page.
+   */
+  export default function Page() {
+    return null;
+  }
+stdout: |
+  input/page.tsx
+  Client-side product page.
+  [L6-L8] export default function Page()
+stderr: ''

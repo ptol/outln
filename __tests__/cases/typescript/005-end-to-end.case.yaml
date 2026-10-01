@@ -39,9 +39,7 @@ input/utils.ts: |
   }
 stdout: |
   input/api.d.ts
-  /**
-   * API type definitions.
-   */
+  API type definitions.
   [L4-L4] import FS
   [L6-L6] declare function makeRequest(url: string): Promise<Response>
   [L7-L7] declare function makeRequest(url: URL): Promise<Response>
@@ -51,9 +49,7 @@ stdout: |
   [L15-L19] declare global
 
   input/utils.ts
-  /**
-   * Utility functions.
-   */
+  Utility functions.
   [L4-L6] namespace Internal
   [L7-L9] module Shared
   [L10-L10] import Path

@@ -4,4 +4,4 @@ input/Empty.cs: |
   // This is a comment but no declarations
 stdout: |
   input/Empty.cs
-  // This is a comment but no declarations
+  This is a comment but no declarations

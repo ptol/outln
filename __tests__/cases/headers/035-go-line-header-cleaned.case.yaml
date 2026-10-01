@@ -1,0 +1,14 @@
+args:
+  - input/main.go
+input/main.go: |
+  // Package main wires the CLI.
+  // It parses flags.
+  package main
+
+  func main() {}
+stdout: |
+  input/main.go
+  Package main wires the CLI.
+  It parses flags.
+  [L5-L5] func main()
+stderr: ''

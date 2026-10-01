@@ -76,8 +76,8 @@ input/main.go: |
   }
 stdout: |
   input/models/config.go
-  // Configuration models for the application.
-  // Contains all domain types and constants.
+  Configuration models for the application.
+  Contains all domain types and constants.
   [L8-L8] const DefaultTimeout
   [L11-L11] const StatusActive
   [L12-L12] const StatusInactive
@@ -94,6 +94,6 @@ stdout: |
   [L16-L16] type Utils
 
   input/main.go
-  // Main entry point for the CLI application.
+  Main entry point for the CLI application.
   [L12-L15] func main()
   [L17-L19] func init()

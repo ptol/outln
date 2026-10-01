@@ -5,5 +5,5 @@ input/single-line.ts: |
   const x = 1;
 stdout: |
   input/single-line.ts
-  // Simple comment.
+  Simple comment.
   [L2-L2] const x

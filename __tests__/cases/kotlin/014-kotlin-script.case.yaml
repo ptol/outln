@@ -13,7 +13,7 @@ input/script.kts: |
   val user = User("John", 30)
 stdout: |
   input/script.kts
-  // Kotlin script example
+  Kotlin script example
   [L5-L5] fun sayHello(name: String): String
   [L7-L7] val result
   [L9-L9] data class User(val name: String, val age: Int)

@@ -20,7 +20,7 @@ input/common.cjs: |
   module.exports = cache;
 stdout: |
   input/basic.js
-  // js summary
+  js summary
   [L2-L4] function plain(value)
 
   input/view.jsx
@@ -30,5 +30,5 @@ stdout: |
   [L1-L1] export const version
 
   input/common.cjs
-  /* cjs summary */
+  cjs summary
   [L2-L2] const cache

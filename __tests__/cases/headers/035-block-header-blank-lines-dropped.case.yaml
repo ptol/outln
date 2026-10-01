@@ -1,0 +1,15 @@
+args:
+  - input/notes.ts
+input/notes.ts: |
+  /**
+   * First paragraph.
+   *
+   * Second paragraph.
+   */
+  export const notes = 1;
+stdout: |
+  input/notes.ts
+  First paragraph.
+  Second paragraph.
+  [L6-L6] export const notes
+stderr: ''

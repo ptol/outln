@@ -9,6 +9,6 @@ input/shebang.rs: |
   fn main() {}
 stdout: |
   input/shebang.rs
-  // Header comment after shebang.
-  // Second line of header.
+  Header comment after shebang.
+  Second line of header.
   [L6-L6] fn main ()

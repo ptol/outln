@@ -21,9 +21,7 @@ input/full-feature.ts: |
   }
 stdout: |
   input/full-feature.ts
-  /**
-   * Math utilities with overloaded functions.
-   */
+  Math utilities with overloaded functions.
   [L4-L4] export function add(a: string, b: string): string
   [L5-L5] export function add(a: number, b: number): number
   [L6-L8] export function add(a: string | number, b: string | number): string | number

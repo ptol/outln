@@ -7,5 +7,5 @@ input/preamble.ts: |
   export function main(): void {}
 stdout: |
   input/preamble.ts
-  // CLI wiring.
+  CLI wiring.
   [L4-L4] export function main(): void

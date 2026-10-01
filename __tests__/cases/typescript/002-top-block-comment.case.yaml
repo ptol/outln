@@ -9,7 +9,5 @@ input/with-top-comment.ts: |
   }
 stdout: |
   input/with-top-comment.ts
-  /**
-   * Domain model for account sessions.
-   */
+  Domain model for account sessions.
   [L4-L6] export interface Session

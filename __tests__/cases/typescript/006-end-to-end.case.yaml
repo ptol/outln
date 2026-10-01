@@ -28,9 +28,7 @@ input/exported-blocks.ts: |
   export module 'dynamic/path' {}
 stdout: |
   input/ambient-declarations.ts
-  /**
-   * Ambient type definitions for external libraries.
-   */
+  Ambient type definitions for external libraries.
   [L4-L7] declare namespace ExternalLib
   [L8-L8] declare var globalCounter
   [L9-L9] declare let sessionActive
@@ -39,9 +37,7 @@ stdout: |
   [L12-L12] declare type Callback
 
   input/exported-blocks.ts
-  /**
-   * Exported namespace and module blocks.
-   */
+  Exported namespace and module blocks.
   [L4-L7] export namespace PublicAPI
   [L8-L10] export module Internal
   [L11-L11] export module 'dynamic/path'

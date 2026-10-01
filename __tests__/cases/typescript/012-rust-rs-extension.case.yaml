@@ -6,5 +6,5 @@ input/main.rs: |
   fn main() {}
 stdout: |
   input/main.rs
-  // Entry point.
+  Entry point.
   [L3-L3] fn main ()

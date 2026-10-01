@@ -7,6 +7,6 @@ input/multiple-leading-comments.ts: |
   export const ready = true;
 stdout: |
   input/multiple-leading-comments.ts
-  // Primary file purpose.
-  // Keep this.
+  Primary file purpose.
+  Keep this.
   [L4-L4] export const ready

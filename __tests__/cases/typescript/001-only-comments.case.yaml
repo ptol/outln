@@ -6,4 +6,4 @@ input/comments.ts: |
      comment */
 stdout: |
   input/comments.ts
-  // This is a comment
+  This is a comment

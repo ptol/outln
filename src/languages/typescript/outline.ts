@@ -6,9 +6,9 @@
 import Parser from 'tree-sitter';
 import TypeScript from 'tree-sitter-typescript';
 
-import { extractTopComment, extractTopCommentLineNumber } from './comments.js';
+import { extractTopComment } from './comments.js';
 import { parseDeclarationsWithTree } from './declaration-parsing.js';
-import { buildHeaderCommentLines } from './outline-lines.js';
+import { buildHeaderCommentOutlineLines } from '../../core/header-comment-lines.js';
 import type { ParseDependencies } from './parse-types.js';
 import { buildDeclarationOutlineLines } from '../../core/declaration-lines.js';
 import { createOutlineResult } from '../../core/outline-renderer.js';
@@ -54,16 +54,21 @@ export function generateOutline(
 ): OutlineResult {
   const { filePath, content } = options;
   const topComment = extractTopComment(content);
-  const topCommentLineNumber = extractTopCommentLineNumber(content);
 
   const { declarations, tree } = parseDeclarationsWithTree(content, dependencies);
   const declarationsWithMembers = attachClassMembers(declarations, tree);
 
   const lines: OutlineLine[] = [{ kind: 'file-path', text: filePath }];
-  lines.push(...buildHeaderCommentLines(topComment, topCommentLineNumber));
+  lines.push(
+    ...buildHeaderCommentOutlineLines(
+      topComment === null
+        ? null
+        : { rawLines: topComment.text.split('\n'), startLine: topComment.startLine }
+    )
+  );
   lines.push(...buildDeclarationOutlineLines(declarationsWithMembers));
 
-  return createOutlineResult(lines, topComment);
+  return createOutlineResult(lines, topComment?.text ?? null);
 }
 
 export { formatDeclaration } from '../../core/formatter.js';

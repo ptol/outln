@@ -11,7 +11,7 @@ input/impls.rs: |
   impl String { fn len(&self) -> usize { 0 } }
 stdout: |
   input/impls.rs
-  // Impl blocks
+  Impl blocks
   [L3-L3] struct Container
   [L4-L4] trait Printable
   [L6-L6] impl Container

@@ -26,13 +26,11 @@ input/utils.ts: |
   export const VERSION = '1.0.0';
 stdout: |
   input/config.ts
-  /**
-   * Application configuration types.
-   */
+  Application configuration types.
   [L4-L7] export interface AppConfig
   [L9-L12] export const DEFAULT_CONFIG
 
   input/utils.ts
-  // Helper functions for text processing.
+  Helper functions for text processing.
   [L5-L7] export function trimInput(input: string): string
   [L9-L9] export const VERSION

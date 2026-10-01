@@ -10,7 +10,7 @@ input/use.rs: |
   use std::fs::File as FsFile;
 stdout: |
   input/use.rs
-  // Use declarations
+  Use declarations
   [L3-L3] use std::io
   [L4-L4] use std::collections::HashMap
   [L5-L5] use crate::utils::helpers::{self, format}

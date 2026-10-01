@@ -5,5 +5,5 @@ input/indented-block.ts: |2-
   const x = 1;
 stdout: |
   input/indented-block.ts
-    /* Indented block comment */
+  Indented block comment
   [L2-L2] const x
