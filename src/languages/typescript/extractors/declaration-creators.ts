@@ -7,7 +7,7 @@ import type { SyntaxNode as SyntaxNodeType } from 'tree-sitter';
 
 import type { ParsedDeclaration } from '../../../core/types.js';
 import { getNodeLineRange, getDeclarationName, getDeclarationColumnSpan } from './node-utils.js';
-import { getFunctionSignature } from './signature-builder.js';
+import { buildGenericTypeSignature, getFunctionSignature } from './signature-builder.js';
 
 /**
  * Creates a ParsedDeclaration for a function node.
@@ -51,6 +51,20 @@ function buildBaseDeclaration(
 }
 
 /**
+ * Builds a declaration whose signature includes type parameters when the node is generic.
+ */
+function buildGenericDeclaration(
+  node: SyntaxNodeType,
+  kind: string,
+  modifiers: string,
+  parentNode?: SyntaxNodeType
+): ParsedDeclaration {
+  const name = getDeclarationName(node) ?? '';
+  const signature = buildGenericTypeSignature(kind, name, node);
+  return buildBaseDeclaration(node, kind, modifiers, signature, parentNode);
+}
+
+/**
  * Creates a ParsedDeclaration for a class node.
  */
 export function createClassDeclaration(
@@ -60,7 +74,7 @@ export function createClassDeclaration(
   parentNode?: SyntaxNodeType
 ): ParsedDeclaration {
   const kind = isAbstract ? 'abstract class' : 'class';
-  return buildBaseDeclaration(node, kind, modifiers, '', parentNode);
+  return buildGenericDeclaration(node, kind, modifiers, parentNode);
 }
 
 /**
@@ -71,7 +85,7 @@ export function createInterfaceDeclaration(
   modifiers: string,
   parentNode?: SyntaxNodeType
 ): ParsedDeclaration {
-  return buildBaseDeclaration(node, 'interface', modifiers, '', parentNode);
+  return buildGenericDeclaration(node, 'interface', modifiers, parentNode);
 }
 
 /**
@@ -82,7 +96,7 @@ export function createTypeDeclaration(
   modifiers: string,
   parentNode?: SyntaxNodeType
 ): ParsedDeclaration {
-  return buildBaseDeclaration(node, 'type', modifiers, '', parentNode);
+  return buildGenericDeclaration(node, 'type', modifiers, parentNode);
 }
 
 /**

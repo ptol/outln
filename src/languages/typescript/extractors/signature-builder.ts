@@ -6,20 +6,46 @@
 import type { SyntaxNode as SyntaxNodeType } from 'tree-sitter';
 
 /**
+ * Returns the source text of a node's type parameter list (e.g. `<T extends number>`), or ''.
+ */
+export function getTypeParametersText(node: SyntaxNodeType): string {
+  return node.childForFieldName('type_parameters')?.text ?? '';
+}
+
+/**
+ * Builds a `kind Name<T>` signature for generic classes, interfaces and type aliases.
+ * Returns '' for non-generic declarations so the default `kind name` rendering is used.
+ * @param kind - Declaration kind (e.g. 'class', 'declare interface')
+ * @param name - Declaration name
+ * @param node - Declaration node that may carry type parameters
+ */
+export function buildGenericTypeSignature(
+  kind: string,
+  name: string,
+  node: SyntaxNodeType
+): string {
+  const typeParameters = getTypeParametersText(node);
+  if (typeParameters.length === 0) {
+    return '';
+  }
+  return name.length > 0 ? `${kind} ${name}${typeParameters}` : `${kind}${typeParameters}`;
+}
+
+/**
  * Builds a function signature string from parts.
  * @param prefix - The prefix to use (e.g., 'function' or 'declare function')
  * @param name - The function name
- * @param parameters - The parameters node, or null
- * @param returnType - The return type node, or null
+ * @param signatureNode - Node carrying the type parameters, parameters and return type fields
  * @returns The complete signature string
  */
 export function buildFunctionSignature(
   prefix: string,
   name: string,
-  parameters: SyntaxNodeType | null,
-  returnType: SyntaxNodeType | null
+  signatureNode: SyntaxNodeType
 ): string {
-  let signature = `${prefix} ${name}`;
+  const parameters = signatureNode.childForFieldName('parameters');
+  const returnType = signatureNode.childForFieldName('return_type');
+  let signature = `${prefix} ${name}${getTypeParametersText(signatureNode)}`;
   if (parameters !== null) {
     signature += parameters.text;
   }
@@ -57,7 +83,7 @@ export function getFunctionSignature(node: SyntaxNodeType): string {
   const parameters = node.childForFieldName('parameters');
   const returnType = node.childForFieldName('return_type');
 
-  let signatureRest = '';
+  let signatureRest = getTypeParametersText(node);
   if (parameters !== null) {
     signatureRest += parameters.text;
   }

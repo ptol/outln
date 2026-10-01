@@ -1,0 +1,10 @@
+args:
+  - --debug
+  - input/generic.ts
+input/generic.ts: |
+  export function id<T>(value: T): T {
+    return value;
+  }
+  export class Box<T> {}
+stdout: "\e[32mexport function id<T>(value: T): T\e[0m {\n  return value;\n}\n\e[32mexport class Box<T>\e[0m {}\n"
+stderr: ''

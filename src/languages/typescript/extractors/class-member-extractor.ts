@@ -8,6 +8,7 @@ import type { SyntaxNode as SyntaxNodeType } from 'tree-sitter';
 import type { ParsedDeclaration } from '../../../core/types.js';
 import { isClassMemberNodeType } from '../ast-utils.js';
 import { getDeclarationColumnSpan } from './node-utils.js';
+import { getTypeParametersText } from './signature-builder.js';
 
 /**
  * Checks if a class member node type is supported for extraction.
@@ -202,7 +203,7 @@ function buildMemberSignature(node: SyntaxNodeType, nodeType: string): string {
 
   // Regular method
   const returnType = extractReturnType(node);
-  return `${name}${parameters}${returnType}`;
+  return `${name}${getTypeParametersText(node)}${parameters}${returnType}`;
 }
 
 /**

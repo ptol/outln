@@ -16,10 +16,7 @@ export function extractFunctionSignatureDeclaration(node: SyntaxNodeType): Parse
   const { startLine, endLine } = getNodeLineRange(node);
   const nameNode = node.childForFieldName('name');
   const name = nameNode?.text ?? '';
-  const parameters = node.childForFieldName('parameters');
-  const returnType = node.childForFieldName('return_type');
-
-  const signature = buildFunctionSignature('function', name, parameters, returnType);
+  const signature = buildFunctionSignature('function', name, node);
   const { startColumn, endColumn } = getDeclarationColumnSpan({
     node,
     signature,

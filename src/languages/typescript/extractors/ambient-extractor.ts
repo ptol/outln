@@ -7,7 +7,7 @@ import type { SyntaxNode as SyntaxNodeType } from 'tree-sitter';
 
 import type { ParsedDeclaration } from '../../../core/types.js';
 import { getNodeLineRange, getDeclarationName, getDeclarationColumnSpan } from './node-utils.js';
-import { buildFunctionSignature } from './signature-builder.js';
+import { buildFunctionSignature, buildGenericTypeSignature } from './signature-builder.js';
 
 /**
  * Mapping from AST node types to their corresponding declaration kinds.
@@ -135,9 +135,7 @@ export function extractAmbientDeclaration(node: SyntaxNodeType): ParsedDeclarati
     if (childType === 'function_signature') {
       const nameNode = child.childForFieldName('name');
       const name = nameNode?.text ?? '';
-      const parameters = child.childForFieldName('parameters');
-      const returnType = child.childForFieldName('return_type');
-      const signature = buildFunctionSignature('declare function', name, parameters, returnType);
+      const signature = buildFunctionSignature('declare function', name, child);
       // Pass the ambient_declaration node as startNode to include 'declare' keyword
       const { startColumn, endColumn } = getDeclarationColumnSpan({
         node: child,
@@ -202,15 +200,18 @@ export function extractAmbientDeclaration(node: SyntaxNodeType): ParsedDeclarati
           : (getDeclarationName(child) ?? '');
       // Pass the ambient_declaration node as startNode to include 'declare' keyword
       // Use the full kind (e.g., "declare interface") for correct signature length
+      const signature = buildGenericTypeSignature(kind, name, child);
       const { startColumn, endColumn } = getDeclarationColumnSpan({
         node: child,
-        signature: '',
+        signature,
         modifiers: '',
         kind, // Use full kind with "declare" prefix
         name,
         startNode: node // ambient_declaration node provides the 'declare' start position
       });
-      return createAmbientDeclaration(kind, name, startLine, endLine, startColumn, endColumn);
+      return createAmbientDeclaration(kind, name, startLine, endLine, startColumn, endColumn).map(
+        (decl) => ({ ...decl, signature })
+      );
     }
   }
 
