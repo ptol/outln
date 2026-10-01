@@ -47,14 +47,6 @@ export function calculateExportColumnSpan(
 }
 
 /**
- * Checks if an export statement is a re-export list (export { foo, bar } from './module').
- * These should be skipped per the spec.
- */
-export function isReExportList(node: SyntaxNodeType): boolean {
-  return node.children.some((child) => child.type === 'export_clause');
-}
-
-/**
  * Determines the export modifiers for a declaration based on the export statement.
  * @param exportNode - The export statement node
  * @returns The modifiers string: 'export', 'export default', or '' for non-export

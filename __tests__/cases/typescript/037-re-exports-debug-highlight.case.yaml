@@ -1,0 +1,10 @@
+args:
+  - --debug
+  - input/index.ts
+input/index.ts: |
+  export * from './b';
+  export {
+    a
+  } from './a';
+stdout: "\e[32mexport * from './b';\e[0m\n\e[32mexport {\e[0m\n  a\n} from './a';\n"
+stderr: ''

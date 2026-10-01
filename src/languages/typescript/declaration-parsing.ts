@@ -32,12 +32,15 @@ import {
 import {
   findExportDeclaration,
   getExportModifiers,
-  isReExportList,
   calculateExportColumnSpan
 } from './outline-helpers.js';
 import type { ParsedDeclaration } from '../../core/types.js';
 import type { ParseDependencies } from './parse-types.js';
 import { parseSource } from '../shared/parser-factory.js';
+import {
+  extractReExportDeclaration,
+  isReExportStatement
+} from './extractors/re-export-extractor.js';
 
 /**
  * Type for a function that handles a specific AST node type and extracts declarations.
@@ -275,8 +278,8 @@ function parseVariableDeclarationNode(
 function processExportStatement(node: SyntaxNodeType): ParsedDeclaration[] {
   const declarations: ParsedDeclaration[] = [];
 
-  if (isReExportList(node)) {
-    return declarations;
+  if (isReExportStatement(node)) {
+    return [extractReExportDeclaration(node)];
   }
 
   const declaration = findExportDeclaration(node);

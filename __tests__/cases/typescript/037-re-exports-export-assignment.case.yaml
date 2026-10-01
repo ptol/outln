@@ -1,0 +1,12 @@
+args:
+  - input/legacy.d.ts
+input/legacy.d.ts: |
+  declare function lib(): void;
+  export = lib;
+  export as namespace Lib;
+stdout: |
+  input/legacy.d.ts
+  [L1-L1] declare function lib(): void
+  [L2-L2] export = lib
+  [L3-L3] export as namespace Lib
+stderr: ''
