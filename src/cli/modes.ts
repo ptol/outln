@@ -137,7 +137,7 @@ export async function runGlobViewMode(
     try {
       content = await dependencies.readTextFile(relativePath);
     } catch {
-      dependencies.writeError(`FILE ${relativePath} COULD NOT BE READ OR PARSED`);
+      dependencies.writeError(formatReadFailure(relativePath));
       hasReadFailure = true;
       continue;
     }
@@ -162,6 +162,30 @@ export async function runGlobViewMode(
 }
 
 /**
+ * Builds the stderr message for a file that could not be read or parsed.
+ */
+function formatReadFailure(filePath: string): string {
+  return `FILE ${filePath} COULD NOT BE READ OR PARSED`;
+}
+
+/**
+ * Reads and outlines one file, converting any read or parse failure into an error result.
+ * Keeps one bad file from hiding the outlines of the others.
+ */
+async function outlineSingleFile(
+  filePath: string,
+  dependencies: RunDependencies,
+  processor: ContentProcessor
+): Promise<OutlineGenerationResult> {
+  try {
+    const content = await dependencies.readTextFile(filePath);
+    return processor(filePath, content);
+  } catch {
+    return { supported: false, errorMessage: formatReadFailure(filePath) };
+  }
+}
+
+/**
  * Runs file mode: outline generation for explicit file paths.
  */
 export async function runFileMode(
@@ -169,7 +193,6 @@ export async function runFileMode(
   dependencies: RunDependencies,
   processor: ContentProcessor
 ): Promise<void> {
-  let hasFailure = false;
   const fileExistsStates = await Promise.all(
     filePaths.map(async (filePathArg) => dependencies.fileExists(filePathArg))
   );
@@ -179,40 +202,22 @@ export async function runFileMode(
   );
 
   for (const missingFilePath of missingFilePaths) {
-    hasFailure = true;
     dependencies.writeError(`File ${missingFilePath} does not exist`);
   }
 
-  if (existingFilePaths.length > 0) {
-    try {
-      const contents = await Promise.all(
-        existingFilePaths.map(async (filePathArg) => dependencies.readTextFile(filePathArg))
-      );
-      const processedResults = contents.map((content, index) => {
-        const filePath = existingFilePaths[index];
-        if (filePath === undefined) {
-          throw new Error(`Missing file path at index ${index.toString()}`);
-        }
-        return processor(filePath, content);
-      });
-
-      const { outlines, errors } = collectOutlines(processedResults);
-      for (const error of errors) {
-        hasFailure = true;
-        dependencies.writeError(error);
-      }
-
-      if (outlines.length > 0) {
-        dependencies.writeOutput(outlines.join('\n'));
-      }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      dependencies.writeError(`Failed to read input files: ${message}`);
-      hasFailure = true;
-    }
+  const processedResults = await Promise.all(
+    existingFilePaths.map(async (filePath) => outlineSingleFile(filePath, dependencies, processor))
+  );
+  const { outlines, errors } = collectOutlines(processedResults);
+  for (const error of errors) {
+    dependencies.writeError(error);
   }
 
-  if (hasFailure) {
+  if (outlines.length > 0) {
+    dependencies.writeOutput(outlines.join('\n'));
+  }
+
+  if (missingFilePaths.length > 0 || errors.length > 0) {
     dependencies.setExitCode(1);
   }
 }
@@ -234,7 +239,7 @@ async function processDebugFile(
   try {
     content = await dependencies.readTextFile(filePath);
   } catch {
-    return { success: false, error: `FILE ${filePath} COULD NOT BE READ OR PARSED` };
+    return { success: false, error: formatReadFailure(filePath) };
   }
 
   const outlineResult = generateOutlineForFile({ filePath, content });
@@ -247,7 +252,7 @@ async function processDebugFile(
 
   const result = outlineResult.result;
   if (result === undefined) {
-    return { success: false, error: `FILE ${filePath} COULD NOT BE READ OR PARSED` };
+    return { success: false, error: formatReadFailure(filePath) };
   }
 
   const debugOutput = generateDebugOutput(content, result);

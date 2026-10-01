@@ -95,7 +95,7 @@ description: Minimal architecture and module boundaries for the current outln ru
 - Missing input paths write a usage line to stderr and exit with code `1`.
 - Missing files write one-line `FILE <path> DOESN'T EXIST` errors and continue processing remaining files.
 - Unsupported file types write one-line `FILE <path> HAS UNSUPPORTED FILE TYPE` errors and continue processing remaining files.
-- File read failures write a one-line `Failed to read input files: <message>` error.
+- A file that cannot be read or parsed writes `FILE <path> COULD NOT BE READ OR PARSED`; other files in the same run are still outlined.
 - Any failure path sets process exit code `1`; success path leaves exit code as `0`.
 - Detailed typed error categories are future work and tracked separately from current runtime behavior.
 
