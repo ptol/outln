@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { generateOutlineForFile } from './core/language-registry.js';
 import { runDebugMode, runFileMode, runGlobViewMode, failWithError } from './cli/modes.js';
 import type { ContentProcessor, RunDependencies } from './cli/types.js';
+import { createStdoutErrorHandler } from './cli/broken-pipe.js';
 import {
   parseArguments,
   normalizeInputArguments,
@@ -168,5 +169,9 @@ function normalizeExecutionPath(filePath: string): string {
 }
 
 if (isDirectExecution(process.argv, import.meta.url)) {
+  process.stdout.on(
+    'error',
+    createStdoutErrorHandler((code) => process.exit(code))
+  );
   void run(process.argv);
 }
