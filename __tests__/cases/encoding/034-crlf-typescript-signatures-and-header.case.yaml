@@ -1,0 +1,47 @@
+args:
+  - input/crlf.ts
+input/crlf.ts: "/**\r
+
+  \ * CRLF header.\r
+
+  \ */\r
+
+  export function add(\r
+
+  \  a: number,\r
+
+  \  b: number\r
+
+  ): number {\r
+
+  \  return a + b;\r
+
+  }\r
+
+  export class Box {\r
+
+  \  get(\r
+
+  \    key: string\r
+
+  \  ): string {\r
+
+  \    return key;\r
+
+  \  }\r
+
+  }\r\n"
+stdout: |
+  input/crlf.ts
+  /**
+   * CRLF header.
+   */
+  [L4-L9] export function add(
+    a: number,
+    b: number
+  ): number
+  [L10-L16] export class Box
+    [L11-L15] get(
+      key: string
+    ): string
+stderr: ''

@@ -1,0 +1,12 @@
+args:
+  - input
+input/utf16.ts: "��/\0*\0*\0 \0H\0i\0 \0*\0/\0"
+input/ok.ts: |
+  /** OK file. */
+  export const ok = 1;
+stdout: |
+  glob view: input
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/ok.ts: OK file.
+stderr: FILE input/utf16.ts IS NOT UTF-8 TEXT

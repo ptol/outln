@@ -10,6 +10,7 @@ import {
 import { generateDebugOutput, validateDebugInput } from '../debug/debug-mode.js';
 import { discoverInputFiles, isSupportedFilePath, type GlobViewInputs } from './input-discovery.js';
 import { walkDirectory } from './file-walker.js';
+import { formatReadFailure, readSourceFile } from './source-reader.js';
 import type { ContentProcessor, RunDependencies } from './types.js';
 
 interface PartitionedFilePaths {
@@ -99,12 +100,12 @@ export async function runGlobViewMode(
 
   let hasReadFailure = false;
   for (const filePath of discovered.filePaths) {
-    const line = await summarizeFile(filePath, dependencies);
-    if (line === null) {
-      dependencies.writeError(formatReadFailure(filePath));
-      hasReadFailure = true;
+    const summary = await summarizeFile(filePath, dependencies);
+    if (summary.ok) {
+      dependencies.writeOutput(summary.line);
     } else {
-      dependencies.writeOutput(line);
+      dependencies.writeError(summary.error);
+      hasReadFailure = true;
     }
   }
 
@@ -112,28 +113,23 @@ export async function runGlobViewMode(
 }
 
 /**
- * Reads a supported file and formats its one-line summary, or returns null when it cannot be read.
+ * Reads a supported file and formats its one-line summary, or the read error message.
  */
 async function summarizeFile(
   filePath: string,
   dependencies: RunDependencies
-): Promise<string | null> {
-  try {
-    const content = await dependencies.readTextFile(filePath);
-    const summary = extractSummaryFromFile(filePath, content).summary ?? null;
-    return summary !== null && summary.length > 0
-      ? `${filePath}: ${summary}\n`
-      : `${filePath}: (no header comment available)\n`;
-  } catch {
-    return null;
+): Promise<{ ok: true; line: string } | { ok: false; error: string }> {
+  const source = await readSourceFile(filePath, dependencies);
+  if (!source.ok) {
+    return source;
   }
-}
-
-/**
- * Builds the stderr message for a file that could not be read or parsed.
- */
-function formatReadFailure(filePath: string): string {
-  return `FILE ${filePath} COULD NOT BE READ OR PARSED`;
+  try {
+    const summary = extractSummaryFromFile(filePath, source.content).summary ?? null;
+    const text = summary !== null && summary.length > 0 ? summary : '(no header comment available)';
+    return { ok: true, line: `${filePath}: ${text}\n` };
+  } catch (error) {
+    return { ok: false, error: formatReadFailure(filePath, error) };
+  }
 }
 
 /**
@@ -145,11 +141,14 @@ async function outlineSingleFile(
   dependencies: RunDependencies,
   processor: ContentProcessor
 ): Promise<OutlineGenerationResult> {
+  const source = await readSourceFile(filePath, dependencies);
+  if (!source.ok) {
+    return { supported: false, errorMessage: source.error };
+  }
   try {
-    const content = await dependencies.readTextFile(filePath);
-    return processor(filePath, content);
-  } catch {
-    return { supported: false, errorMessage: formatReadFailure(filePath) };
+    return processor(filePath, source.content);
+  } catch (error) {
+    return { supported: false, errorMessage: formatReadFailure(filePath, error) };
   }
 }
 
@@ -203,12 +202,11 @@ async function processDebugFile(
     return { success: false, error: `File ${filePath} does not exist` };
   }
 
-  let content: string;
-  try {
-    content = await dependencies.readTextFile(filePath);
-  } catch {
-    return { success: false, error: formatReadFailure(filePath) };
+  const source = await readSourceFile(filePath, dependencies);
+  if (!source.ok) {
+    return { success: false, error: source.error };
   }
+  const content = source.content;
 
   const outlineResult = generateOutlineForFile({ filePath, content });
   if (!outlineResult.supported) {

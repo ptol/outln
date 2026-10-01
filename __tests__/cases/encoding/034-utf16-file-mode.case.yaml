@@ -1,0 +1,10 @@
+args:
+  - input/utf16.ts
+  - input/ok.ts
+input/utf16.ts: "��c\0o\0n\0s\0t\0 \0a\0 \0=\0 \01\0;\0"
+input/ok.ts: |
+  export const ok = 1;
+stdout: |
+  input/ok.ts
+  [L1-L1] export const ok
+stderr: FILE input/utf16.ts IS NOT UTF-8 TEXT

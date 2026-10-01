@@ -1,0 +1,19 @@
+args:
+  - input/crlf.md
+input/crlf.md: "---\r
+
+  description: CRLF doc\r
+
+  ---\r
+
+  # Title\r
+
+  \r
+
+  ## Section\r\n"
+stdout: |
+  input/crlf.md
+  description: "CRLF doc"
+  [L4-L4] # Title
+  [L6-L6] ## Section
+stderr: ''
