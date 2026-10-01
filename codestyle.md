@@ -1,0 +1,7 @@
+- Prefer short, pure functions. If a function needs side effects (e.g., randomness, time/date, filesystem I/O, network calls, environment access, logging, UUID generation), inject them via parameters
+- Follow the single-responsibility principle for files: each file should focus on one clear purpose, use descriptive file names.
+- Add a short header comment at the top of every file describing what the file does, and keep it up to date as the file changes.
+- Write self-documented code: use meaningful function and variable names so intent is clear without extra explanation.
+- Use immutable updates; avoid in-place mutation unless there is a clear, documented reason.
+- Avoid hidden global state; pass dependencies and configuration explicitly.
+- If there are several valid implementation options, prefer the approach that follows the principle of least surprise for maintainers and users.
