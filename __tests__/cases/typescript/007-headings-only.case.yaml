@@ -8,6 +8,6 @@ input/headings-only.md: |
   ### Next
 stdout: |
   input/headings-only.md
-  [L1-L1] # Intro
-  [L3-L3] ## Details
+  [L1-L5] # Intro
+  [L3-L5] ## Details
   [L5-L5] ### Next

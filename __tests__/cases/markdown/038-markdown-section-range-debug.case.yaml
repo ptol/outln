@@ -1,0 +1,8 @@
+args:
+  - --debug
+  - input/doc.md
+input/doc.md: |
+  ## Closed ##
+  text
+stdout: "\e[32m## Closed ##\e[0m\ntext\n"
+stderr: ''

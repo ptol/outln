@@ -15,6 +15,6 @@ stdout: |
   input/sample.md
   title: "Sample doc"
   owner: "docs-team"
-  [L6-L6] # Overview
-  [L8-L8] ## Scope
+  [L6-L10] # Overview
+  [L8-L10] ## Scope
   [L10-L10] ### Notes

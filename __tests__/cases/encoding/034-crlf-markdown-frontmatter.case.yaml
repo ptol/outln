@@ -14,6 +14,6 @@ input/crlf.md: "---\r
 stdout: |
   input/crlf.md
   description: "CRLF doc"
-  [L4-L4] # Title
+  [L4-L6] # Title
   [L6-L6] ## Section
 stderr: ''

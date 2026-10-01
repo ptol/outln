@@ -31,15 +31,15 @@ stdout: |
   input/doc-with-frontmatter.md
   title: "API Documentation"
   version: 2
-  [L6-L6] # Introduction
+  [L6-L8] # Introduction
   [L8-L8] ## Getting Started
 
   input/doc-headings-only.md
-  [L1-L1] # Overview
+  [L1-L3] # Overview
   [L3-L3] ## Details
 
   input/doc-with-code.md
-  [L1-L1] # Configuration
+  [L1-L8] # Configuration
   [L8-L8] ## Options
 
   input/regular.ts

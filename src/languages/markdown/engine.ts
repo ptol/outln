@@ -82,15 +82,32 @@ function parseFrontmatter(content: string): { key: string; value: string }[] {
 }
 
 /**
- * Processed heading with metadata for outline generation.
+ * Heading found in the document body, before section ranges are computed.
  */
 interface ProcessedHeading {
-  /** Formatted heading line for outline output */
-  text: string;
+  /** Heading level (1-6, the number of leading hashes) */
+  level: number;
+  /** Heading text without leading/closing hash sequences */
+  title: string;
   /** 1-based line number in the source file */
   lineNumber: number;
   /** Span for debug mode highlighting (startColumn, endColumn) */
   span: { startColumn: number; endColumn: number };
+}
+
+/**
+ * Heading with the 1-based line range of its whole section.
+ */
+interface HeadingSection extends ProcessedHeading {
+  endLine: number;
+}
+
+/**
+ * Removes an optional closing hash sequence (`## Title ##` becomes `Title`).
+ * Per CommonMark, the closing hashes must be preceded by whitespace or make up the whole text.
+ */
+function stripClosingHashes(headingText: string): string {
+  return headingText.replace(/(^|\s+)#+\s*$/, '').trim();
 }
 
 /**
@@ -111,15 +128,61 @@ function processHeadingLine(line: string, lineNumber: number): ProcessedHeading 
     return null;
   }
 
-  const headingText = rawHeadingText.trim();
   return {
-    text: `[L${lineNumber.toString()}-L${lineNumber.toString()}] ${hashes} ${headingText}`,
+    level: hashes.length,
+    title: stripClosingHashes(rawHeadingText),
     lineNumber,
     span: {
       startColumn: 1,
-      endColumn: hashes.length + 1 + headingText.length + 1
+      endColumn: line.trimEnd().length + 1
     }
   };
+}
+
+/**
+ * Finds the last non-blank line in `[fromLine, toLine]` (1-based), never going above `fromLine`.
+ */
+function trimTrailingBlankLines(
+  allLines: readonly string[],
+  fromLine: number,
+  toLine: number
+): number {
+  let endLine = toLine;
+  while (endLine > fromLine && (allLines[endLine - 1] ?? '').trim() === '') {
+    endLine--;
+  }
+  return endLine;
+}
+
+/**
+ * Computes each heading's section range: it ends before the next heading of the same or
+ * higher level (or at the end of the document), excluding trailing blank lines.
+ * @param headings - Headings in document order
+ * @param allLines - All document lines
+ */
+function computeHeadingSections(
+  headings: readonly ProcessedHeading[],
+  allLines: readonly string[]
+): HeadingSection[] {
+  return headings.map((heading, index) => {
+    const nextSibling = headings
+      .slice(index + 1)
+      .find((candidate) => candidate.level <= heading.level);
+    const rawEndLine = nextSibling === undefined ? allLines.length : nextSibling.lineNumber - 1;
+    return {
+      ...heading,
+      endLine: trimTrailingBlankLines(allLines, heading.lineNumber, rawEndLine)
+    };
+  });
+}
+
+/**
+ * Formats a heading section as an outline line text.
+ */
+function formatHeadingSection(section: HeadingSection): string {
+  const range = `[L${section.lineNumber.toString()}-L${section.endLine.toString()}]`;
+  const hashes = '#'.repeat(section.level);
+  return section.title.length > 0 ? `${range} ${hashes} ${section.title}` : `${range} ${hashes}`;
 }
 
 /**
@@ -182,8 +245,11 @@ function generateMarkdownOutline(options: OutlineOptions): OutlineResult {
   const bodyStartIndex = bodyStartLine - 1; // Convert to 0-based index
   const bodyLines = allLines.slice(bodyStartIndex);
 
-  // Extract headings from body content only
-  const headingLines = extractHeadingsFromBody(bodyLines, bodyStartLine);
+  // Extract headings from body content only, then compute their section ranges
+  const headingSections = computeHeadingSections(
+    extractHeadingsFromBody(bodyLines, bodyStartLine),
+    allLines
+  );
 
   // Build output lines: file path first, then frontmatter (if valid), then headings
   const outlineLines: OutlineLine[] = [{ kind: 'file-path', text: filePath }];
@@ -217,12 +283,12 @@ function generateMarkdownOutline(options: OutlineOptions): OutlineResult {
     }
   }
 
-  for (const heading of headingLines) {
+  for (const section of headingSections) {
     outlineLines.push({
       kind: 'declaration',
-      text: heading.text,
-      lineNumber: heading.lineNumber,
-      span: heading.span
+      text: formatHeadingSection(section),
+      lineNumber: section.lineNumber,
+      span: section.span
     });
   }
 

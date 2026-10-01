@@ -7,5 +7,5 @@ input/bad-frontmatter.md: |
   ## Also visible
 stdout: |
   input/bad-frontmatter.md
-  [L3-L3] # Visible heading
+  [L3-L4] # Visible heading
   [L4-L4] ## Also visible

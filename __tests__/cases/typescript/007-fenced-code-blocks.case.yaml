@@ -8,5 +8,5 @@ input/fenced.md: |
   ## Real
 stdout: |
   input/fenced.md
-  [L1-L1] # Top
+  [L1-L5] # Top
   [L5-L5] ## Real
