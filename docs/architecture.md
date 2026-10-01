@@ -88,7 +88,7 @@ description: Minimal architecture and module boundaries for the current outln ru
   - Optional `lineNumber` (1-based) for debug mode source highlighting
 - `generateDebugOutput(content, outlineResult): string`: generates ANSI-highlighted source output
 - `validateDebugInput(args): { valid: true, arg: string } | { valid: false, error: string }`: validates debug mode input constraints; returns discriminated union with validated arg or error
-- `parseArguments(args: string[]): ParsedArguments`: extracts `--debug` flag and positional paths from CLI args
+- `parseArguments(args: string[]): ParsedArguments`: extracts `--debug`, `--help`/`-h`, `--version`/`-v`, unknown options and positional paths (everything after `--` is positional)
 
 ## Error handling strategy
 

@@ -1,0 +1,28 @@
+args:
+  - input/a.ts
+  - -h
+input/a.ts: |
+  export const a = 1;
+stdout: >
+  Usage: outln [options] <path|glob>...
+
+
+  Print a compact structural outline of source files.
+
+
+  Modes:
+    outln <file>...            Full outline for each file (headers, declarations, line ranges).
+    outln <dir|glob>...        One line per file with its header comment.
+    outln --debug <file|dir>   Source text with the extracted outline highlighted.
+
+  Options:
+    -h, --help                 Show this help.
+    -v, --version              Show the installed version.
+    --debug                    Enable debug mode.
+    --                         Treat all following arguments as paths.
+
+  Examples:
+    outln src/main.ts
+    outln src "docs/**/*.md"
+    outln --debug src/main.ts
+stderr: ''

@@ -52,6 +52,7 @@ export async function runWithVirtualFiles(
     writeError: (value) => {
       stderr += value;
     },
+    readVersion: () => '1.2.3-test',
     setExitCode: (code) => {
       exitCode = code;
     },

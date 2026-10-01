@@ -1,0 +1,9 @@
+args:
+  - --
+  - input/-dash.ts
+input/-dash.ts: |
+  export const dash = 1;
+stdout: |
+  input/-dash.ts
+  [L1-L1] export const dash
+stderr: ''

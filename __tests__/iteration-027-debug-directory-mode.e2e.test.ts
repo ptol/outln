@@ -83,6 +83,7 @@ async function runWithVirtualFiles(
     writeError: (value) => {
       stderr += value;
     },
+    readVersion: () => '1.2.3-test',
     setExitCode: (code) => {
       exitCode = code;
     },
@@ -208,6 +209,7 @@ describe('iteration 027 debug directory mode (e2e)', () => {
         writeError: (value) => {
           stderr += value;
         },
+        readVersion: () => '1.2.3-test',
         setExitCode: (code) => {
           exitCode = code;
         },

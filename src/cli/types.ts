@@ -14,6 +14,8 @@ export interface RunDependencies {
   writeOutput: (value: string) => void;
   writeError: (value: string) => void;
   setExitCode: (code: number) => void;
+  /** Returns the installed outln version for `--version`. */
+  readVersion: () => string;
   globber?: (pattern: string) => Promise<string[]>;
   /**
    * Lists all regular files recursively in a directory.

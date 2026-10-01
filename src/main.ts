@@ -2,6 +2,7 @@
  * CLI entrypoint that prints concatenated content from one or more input file paths.
  */
 import { realpathSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { access, readFile, stat, readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,6 +11,7 @@ import { generateOutlineForFile } from './core/language-registry.js';
 import { runDebugMode, runFileMode, runGlobViewMode, failWithError } from './cli/modes.js';
 import type { ContentProcessor, RunDependencies } from './cli/types.js';
 import { createStdoutErrorHandler } from './cli/broken-pipe.js';
+import { HELP_TEXT, USAGE_LINE } from './cli/help-text.js';
 import {
   parseArguments,
   normalizeInputArguments,
@@ -68,6 +70,18 @@ async function defaultListFiles(dirPath: string): Promise<string[]> {
 }
 
 /**
+ * Reads the package version from the package.json next to the source/dist directory.
+ */
+function defaultReadVersion(): string {
+  const packageJson: unknown = createRequire(import.meta.url)('../package.json');
+  const version: unknown =
+    typeof packageJson === 'object' && packageJson !== null && 'version' in packageJson
+      ? packageJson.version
+      : undefined;
+  return typeof version === 'string' ? version : 'unknown';
+}
+
+/**
  * Default runtime dependencies that use Node process and filesystem APIs.
  */
 const defaultRunDependencies: RunDependencies = {
@@ -90,6 +104,7 @@ const defaultRunDependencies: RunDependencies = {
   setExitCode: (code) => {
     process.exitCode = code;
   },
+  readVersion: defaultReadVersion,
   listFiles: defaultListFiles
 };
 
@@ -112,10 +127,29 @@ export async function run(
   dependencies: RunDependencies = defaultRunDependencies,
   processor: ContentProcessor = defaultContentProcessor
 ): Promise<void> {
-  const { debug, positional } = parseArguments(args);
+  const { debug, help, version, unknownOptions, positional } = parseArguments(args);
+
+  if (help) {
+    dependencies.writeOutput(HELP_TEXT);
+    return;
+  }
+
+  if (version) {
+    dependencies.writeOutput(`${dependencies.readVersion()}\n`);
+    return;
+  }
+
+  const [firstUnknownOption] = unknownOptions;
+  if (firstUnknownOption !== undefined) {
+    failWithError(
+      dependencies,
+      `Unknown option ${firstUnknownOption}. Run outln --help for usage.`
+    );
+    return;
+  }
 
   if (positional.length === 0 && !debug) {
-    failWithError(dependencies, 'Usage: outln <file-path> [file-path...]');
+    failWithError(dependencies, `${USAGE_LINE}\nRun outln --help for details.`);
     return;
   }
 

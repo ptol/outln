@@ -1,0 +1,7 @@
+args:
+  - --verbose
+  - input/a.ts
+input/a.ts: |
+  export const a = 1;
+stdout: ''
+stderr: Unknown option --verbose. Run outln --help for usage.

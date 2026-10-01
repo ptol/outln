@@ -5,11 +5,17 @@
 import { Minimatch } from 'minimatch';
 
 /**
- * Result of parsing CLI arguments for debug mode.
+ * Result of parsing CLI flags and positional arguments.
  */
 export interface ParsedArguments {
-  /** Whether debug mode is enabled */
+  /** Whether debug mode is enabled (`--debug`) */
   debug: boolean;
+  /** Whether help output was requested (`--help`, `-h`) */
+  help: boolean;
+  /** Whether version output was requested (`--version`, `-v`) */
+  version: boolean;
+  /** Option-like arguments that are not recognized */
+  unknownOptions: string[];
   /** Remaining positional arguments after flag extraction */
   positional: string[];
 }
@@ -22,16 +28,41 @@ export interface ClassifiedInputArguments {
   filePaths: string[];
 }
 
+const HELP_FLAGS = new Set(['--help', '-h']);
+const VERSION_FLAGS = new Set(['--version', '-v']);
+const DEBUG_FLAG = '--debug';
+const END_OF_OPTIONS = '--';
+
+/**
+ * Checks whether an argument looks like a command-line option rather than a path.
+ */
+function isOptionLike(arg: string): boolean {
+  return arg.startsWith('-') && arg !== '-';
+}
+
 /**
  * Extracts CLI flags and positional arguments from process-like argv values.
+ * Arguments after `--` are always treated as positional paths.
  * @param args Process argument vector, usually `process.argv`.
- * @returns Parsed arguments with debug flag and positional paths.
+ * @returns Parsed flags, unknown options and positional paths.
  */
 export function parseArguments(args: string[]): ParsedArguments {
-  const rawArgs = args.slice(2);
-  const debug = rawArgs.includes('--debug');
-  const positional = rawArgs.filter((arg) => arg !== '--debug' && arg.length > 0);
-  return { debug, positional };
+  const rawArgs = args.slice(2).filter((arg) => arg.length > 0);
+  const endOfOptionsIndex = rawArgs.indexOf(END_OF_OPTIONS);
+  const optionArgs = endOfOptionsIndex === -1 ? rawArgs : rawArgs.slice(0, endOfOptionsIndex);
+  const forcedPositional = endOfOptionsIndex === -1 ? [] : rawArgs.slice(endOfOptionsIndex + 1);
+
+  const options = optionArgs.filter(isOptionLike);
+  const isKnownOption = (arg: string): boolean =>
+    arg === DEBUG_FLAG || HELP_FLAGS.has(arg) || VERSION_FLAGS.has(arg);
+
+  return {
+    debug: options.includes(DEBUG_FLAG),
+    help: options.some((arg) => HELP_FLAGS.has(arg)),
+    version: options.some((arg) => VERSION_FLAGS.has(arg)),
+    unknownOptions: options.filter((arg) => !isKnownOption(arg)),
+    positional: [...optionArgs.filter((arg) => !isOptionLike(arg)), ...forcedPositional]
+  };
 }
 
 /**

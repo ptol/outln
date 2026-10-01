@@ -1,0 +1,7 @@
+args: []
+input/unused.ts: |
+  export const unused = 1;
+stdout: ''
+stderr: |-
+  Usage: outln [options] <path|glob>...
+  Run outln --help for details.

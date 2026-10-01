@@ -1,0 +1,7 @@
+args:
+  - -v
+input/unused.ts: |
+  export const unused = 1;
+stdout: |
+  1.2.3-test
+stderr: ''

@@ -36,6 +36,7 @@ async function runWithVirtualFiles(args: string[], files: VirtualFiles): Promise
     writeError: (value) => {
       stderr += value;
     },
+    readVersion: () => '1.2.3-test',
     setExitCode: (code) => {
       exitCode = code;
     }
