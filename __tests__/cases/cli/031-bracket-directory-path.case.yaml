@@ -1,0 +1,14 @@
+args:
+  - input/app/[id]
+input/app/[id]/page.tsx: |
+  /** Product detail page. */
+  export default function Page() {}
+input/app/i/other.tsx: |
+  /** Must not match the [id] character class. */
+  export const other = 1;
+stdout: |
+  glob view: input/app/\[id\]/**/*
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/app/[id]/page.tsx: Product detail page.
+stderr: ''

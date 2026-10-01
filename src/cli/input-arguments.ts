@@ -2,7 +2,7 @@
  * CLI argument parsing and input path normalization helpers.
  */
 
-import { Minimatch } from 'minimatch';
+import { Minimatch, escape } from 'minimatch';
 
 /**
  * Result of parsing CLI flags and positional arguments.
@@ -66,6 +66,14 @@ export function parseArguments(args: string[]): ParsedArguments {
 }
 
 /**
+ * Filesystem probes used to decide whether an argument names an existing path.
+ */
+export interface PathProbes {
+  isDirectory: (filePath: string) => Promise<boolean>;
+  fileExists: (filePath: string) => Promise<boolean>;
+}
+
+/**
  * Checks if an argument contains glob magic characters.
  * @param arg The argument to check.
  * @returns True if the argument is a glob pattern.
@@ -75,80 +83,51 @@ function isGlobPattern(arg: string): boolean {
 }
 
 /**
- * Checks if an argument contains wildcard tokens (*, ?, [).
- * @param arg The argument to check.
- * @returns True if the argument contains wildcards.
- */
-function hasWildcardToken(arg: string): boolean {
-  return /[*?[]/.test(arg);
-}
-
-/**
- * Determines if a positional argument is a directory argument.
- * A directory argument has no wildcard tokens and either ends with '/' or resolves to an existing directory.
- * @param arg The positional argument to check.
- * @param isDirectoryFn Function to check if a path is an existing directory.
- * @returns True if the argument should be treated as a directory.
- */
-async function isDirectoryArgument(
-  arg: string,
-  isDirectoryFn: (filePath: string) => Promise<boolean>
-): Promise<boolean> {
-  if (hasWildcardToken(arg)) {
-    return false;
-  }
-
-  if (arg.endsWith('/')) {
-    return true;
-  }
-
-  return await isDirectoryFn(arg);
-}
-
-/**
- * Normalizes a directory argument to a recursive glob pattern.
- * Removes trailing slashes and appends the recursive glob suffix.
+ * Converts a literal directory path to a recursive glob, escaping glob characters in the path.
  * @param dirArg The directory argument to normalize.
  * @returns The normalized glob pattern.
  */
-function normalizeDirectoryArgument(dirArg: string): string {
+function toRecursiveDirectoryGlob(dirArg: string): string {
   const withoutTrailingSlash = dirArg.replace(/\/+$/, '');
-  return `${withoutTrailingSlash}/**/*`;
+  return `${escape(withoutTrailingSlash)}/**/*`;
 }
 
 /**
- * Normalizes raw positional arguments.
- * Directory arguments are converted to recursive glob patterns.
+ * Classifies one argument. Existing paths are always literal, even when they contain
+ * glob characters such as `[id]`; only non-existent arguments with glob magic are globs.
  */
-export async function normalizeInputArguments(
+async function classifyInputArgument(
+  arg: string,
+  probes: PathProbes
+): Promise<{ kind: 'glob' | 'file'; value: string }> {
+  if (await probes.isDirectory(arg)) {
+    return { kind: 'glob', value: toRecursiveDirectoryGlob(arg) };
+  }
+  if (await probes.fileExists(arg)) {
+    return { kind: 'file', value: arg };
+  }
+  if (isGlobPattern(arg)) {
+    return { kind: 'glob', value: arg };
+  }
+  if (arg.endsWith('/')) {
+    return { kind: 'glob', value: toRecursiveDirectoryGlob(arg) };
+  }
+  return { kind: 'file', value: arg };
+}
+
+/**
+ * Splits positional args into glob patterns (including directories as recursive globs)
+ * and literal file paths.
+ */
+export async function classifyInputArguments(
   inputArgs: string[],
-  isDirectoryFn: (filePath: string) => Promise<boolean>
-): Promise<string[]> {
-  const normalizedArgs: string[] = [];
-  for (const arg of inputArgs) {
-    if (await isDirectoryArgument(arg, isDirectoryFn)) {
-      normalizedArgs.push(normalizeDirectoryArgument(arg));
-    } else {
-      normalizedArgs.push(arg);
-    }
-  }
-  return normalizedArgs;
-}
-
-/**
- * Splits normalized args into either glob patterns or file paths.
- */
-export function classifyInputArguments(inputArgs: string[]): ClassifiedInputArguments {
-  const globPatterns: string[] = [];
-  const filePaths: string[] = [];
-
-  for (const arg of inputArgs) {
-    if (isGlobPattern(arg)) {
-      globPatterns.push(arg);
-    } else {
-      filePaths.push(arg);
-    }
-  }
-
-  return { globPatterns, filePaths };
+  probes: PathProbes
+): Promise<ClassifiedInputArguments> {
+  const classified = await Promise.all(
+    inputArgs.map(async (arg) => classifyInputArgument(arg, probes))
+  );
+  return {
+    globPatterns: classified.filter((entry) => entry.kind === 'glob').map((entry) => entry.value),
+    filePaths: classified.filter((entry) => entry.kind === 'file').map((entry) => entry.value)
+  };
 }

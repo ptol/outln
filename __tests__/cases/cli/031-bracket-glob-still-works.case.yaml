@@ -1,0 +1,18 @@
+args:
+  - input/[ab].ts
+input/a.ts: |
+  /** File a. */
+  export const a = 1;
+input/b.ts: |
+  /** File b. */
+  export const b = 1;
+input/c.ts: |
+  /** File c. */
+  export const c = 1;
+stdout: |
+  glob view: input/[ab].ts
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/a.ts: File a.
+  input/b.ts: File b.
+stderr: ''

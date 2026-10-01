@@ -1,0 +1,12 @@
+args:
+  - input/app/[id]/page.tsx
+input/app/[id]/page.tsx: |
+  /** Product detail page. */
+  export default function Page(): JSX.Element {
+    return null;
+  }
+stdout: |
+  input/app/[id]/page.tsx
+  /** Product detail page. */
+  [L2-L4] export default function Page(): JSX.Element
+stderr: ''

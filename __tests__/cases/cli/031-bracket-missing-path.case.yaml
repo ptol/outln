@@ -1,0 +1,6 @@
+args:
+  - input/[slug].ts
+input/other.ts: |
+  export const other = 1;
+stdout: ''
+stderr: 'No files matched glob patterns: input/[slug].ts'

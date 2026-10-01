@@ -12,11 +12,7 @@ import { runDebugMode, runFileMode, runGlobViewMode, failWithError } from './cli
 import type { ContentProcessor, RunDependencies } from './cli/types.js';
 import { createStdoutErrorHandler } from './cli/broken-pipe.js';
 import { HELP_TEXT, USAGE_LINE } from './cli/help-text.js';
-import {
-  parseArguments,
-  normalizeInputArguments,
-  classifyInputArguments
-} from './cli/input-arguments.js';
+import { parseArguments, classifyInputArguments } from './cli/input-arguments.js';
 export type { ContentProcessor, RunDependencies } from './cli/types.js';
 export type { ParsedArguments } from './cli/input-arguments.js';
 export { parseArguments } from './cli/input-arguments.js';
@@ -158,8 +154,7 @@ export async function run(
     return;
   }
 
-  const normalizedArgs = await normalizeInputArguments(positional, dependencies.isDirectory);
-  const { globPatterns, filePaths } = classifyInputArguments(normalizedArgs);
+  const { globPatterns, filePaths } = await classifyInputArguments(positional, dependencies);
 
   if (globPatterns.length > 0 && filePaths.length > 0) {
     failWithError(dependencies, 'Cannot mix glob patterns and file paths in one command.');
