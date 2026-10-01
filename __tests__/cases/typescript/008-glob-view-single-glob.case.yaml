@@ -20,4 +20,4 @@ stdout: |
   input/docs/guide.md: summary: "Guide overview."
   input/src/no-summary.ts: (no header comment available)
   input/src/with-comment.ts: Utility helpers for HTTP requests.
-stderr: FILE input/misc/raw.txt HAS UNSUPPORTED FILE TYPE
+stderr: ''

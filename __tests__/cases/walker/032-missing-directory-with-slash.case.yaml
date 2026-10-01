@@ -1,0 +1,12 @@
+args:
+  - input/missing/
+  - input/src
+input/src/a.ts: |
+  /** Source a. */
+  export const a = 1;
+stdout: |
+  glob view: input/missing/ input/src
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/src/a.ts: Source a.
+stderr: Directory input/missing/ does not exist

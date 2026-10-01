@@ -3,26 +3,19 @@
  */
 
 import type { OutlineGenerationResult } from '../core/language-registry.js';
+import type { WalkerDependencies } from './file-walker.js';
 
 /**
  * Injectable dependencies used by CLI run paths for I/O and process signaling.
  */
-export interface RunDependencies {
-  fileExists: (filePath: string) => Promise<boolean>;
-  isDirectory: (filePath: string) => Promise<boolean>;
-  readTextFile: (filePath: string) => Promise<string>;
+export interface RunDependencies extends WalkerDependencies {
   writeOutput: (value: string) => void;
   writeError: (value: string) => void;
   setExitCode: (code: number) => void;
   /** Returns the installed outln version for `--version`. */
   readVersion: () => string;
-  globber?: (pattern: string) => Promise<string[]>;
-  /**
-   * Lists all regular files recursively in a directory.
-   * Skips symlinked directories to avoid cycles and duplicates.
-   * Returns normalized file paths (forward slashes) sorted lexicographically.
-   */
-  listFiles?: (dirPath: string) => Promise<string[]>;
+  /** Expands a glob pattern to matching regular files (symlinks excluded). */
+  globber: (pattern: string) => Promise<string[]>;
 }
 
 /**

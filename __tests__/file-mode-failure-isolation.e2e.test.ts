@@ -29,9 +29,7 @@ describe('file mode failure isolation (e2e)', () => {
       const result = await runWithVirtualFiles(
         ['input/a.ts', 'input/bad.ts', 'input/c.ts'],
         files,
-        {
-          readTextFile: readFailingForBadFile
-        }
+        { overrides: { readTextFile: readFailingForBadFile } }
       );
 
       expect(result.stdout).toBe(
@@ -52,9 +50,7 @@ describe('file mode failure isolation (e2e)', () => {
       const result = await runWithVirtualFiles(
         ['input/bad.ts', 'input/missing.ts', 'input/a.ts'],
         files,
-        {
-          readTextFile: readFailingForBadFile
-        }
+        { overrides: { readTextFile: readFailingForBadFile } }
       );
 
       expect(result.stdout).toBe('input/a.ts\n[L1-L1] export const a\n');

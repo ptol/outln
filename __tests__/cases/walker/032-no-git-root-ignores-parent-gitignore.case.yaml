@@ -1,0 +1,13 @@
+args:
+  - input/pkg
+input/.gitignore: |
+  *.ts
+input/pkg/a.ts: |
+  /** Parent .gitignore does not apply outside a git repo. */
+  export const a = 1;
+stdout: |
+  glob view: input/pkg
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/pkg/a.ts: Parent .gitignore does not apply outside a git repo.
+stderr: ''

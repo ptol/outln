@@ -4,94 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { run } from '../src/main.js';
-
-type VirtualFiles = Record<string, string>;
-
-interface RunResult {
-  stdout: string;
-  stderr: string;
-  exitCode: number;
-}
-
-/**
- * Checks if a path is a directory in the virtual filesystem.
- * A path is a directory if it's in the explicit directories list or contains files.
- */
-function isVirtualDirectory(
-  files: VirtualFiles,
-  filePath: string,
-  explicitDirs: readonly string[] = []
-): boolean {
-  const normalizedPath = filePath.endsWith('/') ? filePath.slice(0, -1) : filePath;
-
-  // Check explicit directory list first
-  if (explicitDirs.includes(normalizedPath)) {
-    return true;
-  }
-
-  // Check if any files are under this path
-  const prefix = normalizedPath + '/';
-  for (const path of Object.keys(files)) {
-    if (path.startsWith(prefix)) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Lists all files recursively in a virtual directory.
- */
-function listVirtualFiles(files: VirtualFiles, dirPath: string): string[] {
-  const normalizedDir = dirPath.endsWith('/') ? dirPath.slice(0, -1) : dirPath;
-  const prefix = normalizedDir + '/';
-  const result: string[] = [];
-
-  for (const path of Object.keys(files)) {
-    if (path.startsWith(prefix)) {
-      result.push(path);
-    }
-  }
-
-  return result.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'variant' }));
-}
-
-async function runWithVirtualFiles(
-  args: string[],
-  files: VirtualFiles,
-  explicitDirs: readonly string[] = []
-): Promise<RunResult> {
-  const fileContentByPath = new Map<string, string>(Object.entries(files));
-  let stdout = '';
-  let stderr = '';
-  let exitCode = 0;
-
-  await run(['node', 'main.ts', ...args], {
-    fileExists: (filePath) => Promise.resolve(fileContentByPath.has(filePath)),
-    isDirectory: (filePath) => Promise.resolve(isVirtualDirectory(files, filePath, explicitDirs)),
-    readTextFile: (filePath) => {
-      const content = fileContentByPath.get(filePath);
-      if (content === undefined) {
-        return Promise.reject(new Error(`Missing virtual file: ${filePath}`));
-      }
-      return Promise.resolve(content);
-    },
-    writeOutput: (value) => {
-      stdout += value;
-    },
-    writeError: (value) => {
-      stderr += value;
-    },
-    readVersion: () => '1.2.3-test',
-    setExitCode: (code) => {
-      exitCode = code;
-    },
-    listFiles: (dirPath) => Promise.resolve(listVirtualFiles(files, dirPath))
-  });
-
-  return { stdout, stderr, exitCode };
-}
+import { runWithVirtualFiles, type VirtualFiles } from './support/virtual-run.js';
 
 describe('iteration 027 debug directory mode (e2e)', () => {
   describe('happy path', () => {
@@ -140,7 +53,7 @@ describe('iteration 027 debug directory mode (e2e)', () => {
         {
           // No files in the directory
         },
-        ['input/empty']
+        { emptyDirectories: ['input/empty'] }
       );
 
       expect(result.exitCode).toBe(0);
@@ -154,23 +67,21 @@ describe('iteration 027 debug directory mode (e2e)', () => {
         'input/unsupported/data.json': '{"a": 1}'
       });
 
-      // Markdown headings ARE supported now (they produce declaration spans)
-      // JSON files are not supported
-      expect(result.exitCode).toBe(1);
-      // Markdown heading gets highlighted
+      // Markdown is supported; the JSON file is skipped silently while walking
+      expect(result.exitCode).toBe(0);
       expect(result.stdout).toBe('\x1b[32m# Readme\x1b[0m');
-      expect(result.stderr).toContain('HAS UNSUPPORTED FILE TYPE');
+      expect(result.stderr).toBe('');
     });
 
-    it('continues processing when some files have unsupported types', async () => {
+    it('skips unsupported file types silently while walking', async () => {
       const result = await runWithVirtualFiles(['--debug', 'input/mixed'], {
         'input/mixed/c.ts': 'export const c = 3;',
         'input/mixed/a.ts': 'export const a = 1;',
         'input/mixed/raw.txt': 'plain text'
       });
 
-      expect(result.exitCode).toBe(1);
-      expect(result.stderr).toBe('FILE input/mixed/raw.txt HAS UNSUPPORTED FILE TYPE');
+      expect(result.exitCode).toBe(0);
+      expect(result.stderr).toBe('');
       // Only TS files should be in output, sorted
       // Note: no trailing newline after the last file's output
       expect(result.stdout).toBe(
@@ -185,36 +96,18 @@ describe('iteration 027 debug directory mode (e2e)', () => {
         'input/pkg/unreadable.ts': 'export const unreadable = 2;'
       };
 
-      const fileContentByPath = new Map<string, string>(Object.entries(files));
-      let stdout = '';
-      let stderr = '';
-      let exitCode = 0;
-
-      await run(['node', 'main.ts', '--debug', 'input/pkg'], {
-        fileExists: (filePath) => Promise.resolve(fileContentByPath.has(filePath)),
-        isDirectory: (filePath) => Promise.resolve(isVirtualDirectory(files, filePath)),
-        readTextFile: (filePath) => {
-          if (filePath === 'input/pkg/unreadable.ts') {
-            return Promise.reject(new Error('Permission denied'));
+      const { stdout, stderr, exitCode } = await runWithVirtualFiles(
+        ['--debug', 'input/pkg'],
+        files,
+        {
+          overrides: {
+            readTextFile: (filePath) =>
+              filePath === 'input/pkg/unreadable.ts'
+                ? Promise.reject(new Error('Permission denied'))
+                : Promise.resolve(files[filePath] ?? '')
           }
-          const content = fileContentByPath.get(filePath);
-          if (content === undefined) {
-            return Promise.reject(new Error(`Missing virtual file: ${filePath}`));
-          }
-          return Promise.resolve(content);
-        },
-        writeOutput: (value) => {
-          stdout += value;
-        },
-        writeError: (value) => {
-          stderr += value;
-        },
-        readVersion: () => '1.2.3-test',
-        setExitCode: (code) => {
-          exitCode = code;
-        },
-        listFiles: (dirPath) => Promise.resolve(listVirtualFiles(files, dirPath))
-      });
+        }
+      );
 
       expect(exitCode).toBe(1);
       expect(stderr).toBe('FILE input/pkg/unreadable.ts COULD NOT BE READ OR PARSED');

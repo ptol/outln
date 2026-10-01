@@ -1,0 +1,25 @@
+args:
+  - repo/dist
+repo/.git/HEAD: |
+  ref: refs/heads/main
+repo/.gitignore: |
+  dist/
+  *.map.ts
+repo/dist/bundle.ts: |
+  /** Explicitly requested, so walked. */
+  export const bundle = 1;
+repo/dist/bundle.map.ts: |
+  /** Ancestor rules are dropped for an ignored root. */
+  export const map = 1;
+repo/dist/.gitignore: |
+  skip.ts
+repo/dist/skip.ts: |
+  /** Ignored by the root's own .gitignore. */
+  export const skip = 1;
+stdout: |
+  glob view: repo/dist
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  repo/dist/bundle.map.ts: Ancestor rules are dropped for an ignored root.
+  repo/dist/bundle.ts: Explicitly requested, so walked.
+stderr: ''

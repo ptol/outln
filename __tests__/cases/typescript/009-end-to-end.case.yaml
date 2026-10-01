@@ -18,7 +18,7 @@ input/config/settings.ts: |
   /** Config settings. */
   export const settings = {};
 stdout: |
-  glob view: input/src/**/* input/docs/**/* input/config/*.ts
+  glob view: input/src input/docs/ input/config/*.ts
   Includes only header comments per file.
   For file-level outlines, use `outln [FILE]...`.
   input/config/settings.ts: Config settings.

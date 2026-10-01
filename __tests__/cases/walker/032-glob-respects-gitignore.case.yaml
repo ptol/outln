@@ -1,0 +1,27 @@
+args:
+  - input/**/*.ts
+input/.gitignore: |
+  dist/
+  !dist/keep.ts
+  *.gen.ts
+input/src/a.ts: |
+  /** Source a. */
+  export const a = 1;
+input/src/a.gen.ts: |
+  /** Generated. */
+  export const gen = 1;
+input/dist/out.ts: |
+  /** Dist output. */
+  export const out = 1;
+input/dist/keep.ts: |
+  /** Cannot be re-included: parent dist/ is excluded. */
+  export const keep = 1;
+input/node_modules/dep/index.ts: |
+  /** Dependency. */
+  export const dep = 1;
+stdout: |
+  glob view: input/**/*.ts
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/src/a.ts: Source a.
+stderr: ''

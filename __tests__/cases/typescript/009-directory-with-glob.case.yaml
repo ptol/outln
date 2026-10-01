@@ -9,7 +9,7 @@ input/docs/guide.md: |
   summary: Guide summary.
   ---
 stdout: |
-  glob view: input/src/**/* input/docs/**/*.md
+  glob view: input/src input/docs/**/*.md
   Includes only header comments per file.
   For file-level outlines, use `outln [FILE]...`.
   input/docs/guide.md: summary: "Guide summary."

@@ -15,4 +15,4 @@ stdout: |
   For file-level outlines, use `outln [FILE]...`.
   input/src/no-header.rs: (no header comment available)
   input/src/with-header.rs: Rust service worker. Handles background jobs.
-stderr: FILE input/misc/raw.txt HAS UNSUPPORTED FILE TYPE
+stderr: ''

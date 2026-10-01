@@ -1,0 +1,15 @@
+args:
+  - --debug
+  - input
+input/.gitignore: |
+  ignored.ts
+input/a.ts: |
+  export const a = 1;
+input/ignored.ts: |
+  export const ignored = 1;
+input/.hidden/h.ts: |
+  export const h = 1;
+input/node_modules/dep/index.ts: |
+  export const dep = 1;
+stdout: "\e[32mexport const a\e[0m = 1;\n"
+stderr: ''

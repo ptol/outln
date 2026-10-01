@@ -2,8 +2,6 @@
  * CLI entrypoint that prints concatenated content from one or more input file paths.
  */
 import { realpathSync } from 'node:fs';
-import { createRequire } from 'node:module';
-import { access, readFile, stat, readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -11,6 +9,7 @@ import { generateOutlineForFile } from './core/language-registry.js';
 import { runDebugMode, runFileMode, runGlobViewMode, failWithError } from './cli/modes.js';
 import type { ContentProcessor, RunDependencies } from './cli/types.js';
 import { createStdoutErrorHandler } from './cli/broken-pipe.js';
+import { createNodeRunDependencies } from './cli/node-dependencies.js';
 import { HELP_TEXT, USAGE_LINE } from './cli/help-text.js';
 import { parseArguments, classifyInputArguments } from './cli/input-arguments.js';
 export type { ContentProcessor, RunDependencies } from './cli/types.js';
@@ -18,91 +17,9 @@ export type { ParsedArguments } from './cli/input-arguments.js';
 export { parseArguments } from './cli/input-arguments.js';
 
 /**
- * Checks if a path is a directory.
- * @param filePath The path to check.
- * @returns True if the path exists and is a directory.
- */
-async function defaultIsDirectory(filePath: string): Promise<boolean> {
-  try {
-    const stats = await stat(filePath);
-    return stats.isDirectory();
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Recursively lists all regular files in a directory.
- * Skips symlinked directories to avoid cycles and duplicates.
- * @param dirPath The directory path to traverse.
- * @returns Array of normalized file paths (forward slashes) sorted lexicographically.
- */
-async function defaultListFiles(dirPath: string): Promise<string[]> {
-  const files: string[] = [];
-
-  async function traverse(currentPath: string): Promise<void> {
-    const entries = await readdir(currentPath, { withFileTypes: true });
-
-    for (const entry of entries) {
-      const fullPath = `${currentPath}/${entry.name}`;
-
-      if (entry.isDirectory()) {
-        // Skip symlinked directories to avoid cycles and duplicates
-        if (entry.isSymbolicLink()) {
-          continue;
-        }
-        await traverse(fullPath);
-      } else if (entry.isFile()) {
-        // Normalize path separators to forward slashes
-        files.push(fullPath.replace(/\\/g, '/'));
-      }
-    }
-  }
-
-  await traverse(dirPath);
-
-  // Sort lexicographically for consistent output
-  return files.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'variant' }));
-}
-
-/**
- * Reads the package version from the package.json next to the source/dist directory.
- */
-function defaultReadVersion(): string {
-  const packageJson: unknown = createRequire(import.meta.url)('../package.json');
-  const version: unknown =
-    typeof packageJson === 'object' && packageJson !== null && 'version' in packageJson
-      ? packageJson.version
-      : undefined;
-  return typeof version === 'string' ? version : 'unknown';
-}
-
-/**
  * Default runtime dependencies that use Node process and filesystem APIs.
  */
-const defaultRunDependencies: RunDependencies = {
-  fileExists: async (filePath) => {
-    try {
-      await access(filePath);
-      return true;
-    } catch {
-      return false;
-    }
-  },
-  isDirectory: defaultIsDirectory,
-  readTextFile: async (filePath) => readFile(filePath, 'utf8'),
-  writeOutput: (value) => {
-    process.stdout.write(value);
-  },
-  writeError: (value) => {
-    console.error(value);
-  },
-  setExitCode: (code) => {
-    process.exitCode = code;
-  },
-  readVersion: defaultReadVersion,
-  listFiles: defaultListFiles
-};
+const defaultRunDependencies: RunDependencies = createNodeRunDependencies();
 
 /**
  * Default processor that generates outline from source content.
@@ -154,15 +71,19 @@ export async function run(
     return;
   }
 
-  const { globPatterns, filePaths } = await classifyInputArguments(positional, dependencies);
+  const { directories, globPatterns, filePaths } = await classifyInputArguments(
+    positional,
+    dependencies
+  );
+  const hasExpandableInputs = directories.length > 0 || globPatterns.length > 0;
 
-  if (globPatterns.length > 0 && filePaths.length > 0) {
+  if (hasExpandableInputs && filePaths.length > 0) {
     failWithError(dependencies, 'Cannot mix glob patterns and file paths in one command.');
     return;
   }
 
-  if (globPatterns.length > 0) {
-    await runGlobViewMode(globPatterns, dependencies);
+  if (hasExpandableInputs) {
+    await runGlobViewMode(positional, directories, globPatterns, dependencies);
   } else {
     await runFileMode(filePaths, dependencies, processor);
   }

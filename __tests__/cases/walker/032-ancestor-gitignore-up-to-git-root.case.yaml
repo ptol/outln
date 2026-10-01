@@ -1,0 +1,25 @@
+args:
+  - repo/packages/web
+outer/.gitignore: |
+  *.ts
+repo/.git/HEAD: |
+  ref: refs/heads/main
+repo/.gitignore: |
+  generated/
+repo/packages/.gitignore: |
+  *.tmp.ts
+repo/packages/web/index.ts: |
+  /** Web entry. */
+  export const web = 1;
+repo/packages/web/generated/api.ts: |
+  /** Ignored by repo root .gitignore. */
+  export const api = 1;
+repo/packages/web/scratch.tmp.ts: |
+  /** Ignored by packages/.gitignore. */
+  export const scratch = 1;
+stdout: |
+  glob view: repo/packages/web
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  repo/packages/web/index.ts: Web entry.
+stderr: ''

@@ -2,17 +2,15 @@
  * CLI execution modes for file, glob, and debug workflows.
  */
 
-import { glob } from 'glob';
-
 import {
   extractSummaryFromFile,
   generateOutlineForFile,
   type OutlineGenerationResult
 } from '../core/language-registry.js';
 import { generateDebugOutput, validateDebugInput } from '../debug/debug-mode.js';
+import { discoverInputFiles, isSupportedFilePath } from './input-discovery.js';
+import { walkDirectory } from './file-walker.js';
 import type { ContentProcessor, RunDependencies } from './types.js';
-
-const DEBUG_INPUT_ERROR = '--debug requires exactly one input file path.';
 
 interface PartitionedFilePaths {
   existingFilePaths: string[];
@@ -22,39 +20,6 @@ interface PartitionedFilePaths {
 interface OutlineCollection {
   outlines: string[];
   errors: string[];
-}
-
-/**
- * Default glob function using the glob package.
- */
-async function defaultGlob(pattern: string): Promise<string[]> {
-  return glob(pattern, { nodir: true, follow: false });
-}
-
-/**
- * Normalizes path separators to forward slashes.
- */
-function normalizePathSeparators(filePath: string): string {
-  return filePath.replace(/\\/g, '/');
-}
-
-/**
- * De-duplicates path matches after separator normalization and returns sorted output.
- */
-function deduplicateAndSortMatches(matches: string[]): string[] {
-  const uniquePaths = new Set<string>();
-  const deduplicatedMatches: string[] = [];
-
-  for (const match of matches) {
-    const normalized = normalizePathSeparators(match);
-    if (!uniquePaths.has(normalized)) {
-      uniquePaths.add(normalized);
-      deduplicatedMatches.push(normalized);
-    }
-  }
-
-  deduplicatedMatches.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'variant' }));
-  return deduplicatedMatches;
 }
 
 /**
@@ -106,59 +71,62 @@ export function failWithError(dependencies: RunDependencies, message: string): v
 }
 
 /**
- * Runs glob view mode: expands patterns, extracts summaries, prints compact output.
+ * Runs glob view mode: expands directories and globs, extracts summaries, prints compact output.
+ * @param displayArgs Original arguments, shown in the banner.
  */
 export async function runGlobViewMode(
-  patterns: string[],
+  displayArgs: string[],
+  directories: string[],
+  globPatterns: string[],
   dependencies: RunDependencies
 ): Promise<void> {
-  const globber = dependencies.globber ?? defaultGlob;
-
-  const allMatches: string[] = [];
-  for (const pattern of patterns) {
-    const matches = await globber(pattern);
-    allMatches.push(...matches);
+  const discovered = await discoverInputFiles(directories, globPatterns, dependencies);
+  for (const error of discovered.errors) {
+    dependencies.writeError(error);
   }
 
-  const deduplicatedMatches = deduplicateAndSortMatches(allMatches);
-  if (deduplicatedMatches.length === 0) {
-    dependencies.writeError(`No files matched glob patterns: ${patterns.join(' ')}`);
+  if (discovered.filePaths.length === 0) {
+    if (discovered.errors.length === 0) {
+      dependencies.writeError(`No supported files matched: ${displayArgs.join(' ')}`);
+    }
     dependencies.setExitCode(1);
     return;
   }
 
-  dependencies.writeOutput(`glob view: ${patterns.join(' ')}\n`);
+  dependencies.writeOutput(`glob view: ${displayArgs.join(' ')}\n`);
   dependencies.writeOutput('Includes only header comments per file.\n');
   dependencies.writeOutput('For file-level outlines, use `outln [FILE]...`.\n');
 
   let hasReadFailure = false;
-  for (const relativePath of deduplicatedMatches) {
-    let content: string;
-    try {
-      content = await dependencies.readTextFile(relativePath);
-    } catch {
-      dependencies.writeError(formatReadFailure(relativePath));
+  for (const filePath of discovered.filePaths) {
+    const line = await summarizeFile(filePath, dependencies);
+    if (line === null) {
+      dependencies.writeError(formatReadFailure(filePath));
       hasReadFailure = true;
-      continue;
-    }
-
-    const result = extractSummaryFromFile(relativePath, content);
-    if (!result.supported) {
-      dependencies.writeError(
-        result.errorMessage ?? `FILE ${relativePath} HAS UNSUPPORTED FILE TYPE`
-      );
-      continue;
-    }
-
-    const summary = result.summary ?? null;
-    if (summary !== null && summary.length > 0) {
-      dependencies.writeOutput(`${relativePath}: ${summary}\n`);
     } else {
-      dependencies.writeOutput(`${relativePath}: (no header comment available)\n`);
+      dependencies.writeOutput(line);
     }
   }
 
-  dependencies.setExitCode(hasReadFailure ? 1 : 0);
+  dependencies.setExitCode(hasReadFailure || discovered.errors.length > 0 ? 1 : 0);
+}
+
+/**
+ * Reads a supported file and formats its one-line summary, or returns null when it cannot be read.
+ */
+async function summarizeFile(
+  filePath: string,
+  dependencies: RunDependencies
+): Promise<string | null> {
+  try {
+    const content = await dependencies.readTextFile(filePath);
+    const summary = extractSummaryFromFile(filePath, content).summary ?? null;
+    return summary !== null && summary.length > 0
+      ? `${filePath}: ${summary}\n`
+      : `${filePath}: (no header comment available)\n`;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -277,12 +245,8 @@ export async function runDebugMode(args: string[], dependencies: RunDependencies
   const isDir = await dependencies.isDirectory(inputPath);
 
   if (isDir) {
-    // Directory input: collect all files recursively
-    if (dependencies.listFiles === undefined) {
-      failWithError(dependencies, DEBUG_INPUT_ERROR);
-      return;
-    }
-    filePaths = await dependencies.listFiles(inputPath);
+    // Directory input: supported, non-ignored files only
+    filePaths = (await walkDirectory(inputPath, dependencies)).filter(isSupportedFilePath);
   } else {
     // Single file input
     filePaths = [inputPath];

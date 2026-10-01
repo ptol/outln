@@ -19,4 +19,4 @@ stdout: |
   input/alpha.js: Alpha summary
   input/bravo.jsx: Bravo summary
   input/charlie.mjs: (no header comment available)
-stderr: FILE input/delta.txt HAS UNSUPPORTED FILE TYPE
+stderr: ''

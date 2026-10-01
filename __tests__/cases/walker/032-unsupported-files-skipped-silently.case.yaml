@@ -1,0 +1,17 @@
+args:
+  - input
+input/a.ts: |
+  /** Source a. */
+  export const a = 1;
+input/data.json: |
+  {"a": 1}
+input/styles.css: |
+  body {}
+input/logo.png: |
+  not really a png
+stdout: |
+  glob view: input
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/a.ts: Source a.
+stderr: ''

@@ -1,0 +1,6 @@
+args:
+  - input
+input/data.json: |
+  {"a": 1}
+stdout: ''
+stderr: 'No supported files matched: input'

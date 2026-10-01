@@ -1,0 +1,34 @@
+args:
+  - input
+input/.gitignore: |
+  *.gen.ts
+  /build/
+input/build/out.ts: |
+  /** Build output (anchored /build/ ignores this). */
+  export const out = 1;
+input/src/build/kept.ts: |
+  /** Not the root build dir, so kept. */
+  export const kept = 1;
+input/src/a.gen.ts: |
+  /** Generated, ignored by root rule. */
+  export const gen = 1;
+input/src/.gitignore: |
+  !keep.gen.ts
+  local/
+input/src/keep.gen.ts: |
+  /** Re-included by nested negation. */
+  export const keep = 1;
+input/src/local/l.ts: |
+  /** Ignored by nested rule. */
+  export const l = 1;
+input/other/local/o.ts: |
+  /** Nested rule does not apply outside src. */
+  export const o = 1;
+stdout: |
+  glob view: input
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/other/local/o.ts: Nested rule does not apply outside src.
+  input/src/build/kept.ts: Not the root build dir, so kept.
+  input/src/keep.gen.ts: Re-included by nested negation.
+stderr: ''

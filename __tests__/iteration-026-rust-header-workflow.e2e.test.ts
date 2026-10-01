@@ -4,46 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { run } from '../src/main.js';
-
-type VirtualFiles = Record<string, string>;
-
-interface RunResult {
-  stdout: string;
-  stderr: string;
-  exitCode: number;
-}
-
-async function runWithVirtualFiles(args: string[], files: VirtualFiles): Promise<RunResult> {
-  const fileContentByPath = new Map<string, string>(Object.entries(files));
-  let stdout = '';
-  let stderr = '';
-  let exitCode = 0;
-
-  await run(['node', 'main.ts', ...args], {
-    fileExists: (filePath) => Promise.resolve(fileContentByPath.has(filePath)),
-    isDirectory: () => Promise.resolve(false),
-    readTextFile: (filePath) => {
-      const content = fileContentByPath.get(filePath);
-      if (content === undefined) {
-        return Promise.reject(new Error(`Missing virtual file: ${filePath}`));
-      }
-      return Promise.resolve(content);
-    },
-    writeOutput: (value) => {
-      stdout += value;
-    },
-    writeError: (value) => {
-      stderr += value;
-    },
-    readVersion: () => '1.2.3-test',
-    setExitCode: (code) => {
-      exitCode = code;
-    }
-  });
-
-  return { stdout, stderr, exitCode };
-}
+import { runWithVirtualFiles } from './support/virtual-run.js';
 
 describe('iteration 026 rust header workflow (e2e)', () => {
   describe('happy path', () => {

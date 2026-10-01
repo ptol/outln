@@ -3,4 +3,4 @@ args:
 input/reference.ts: |
   /** Reference file. */
   export const ref = true;
-stderr: 'No files matched glob patterns: input/none/**/*.ts'
+stderr: 'No supported files matched: input/none/**/*.ts'

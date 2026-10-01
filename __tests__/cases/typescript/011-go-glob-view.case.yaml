@@ -24,4 +24,4 @@ stdout: >
 
   input/src/with-comment.go: HTTP service handlers. Used by CLI integration
   tests.
-stderr: FILE input/misc/raw.txt HAS UNSUPPORTED FILE TYPE
+stderr: ''

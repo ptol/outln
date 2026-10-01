@@ -3,4 +3,4 @@ args:
 input/reference.ts: |
   /** Reference file. */
   export const ref = true;
-stderr: 'No files matched glob patterns: input/empty/**/*'
+stderr: Directory input/empty/ does not exist
