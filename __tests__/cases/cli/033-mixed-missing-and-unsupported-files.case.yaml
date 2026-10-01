@@ -1,0 +1,16 @@
+args:
+  - input/src
+  - input/missing.ts
+  - input/notes.txt
+input/src/a.ts: |
+  /** A summary. */
+  export const a = 1;
+input/notes.txt: |
+  plain text
+stdout: |
+  glob view: input/src input/missing.ts input/notes.txt
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/src/a.ts: A summary.
+stderr: File input/missing.ts does not existFILE input/notes.txt HAS UNSUPPORTED
+  FILE TYPE

@@ -13,6 +13,7 @@ stdout: >
   Modes:
     outln <file>...            Full outline for each file (headers, declarations, line ranges).
     outln <dir|glob>...        One line per file with its header comment.
+                               Explicit files may be mixed in; they use the same one-line format.
                                Respects .gitignore; skips node_modules, dot-entries and symlinks.
     outln --debug <file|dir>   Source text with the extracted outline highlighted.
 

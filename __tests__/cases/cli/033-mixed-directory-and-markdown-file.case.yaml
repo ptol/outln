@@ -1,0 +1,20 @@
+args:
+  - input/docs
+  - input/AGENTS.md
+input/docs/guide.md: |
+  ---
+  description: How to use the tool.
+  ---
+  # Guide
+input/AGENTS.md: |
+  ---
+  description: Agent instructions.
+  ---
+  # Agents
+stdout: |
+  glob view: input/docs input/AGENTS.md
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/AGENTS.md: description: "Agent instructions."
+  input/docs/guide.md: description: "How to use the tool."
+stderr: ''

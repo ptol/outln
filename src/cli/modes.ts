@@ -8,7 +8,7 @@ import {
   type OutlineGenerationResult
 } from '../core/language-registry.js';
 import { generateDebugOutput, validateDebugInput } from '../debug/debug-mode.js';
-import { discoverInputFiles, isSupportedFilePath } from './input-discovery.js';
+import { discoverInputFiles, isSupportedFilePath, type GlobViewInputs } from './input-discovery.js';
 import { walkDirectory } from './file-walker.js';
 import type { ContentProcessor, RunDependencies } from './types.js';
 
@@ -71,16 +71,16 @@ export function failWithError(dependencies: RunDependencies, message: string): v
 }
 
 /**
- * Runs glob view mode: expands directories and globs, extracts summaries, prints compact output.
+ * Runs glob view mode: expands directories and globs, merges explicit files,
+ * extracts summaries and prints one line per file.
  * @param displayArgs Original arguments, shown in the banner.
  */
 export async function runGlobViewMode(
   displayArgs: string[],
-  directories: string[],
-  globPatterns: string[],
+  inputs: GlobViewInputs,
   dependencies: RunDependencies
 ): Promise<void> {
-  const discovered = await discoverInputFiles(directories, globPatterns, dependencies);
+  const discovered = await discoverInputFiles(inputs, dependencies);
   for (const error of discovered.errors) {
     dependencies.writeError(error);
   }

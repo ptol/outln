@@ -1,5 +1,5 @@
 /**
- * Expands directory and glob arguments into the supported, non-ignored files to summarize.
+ * Expands directory and glob arguments (plus explicit files) into the supported, non-ignored files to summarize.
  */
 
 import { resolveLanguageEngine } from '../core/language-registry.js';
@@ -64,30 +64,61 @@ async function expandGlob(pattern: string, dependencies: RunDependencies): Promi
 }
 
 /**
- * Expands directories and glob patterns into sorted, unique, supported file paths.
- * Unsupported file types are skipped silently, before any file is read.
- * @param directories Directory arguments.
- * @param globPatterns Glob pattern arguments.
- * @param dependencies Injected filesystem access.
- * @returns Discovered file paths and expansion errors.
+ * Validates one explicitly named file: it must exist and have a supported type.
  */
-export async function discoverInputFiles(
-  directories: readonly string[],
-  globPatterns: readonly string[],
+async function checkExplicitFile(
+  filePath: string,
   dependencies: RunDependencies
 ): Promise<DiscoveredInputs> {
+  if (!(await dependencies.fileExists(filePath))) {
+    return { filePaths: [], errors: [`File ${filePath} does not exist`] };
+  }
+  if (!isSupportedFilePath(filePath)) {
+    return { filePaths: [], errors: [`FILE ${filePath} HAS UNSUPPORTED FILE TYPE`] };
+  }
+  return { filePaths: [filePath], errors: [] };
+}
+
+/**
+ * Inputs of glob view mode, grouped by argument kind.
+ */
+export interface GlobViewInputs {
+  directories: readonly string[];
+  globPatterns: readonly string[];
+  /** Explicitly named files; unlike walked files, missing or unsupported ones are errors. */
+  filePaths: readonly string[];
+}
+
+/**
+ * Expands directories and glob patterns and merges explicit files into sorted, unique,
+ * supported file paths. Walked unsupported file types are skipped silently, before any file is read.
+ * @param inputs Directory, glob and explicit file arguments.
+ * @param dependencies Injected filesystem access.
+ * @returns Discovered file paths and errors for inputs that could not be used.
+ */
+export async function discoverInputFiles(
+  { directories, globPatterns, filePaths }: GlobViewInputs,
+  dependencies: RunDependencies
+): Promise<DiscoveredInputs> {
+  const explicitResults = await Promise.all(
+    filePaths.map(async (filePath) => checkExplicitFile(filePath, dependencies))
+  );
   const directoryResults = await Promise.all(
     directories.map(async (directory) => expandDirectory(directory, dependencies))
   );
   const globResults = await Promise.all(
     globPatterns.map(async (pattern) => expandGlob(pattern, dependencies))
   );
-  const allPaths = [
+  const expandedPaths = [
     ...directoryResults.flatMap((result) => result.filePaths),
     ...globResults.flat()
-  ];
+  ].filter(isSupportedFilePath);
+  const checkedResults = [...directoryResults, ...explicitResults];
   return {
-    filePaths: deduplicateAndSortPaths(allPaths).filter(isSupportedFilePath),
-    errors: directoryResults.flatMap((result) => result.errors)
+    filePaths: deduplicateAndSortPaths([
+      ...expandedPaths,
+      ...explicitResults.flatMap((result) => result.filePaths)
+    ]),
+    errors: checkedResults.flatMap((result) => result.errors)
   };
 }

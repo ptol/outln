@@ -1,0 +1,18 @@
+args:
+  - input/src
+  - input/src/generated.ts
+input/.gitignore: |
+  generated.ts
+input/src/a.ts: |
+  /** A summary. */
+  export const a = 1;
+input/src/generated.ts: |
+  /** Explicitly named, so listed despite .gitignore. */
+  export const generated = 1;
+stdout: |
+  glob view: input/src input/src/generated.ts
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/src/a.ts: A summary.
+  input/src/generated.ts: Explicitly named, so listed despite .gitignore.
+stderr: ''

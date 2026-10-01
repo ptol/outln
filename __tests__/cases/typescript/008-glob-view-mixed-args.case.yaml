@@ -4,4 +4,9 @@ args:
 input/direct.ts: |
   /** Direct file. */
   export const direct = true;
-stderr: Cannot mix glob patterns and file paths in one command.
+stdout: |
+  glob view: input/**/*.ts input/direct.ts
+  Includes only header comments per file.
+  For file-level outlines, use `outln [FILE]...`.
+  input/direct.ts: Direct file.
+stderr: ''

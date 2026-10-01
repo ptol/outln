@@ -77,13 +77,8 @@ export async function run(
   );
   const hasExpandableInputs = directories.length > 0 || globPatterns.length > 0;
 
-  if (hasExpandableInputs && filePaths.length > 0) {
-    failWithError(dependencies, 'Cannot mix glob patterns and file paths in one command.');
-    return;
-  }
-
   if (hasExpandableInputs) {
-    await runGlobViewMode(positional, directories, globPatterns, dependencies);
+    await runGlobViewMode(positional, { directories, globPatterns, filePaths }, dependencies);
   } else {
     await runFileMode(filePaths, dependencies, processor);
   }
