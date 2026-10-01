@@ -21,7 +21,17 @@ description: Minimal architecture and module boundaries for the current outln ru
 - `formatter`: model-to-text formatting (`ParsedDeclaration` to output line); nested members rendered with 2-space indentation
 - `comments`: shared top-comment extraction for TypeScript/JavaScript, with language-specific comment extraction for Go and Rust.
 - Current state:
-  - `src/main.ts` — CLI entry and I/O coordination with dependency injection for testability; keeps path/result transformations in pure helpers and routes failure exits through a single error-emission helper
+  - `src/main.ts` — CLI entry: parses flags, classifies inputs and dispatches to file, glob view or debug mode; installs the stdout EPIPE handler when run directly
+  - `src/cli/input-arguments.ts` — Flag parsing (`--help`, `--version`, `--debug`, `--`) and classification of positional args into directories, globs and files (existing paths are always literal, even with `[`)
+  - `src/cli/modes.ts` — File mode (per-file failure isolation), glob view mode and debug mode runners
+  - `src/cli/input-discovery.ts` — Expands directories/globs and merges explicit files for glob view; filters unsupported types before reading
+  - `src/cli/file-walker.ts` — Gitignore-aware directory walk and glob-match filtering (per-directory `.gitignore` via the `ignore` package, ancestor `.gitignore` files up to the git root, always skips `node_modules`, dot-entries and symlinks)
+  - `src/cli/source-reader.ts` — Reads files through the injected reader, normalizes text and maps failures to one-line error messages
+  - `src/cli/node-dependencies.ts` — Default `RunDependencies` backed by Node `fs`, `glob` and `process`
+  - `src/cli/broken-pipe.ts` — Stdout error handler that exits quietly on EPIPE
+  - `src/cli/help-text.ts` — `--help` text and usage line
+  - `src/core/source-text.ts` — Source text normalization: rejects non-UTF-8 (NUL) content, strips BOM, converts CRLF to LF
+  - `src/core/header-comment-lines.ts` — Builds header-comment outline lines with comment markers stripped (all languages)
   - `src/core/language-engine.ts` — `OutlineLanguageEngine` interface (`id`, `matchesFilePath`, `generateOutline`, `extractSummary`)
   - `src/core/language-registry.ts` — engine registration + resolution + dispatch for both outline and summary extraction
   - `src/languages/typescript/script-engine.ts` — Shared script engine factory (`createScriptLanguageEngine`) and file-path matcher helper
@@ -32,11 +42,12 @@ description: Minimal architecture and module boundaries for the current outln ru
   - `src/languages/rust/header-comment.ts` — Rust top-of-file header comment extraction (pure helper for outline and summary paths)
   - `src/languages/rust/engine.ts` — Rust engine adapter (mod/use/type/struct/enum/union/const/static/trait/impl/extern/macro_rules!/fn extraction + delegates header comment extraction)
   - `src/core/types.ts` — Core type definitions (`OutlineOptions`, generic `OutlineResult<TMetadata>` with typed `OutlineMetadata` (`string | Record<string, unknown> | null`), `ParsedDeclaration` with optional `startColumn`/`endColumn` for debug highlighting, `OutlineLine` with optional `span` and `lineNumber`)
-  - `src/languages/typescript/comments.ts` — Top-of-file comment extraction (BOM, shebang, blank line handling)
+  - `src/languages/typescript/comments.ts` — Top-of-file comment extraction (BOM, shebang, blank line and directive prologue handling)
   - `src/languages/typescript/ast-utils.ts` — AST node type constants and checker functions (function, class, variable, ambient, module types)
   - `src/languages/typescript/extractors.ts` — Barrel export for extractor modules
   - `src/languages/typescript/extractors/node-utils.ts` — Line range calculation with decorator support
-  - `src/languages/typescript/extractors/signature-builder.ts` — Function signature text construction
+  - `src/languages/typescript/extractors/signature-builder.ts` — Function signature text construction, including type parameters (`<T>`) for functions, classes, interfaces and type aliases
+  - `src/languages/typescript/extractors/re-export-extractor.ts` — Re-export statements (`export { a as b }`, `export * from`, `export =`, …) as one-line declarations
   - `src/languages/typescript/extractors/declaration-creators.ts` — Pure factory functions for declarations
   - `src/languages/typescript/extractors/ambient-extractor.ts` — Ambient declaration (`declare ...`) extraction
   - `src/languages/typescript/extractors/namespace-extractor.ts` — Namespace/module extraction
@@ -46,30 +57,33 @@ description: Minimal architecture and module boundaries for the current outln ru
   - `src/core/formatter.ts` — Output formatting: signature-first output with kind/name fallback; nested members rendered with 2-space indentation
   - `src/languages/typescript/outline.ts` — Orchestration: `parseDeclarations()`, `generateOutline()` (~550 lines, reduced from original 915)
   - `src/languages/typescript/class-members.ts` — Class member attachment: `attachClassMembers()` matches class declarations to AST nodes by line range
-  - `src/languages/typescript/outline-helpers.ts` — Shared outline utilities: `findExportDeclaration()`, `getExportModifiers()`, `isReExportList()`
+  - `src/languages/shared/parser-factory.ts` — Parser creation and `parseSource()`, which sizes the tree-sitter input buffer to the file (avoids the 32 KB limit)
+  - `src/languages/typescript/outline-helpers.ts` — Shared outline utilities: `findExportDeclaration()`, `getExportModifiers()`
 
 ## Data flow
 
-1. CLI receives paths and options.
-2. IO validates file existence and reads UTF-8 text in the same order as input args.
-3. Language registry resolves an engine by file path; returns null for unsupported extensions.
-4. CLI handles unsupported extensions by writing `FILE <path> HAS UNSUPPORTED FILE TYPE` to stderr and setting exit code 1.
-5. Selected engine parses input and produces an outline result.
-   - Markdown engine extracts YAML frontmatter scalars and ATX-style headings (`# ` to `###### `).
+1. CLI receives paths and options; `--help`/`--version` short-circuit, unknown options fail.
+2. Positional args are classified: existing directories, existing files, then globs (non-existent args with glob syntax). Any directory or glob switches the run to glob view mode, where explicit files are listed alongside walked files.
+3. Directories are walked and globs expanded with gitignore rules; unsupported extensions are dropped before reading.
+4. IO reads each file and normalizes its text (`normalizeSourceText`): NUL content is rejected as non-UTF-8, BOM stripped, CRLF converted to LF.
+5. Language registry resolves an engine by file path; explicitly named unsupported files produce `FILE <path> HAS UNSUPPORTED FILE TYPE` and exit code 1.
+6. Selected engine parses input and produces an outline result.
+   - Header comments are printed without comment markers; debug mode still highlights the raw comment lines.
+   - Markdown engine extracts YAML frontmatter scalars and ATX-style headings (`# ` to `###### `, closing hashes stripped); each heading's range covers its section up to the next heading of the same or higher level.
    - Go engine extracts const/var/type/func declarations with signatures, handling grouped declarations, multi-name specs, methods with receivers, and generics.
    - Rust engine extracts mod, extern crate, use, type, struct, enum, union, const, static, trait, impl, extern blocks, macro_rules!, and fn declarations with signatures.
-6. CLI writes one combined stdout payload, writes one-line stderr messages per failed file, and sets exit code `1` when any failure occurs (otherwise `0`).
-7. Debug mode (`--debug` flag): validates single input path (file or directory), generates ANSI-highlighted output via `generateDebugOutput()`; supports TypeScript, JavaScript, Go, Rust, and Markdown (including frontmatter metadata).
-   - Directory input: recursively lists regular files (excluding symlinks), sorts lexicographically, processes each file, concatenates outputs with newlines, emits per-file errors to stderr, exits `1` if any errors occur.
+7. CLI writes one combined stdout payload, writes one-line stderr messages per failed file, and sets exit code `1` when any failure occurs (otherwise `0`).
+8. Debug mode (`--debug` flag): validates single input path (file or directory), generates ANSI-highlighted output via `generateDebugOutput()`; supports TypeScript, JavaScript, Go, Rust, and Markdown (including frontmatter metadata).
+   - Directory input: uses the same gitignore-aware walker as glob view, keeps supported files only, sorts lexicographically, processes each file, concatenates outputs with newlines, emits per-file errors to stderr, exits `1` if any errors occur.
 
 ## Public interfaces and key types
 
 - `run(args: string[], dependencies?: RunDependencies, processor?: ContentProcessor): Promise<void>`: top-level CLI execution path.
 - `RunDependencies`: Injectable I/O and process dependencies for testability.
-  - `fileExists`, `isDirectory`, `readTextFile`: filesystem operations
+  - `currentDirectory`, `fileExists`, `isDirectory`, `readDirectory`, `readTextFile`: filesystem operations (`WalkerDependencies`)
+  - `globber: (pattern: string) => Promise<string[]>`: glob expansion to regular files (symlinks excluded)
   - `writeOutput`, `writeError`, `setExitCode`: output and process control
-  - `globber?: (pattern: string) => Promise<string[]>`: optional glob matching for tests
-  - `listFiles?: (dirPath: string) => Promise<string[]>`: optional recursive file listing; skips symlinked directories, returns normalized sorted paths
+  - `readVersion`: returns the package version for `--version`
 - `OutlineLanguageEngine`: `{ id, matchesFilePath(filePath), generateOutline(options), extractSummary(content) }`.
   - `extractSummary` returns `{ summary: string | null }` for glob view mode
   - TypeScript: extracts top-of-file comment via `extractTopComment()`
@@ -92,10 +106,12 @@ description: Minimal architecture and module boundaries for the current outln ru
 
 ## Error handling strategy
 
-- Missing input paths write a usage line to stderr and exit with code `1`.
-- Missing files write one-line `FILE <path> DOESN'T EXIST` errors and continue processing remaining files.
-- Unsupported file types write one-line `FILE <path> HAS UNSUPPORTED FILE TYPE` errors and continue processing remaining files.
+- Missing input paths write a usage line to stderr and exit with code `1`; unknown options write `Unknown option <opt>. Run outln --help for usage.`
+- Missing files write one-line `File <path> does not exist` errors (`Directory <path> does not exist` for directories) and continue processing remaining inputs.
+- Explicitly named unsupported files write `FILE <path> HAS UNSUPPORTED FILE TYPE`; unsupported files found by walking or globbing are skipped silently.
+- Non-UTF-8 files (UTF-16, binary) write `FILE <path> IS NOT UTF-8 TEXT`.
 - A file that cannot be read or parsed writes `FILE <path> COULD NOT BE READ OR PARSED`; other files in the same run are still outlined.
+- A closed stdout pipe (EPIPE, e.g. `outln … | head`) exits quietly with code `0`.
 - Any failure path sets process exit code `1`; success path leaves exit code as `0`.
 - Detailed typed error categories are future work and tracked separately from current runtime behavior.
 

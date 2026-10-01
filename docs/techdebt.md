@@ -18,4 +18,7 @@ description: Durable registry of known technical debt, with impact and mitigatio
 
 ## Items
 
-_No actionable items at this time._
+- `Area`: `src/languages/markdown/engine.ts`
+  - `Issue`: Headings are found with a line regex; setext headings (`===`/`---` underlines), `~~~` fences, indented fences and fence-length matching are not handled.
+  - `Impact`: Some Markdown files get missing or extra headings and wrong section ranges.
+  - `Mitigation`: Use a CommonMark-compliant block parser (or tree-sitter-markdown) for heading and fence detection.

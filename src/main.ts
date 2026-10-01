@@ -1,5 +1,5 @@
 /**
- * CLI entrypoint that prints concatenated content from one or more input file paths.
+ * CLI entrypoint: parses flags, classifies inputs and dispatches to file, glob view or debug mode.
  */
 import { realpathSync } from 'node:fs';
 import { resolve } from 'node:path';

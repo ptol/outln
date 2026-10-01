@@ -25,6 +25,9 @@ outln src/main.ts
 outln src/main.ts src/core/formatter.ts
 ```
 
+Header comments are printed without comment markers. Markdown headings show the line range of
+their whole section, so a single section can be read directly.
+
 ### Glob mode
 
 Generate compact one-line summaries per matching file:
@@ -33,7 +36,14 @@ Generate compact one-line summaries per matching file:
 outln src
 outln "src/**/*.ts"
 outln "src/**/*.{ts,tsx,js}"
+outln docs AGENTS.md
 ```
+
+- `.gitignore` files are respected (including ancestor `.gitignore` files up to the git root).
+- `node_modules`, dot-entries and symlinks are always skipped.
+- Unsupported file types are skipped silently.
+- Explicit files can be mixed with directories and globs; they are listed in the same format.
+- Existing paths are always literal, so `outln "app/[id]/page.tsx"` works.
 
 ### Debug mode
 

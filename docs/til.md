@@ -599,3 +599,24 @@ description: Reusable engineering learnings and gotchas for the outln project.
   ```
 - **Benefits**: Eliminates redundant undefined checks; type-safe access to success/error payloads; self-documenting return type; compiler enforces handling both branches.
 - **Applicability**: Input validation, parser results, operation outcomes with typed errors.
+
+## node-tree-sitter 32 KB Input Limit
+
+- **Context**: `parser.parse(text)` in node-tree-sitter 0.21 reads input through a fixed 32K (UTF-16 units) buffer and fails with `Invalid argument` for larger files.
+- **Fix**: Pass `{ bufferSize }` as the third argument (`parser.parse(text, undefined, { bufferSize: text.length + 1 })`). All engines go through `parseSource()` in `src/languages/shared/parser-factory.ts`.
+
+## `ignore` Package Semantics for .gitignore Layers
+
+- **Context**: Each `.gitignore` is compiled into its own `ignore()` matcher and tested with paths relative to its directory (directories with a trailing `/`).
+- **Precedence**: Apply layers outermost first; `test()` returns `{ ignored, unignored }`, so a deeper `!pattern` can re-include a file ignored by an outer layer.
+- **Parents**: `ignore` also matches parent directories of a path (`dist/` ignores `dist/a.js`), mirroring git: a file cannot be re-included when its parent directory is excluded.
+
+## casefile-runner UPDATE_CASES Rewrites YAML Style
+
+- **Context**: `UPDATE_CASES=1` re-serializes every case file it updates and may switch block scalars to folded (`>`) style or quoted multi-line strings.
+- **Practice**: Update only the cases you changed (`UPDATE_CASES=1 npx vitest run __tests__/main.two-section.test.ts -t "<case name>"`), then review the diff and hand-edit expectations if the YAML style degrades.
+
+## NUL Characters Identify Non-UTF-8 Source Files
+
+- **Context**: Reading a UTF-16 file as UTF-8 yields text with a NUL after every ASCII character; binary files also contain NULs. Real UTF-8 source never does.
+- **Practice**: `normalizeSourceText()` rejects content containing `\0` and reports `FILE <path> IS NOT UTF-8 TEXT`.

@@ -4,6 +4,25 @@ description: 'Changelog of notable changes to the outln project.'
 
 # Changelog
 
+## 2026-10-01 — problems-fix-batch: Robustness, gitignore-aware walking and richer TS outlines
+
+- **Fixed**: Files larger than 32 KB no longer fail with `Invalid argument` (tree-sitter `bufferSize` sized to the input via `parseSource()`).
+- **Fixed**: One unreadable file no longer hides the outlines of the other files in file mode.
+- **Fixed**: Piping into `head` no longer prints an EPIPE stack trace.
+- **Fixed**: Existing paths containing `[` (for example `app/[id]/page.tsx`) are treated as literal paths.
+- **Fixed**: CRLF files no longer leak `\r` into outlines; UTF-16/binary files report `FILE <path> IS NOT UTF-8 TEXT` instead of an empty outline.
+- **Fixed**: `'use client'` / `'use strict'` directives no longer hide the header comment.
+- **Added**: `--help`/`-h`, `--version`/`-v`, `--` end-of-options; unknown options are errors.
+- **Added**: Gitignore-aware directory walking (per-directory and ancestor `.gitignore` via the `ignore` package); `node_modules`, dot-entries and symlinks are always skipped. Applies to directories, globs and `--debug <dir>`.
+- **Added**: Directories/globs and explicit files can be mixed in one command (one-line summary view).
+- **Added**: TS/JS outlines show type parameters (`function add<T>(…)`, `class Box<T>`, `type Pair<A, B>`).
+- **Added**: TS/JS outlines list re-exports (`export { a as b }`, `export * from`, `export * as ns from`, `export =`, `export default <identifier>`).
+- **Added**: Markdown heading ranges cover the whole section; closing hashes (`## Title ##`) are stripped.
+- **Changed**: File-mode header comments are printed without comment markers in every language.
+- **Changed**: Unsupported files found while walking are skipped silently (exit `0`); explicitly named ones still fail with exit `1`. Files are filtered by extension before being read.
+- **Changed**: The glob view banner shows the original arguments instead of expanded patterns.
+- **Removed**: `listFiles` dependency (replaced by `readDirectory` + the shared walker).
+
 ## 2026-03-01 — 027-support-dir-input-for-debug-mode.md: Debug mode directory input support
 
 - **Added**: `--debug` flag now accepts directory paths for recursive processing.
